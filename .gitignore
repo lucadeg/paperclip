@@ -70,3 +70,41 @@ tests/storybook-visual/playwright-report/
 .superpowers/
 .claude/worktrees/
 .herenow
+
+
+# ==============================================================================
+# SENSITIVE DATA & CREDENTIALS GUARD (AUTO-INJECTED)
+# ==============================================================================
+*.env
+*.env.*
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*client_secret*.json
+*credentials*.json
+*service_account*.json
+*_sa.json
+*token*.json
+accounts.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+secrets/
+private/
+data/
+**/data/
+gdrive_staging/
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+
+# ALLOW DATABASE SCHEMAS & MIGRATIONS
+!*.prisma
+!schema.prisma
+!migrations/
+!*.sql
