@@ -7,6 +7,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // --- Mocks (hoisted so vi.mock factories can close over them) ----------------
 
+// The company list is keyed by account, so it holds until the session query
+// *succeeds*. A seeded entry is stale under the test client and refetches, so
+// the refetch has to answer too — otherwise the identity errors and the list
+// never runs.
+const mockAuthApi = vi.hoisted(() => ({ getSession: vi.fn() }));
+vi.mock("../api/auth", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../api/auth")>();
+  return { ...actual, authApi: { ...actual.authApi, getSession: mockAuthApi.getSession } };
+});
+
 const mockDialog = vi.hoisted(() => ({
   onboardingOpen: true,
   onboardingOptions: {} as { initialStep?: number; companyId?: string },
@@ -23,6 +33,7 @@ const mockCompany = vi.hoisted(() => ({
 }));
 
 const mockCompaniesApi = vi.hoisted(() => ({
+  detachInflightList: vi.fn(),
   create: vi.fn(),
   update: vi.fn(),
   // The gate fetches the list itself now, rather than reading the shared
@@ -131,6 +142,8 @@ async function flushReact() {
   });
 }
 
+const SESSION_USER_ID = "user-b";
+
 function render() {
   const container = document.createElement("div");
   document.body.appendChild(container);
@@ -138,11 +151,21 @@ function render() {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
+  // The company list is keyed by account, so it stays disabled until the
+  // session is known. Seeding it is how these tests say "signed in as B".
+  queryClient.setQueryData(queryKeys.auth.session, {
+    session: { id: "session-b", userId: SESSION_USER_ID },
+    user: { id: SESSION_USER_ID, name: "B", email: "b@example.com", image: null },
+  });
   return { container, root, queryClient };
 }
 
 describe("OnboardingWizard restore-gate (stale localStorage across accounts)", () => {
   beforeEach(() => {
+    mockAuthApi.getSession.mockResolvedValue({
+      session: { id: "session-b", userId: SESSION_USER_ID },
+      user: { id: SESSION_USER_ID, name: "B", email: "b@example.com", image: null },
+    });
     window.localStorage.clear();
     mockDialog.onboardingOpen = true;
     mockDialog.onboardingOptions = {};
@@ -496,11 +519,15 @@ describe("OnboardingWizard restore-gate (stale localStorage across accounts)", (
   });
   it("does not hand one account's draft to the next when a refetch fails after a switch", async () => {
     // The attack path in full. Account A onboards and leaves a draft naming
-    // its company. A signs out — which does not clear the companies cache,
-    // because `useSignOut` invalidates only the session and health queries.
-    // B signs in and the companies refetch fails, so A's list is still in
+    // its company. The account then changes without this component's company
+    // cache being cleared, and the refetch fails, so A's list is still in
     // hand. A list that still contains A's company must not be read as proof
     // that B owns it.
+    //
+    // `useSignOut` now resets account-scoped caches, which closes the
+    // sign-out-button route into this state (see its own regression test). The
+    // gate is asserted here independently of that: it must hold for any route
+    // that leaves a stale list behind, not only the one that has been fixed.
     window.localStorage.setItem(
       ONBOARDING_STORAGE_KEY,
       JSON.stringify({
@@ -640,7 +667,7 @@ describe("OnboardingWizard restore-gate (stale localStorage across accounts)", (
     );
     const { root, queryClient } = render();
     // A's list, already in the cache from their session.
-    queryClient.setQueryData(queryKeys.companies.all, {
+    queryClient.setQueryData(queryKeys.companies.list(SESSION_USER_ID), {
       companies: [{ id: "company-a", name: "Account A Co", issuePrefix: "AAC" }],
       unauthorized: false,
     });
@@ -683,7 +710,7 @@ describe("OnboardingWizard restore-gate (stale localStorage across accounts)", (
     });
     window.localStorage.setItem(ONBOARDING_STORAGE_KEY, draft);
     const { root, queryClient } = render();
-    queryClient.setQueryData(queryKeys.companies.all, {
+    queryClient.setQueryData(queryKeys.companies.list(SESSION_USER_ID), {
       companies: [{ id: "c1", name: "Saved Co", issuePrefix: "SC" }],
       unauthorized: false,
     });
