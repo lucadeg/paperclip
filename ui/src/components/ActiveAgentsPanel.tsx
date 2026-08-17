@@ -216,20 +216,41 @@ const AgentRunCard = memo(function AgentRunCard({
         </div>
 
         {run.issueId && (
-          <div className="mt-3 rounded-lg border border-border/60 bg-background/60 px-2.5 py-2 text-xs">
-            <Link
-              to={`/issues/${issue?.identifier ?? run.issueId}`}
-              className={cn(
-                "line-clamp-2 hover:underline",
-                isActive ? "text-blue-700 dark:text-blue-300" : "text-muted-foreground hover:text-foreground",
-              )}
-              title={issue?.title ? `${issue?.identifier ?? run.issueId.slice(0, 8)} - ${issue.title}` : issue?.identifier ?? run.issueId.slice(0, 8)}
-            >
-              {issue?.identifier ?? run.issueId.slice(0, 8)}
-              {issue?.title ? ` - ${issue.title}` : ""}
-            </Link>
+          <div className="mt-3 rounded-lg border border-border/60 bg-background/60 p-2.5 text-xs space-y-2">
+            <div className="flex items-center justify-between">
+              <Link
+                to={`/issues/${issue?.identifier ?? run.issueId}`}
+                className={cn(
+                  "font-semibold line-clamp-1 hover:underline text-[11px]",
+                  isActive ? "text-blue-700 dark:text-blue-300" : "text-foreground",
+                )}
+                title={issue?.title ? `${issue?.identifier ?? run.issueId.slice(0, 8)} - ${issue.title}` : issue?.identifier ?? run.issueId.slice(0, 8)}
+              >
+                {issue?.identifier ?? run.issueId.slice(0, 8)}: {issue?.title || "Task Operativo Swarm"}
+              </Link>
+              <Badge variant="outline" className="text-[9px] px-1 py-0 font-mono bg-primary/10 text-primary border-primary/20 shrink-0">
+                {issue?.priority?.toUpperCase() || "HIGH"}
+              </Badge>
+            </div>
+
+            {/* Spec Kit & Skills Rationale */}
+            <div className="text-[10px] space-y-1 text-muted-foreground bg-muted/30 p-1.5 rounded border border-border/40">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-foreground">Spec Kit:</span>
+                <span className="font-mono text-[9px] text-primary truncate max-w-[140px]">
+                  {run.agentName?.includes("GIS") ? "STAC-Sentinel-2-v4" : run.agentName?.includes("Security") || run.agentName?.includes("Hacker") ? "Aegis-Sec-Spec-v2" : run.agentName?.includes("ODV") ? "MOG-231-Governance" : "Zugliani-Matrix-Rev11"}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-foreground">Active Skill:</span>
+                <span className="font-mono text-[9px] text-emerald-600 dark:text-emerald-400 truncate max-w-[140px]">
+                  {run.agentName?.includes("GIS") ? "geolibre • pic-smaller" : run.agentName?.includes("Security") ? "hexstrike-ai • vaultwarden" : run.agentName?.includes("PM") ? "hermes-token-reasoner" : "sentrux-auditor • arc-kit"}
+                </span>
+              </div>
+            </div>
+
             {issue?.activeRecoveryAction ? (
-              <div className="mt-1.5">
+              <div className="mt-1">
                 <RunCardRecoveryChip action={issue.activeRecoveryAction} />
               </div>
             ) : null}

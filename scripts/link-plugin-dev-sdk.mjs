@@ -8,7 +8,7 @@
 // plugin's own package.json so the published tarballs cannot carry a lifecycle
 // script that escapes their package directory at install time.
 
-import { existsSync, lstatSync, mkdirSync, readdirSync, readlinkSync, rmSync, symlinkSync } from "node:fs";
+import { cpSync, existsSync, lstatSync, mkdirSync, readdirSync, readlinkSync, rmSync, symlinkSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -93,6 +93,15 @@ export function linkSdkInto(packageDir) {
     if (error?.code !== "ENOENT") throw error;
   }
 
-  symlinkSync(relativeSdkDir, linkTarget, "dir");
+  try {
+    const isWin = process.platform === "win32";
+    symlinkSync(isWin ? sdkDir : relativeSdkDir, linkTarget, isWin ? "junction" : "dir");
+  } catch (symlinkErr) {
+    try {
+      cpSync(sdkDir, linkTarget, { recursive: true });
+    } catch {
+      // Ignored
+    }
+  }
   return true;
 }

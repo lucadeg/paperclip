@@ -23,7 +23,7 @@ import { relativeTime, cn, agentRouteRef, agentUrl } from "../lib/utils";
 import { PageTabBar } from "../components/PageTabBar";
 import { Tabs } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Bot, Plus, List, GitBranch } from "lucide-react";
+import { AlertTriangle, Bot, Plus, List, GitBranch, Layers } from "lucide-react";
 import { AGENT_ROLE_LABELS, type Agent, type Environment, type EnvironmentCapabilities } from "@paperclipai/shared";
 import {
   isStarred,
@@ -36,6 +36,27 @@ import { usePublishSharedQueryData, useSharedPollingQuery } from "../hooks/useSh
 import { getAdapterLabel } from "../adapters/adapter-display-registry";
 
 const roleLabels = AGENT_ROLE_LABELS as Record<string, string>;
+
+export const COMPANY_DIVISIONS = [
+  { id: "all", label: "Tutte le Divisioni" },
+  { id: "Marketing", label: "Marketing" },
+  { id: "Supporto Clienti", label: "Supporto Clienti" },
+  { id: "Programmazione", label: "Programmazione" },
+  { id: "Gestione Clienti", label: "Gestione Clienti" },
+  { id: "Compliance Legale", label: "Compliance Legale" },
+  { id: "Compliance Fiscale", label: "Compliance Fiscale" },
+  { id: "Compliance Commerciale", label: "Compliance Commerciale" },
+  { id: "Reparto Commerciale", label: "Reparto Commerciale" },
+  { id: "Gestione Risorse", label: "Gestione Risorse" },
+  { id: "Executive & Board", label: "Executive & Board" },
+] as const;
+
+export function getAgentDivision(agent: Agent): string {
+  const match = (agent.capabilities ?? "").match(/^\[(.*?)\]/);
+  if (match && match[1]) return match[1].trim();
+  if (agent.role === "ceo") return "Executive & Board";
+  return "Programmazione";
+}
 
 // Lazy-loaded so the roster page doesn't statically pull in the full
 // AgentConfigForm module graph (the modal reuses its adapter/model pickers).
@@ -91,12 +112,17 @@ function matchesFilter(status: string, tab: FilterTab): boolean {
   return true;
 }
 
-function filterAgents(agents: Agent[], tab: FilterTab, builtInAgentIds: Set<string>): Agent[] {
+function filterAgents(
+  agents: Agent[],
+  tab: FilterTab,
+  builtInAgentIds: Set<string>,
+  division: string = "all"
+): Agent[] {
   return agents
     .filter((a) => {
       if (HIDDEN_AGENT_STATUSES.has(a.status)) return false;
-      // The `builtin` filter keys on the built-in marker, not agent status.
       if (tab === "builtin") return builtInAgentIds.has(a.id);
+      if (division !== "all" && getAgentDivision(a) !== division) return false;
       return matchesFilter(a.status, tab);
     })
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -164,20 +190,28 @@ function resolveAgentEnvironment(
     : describeMissingEnvironment(environmentId);
 }
 
-function filterOrgTree(nodes: OrgNode[], tab: FilterTab, builtInAgentIds: Set<string>): OrgNode[] {
+function filterOrgTree(
+  nodes: OrgNode[],
+  tab: FilterTab,
+  builtInAgentIds: Set<string>,
+  agentMap: Map<string, Agent>,
+  division: string = "all"
+): OrgNode[] {
   return nodes
     .reduce<OrgNode[]>((acc, node) => {
-      const filteredReports = filterOrgTree(node.reports, tab, builtInAgentIds);
+      const filteredReports = filterOrgTree(node.reports, tab, builtInAgentIds, agentMap, division);
       // Hidden agents (terminated / pending_approval) never render as a row, but
       // any visible reports are promoted so the tree doesn't lose live agents.
       if (HIDDEN_AGENT_STATUSES.has(node.status)) {
         acc.push(...filteredReports);
         return acc;
       }
+      const agent = agentMap.get(node.id);
+      const divisionMatches = division === "all" || (agent && getAgentDivision(agent) === division);
       const nodeMatches = tab === "builtin"
         ? builtInAgentIds.has(node.id)
         : matchesFilter(node.status, tab);
-      if (nodeMatches || filteredReports.length > 0) {
+      if ((nodeMatches && divisionMatches) || filteredReports.length > 0) {
         acc.push({ ...node, reports: filteredReports });
       }
       return acc;
@@ -324,6 +358,8 @@ export function Agents() {
     }
   }, [builtInAgentsEnabled, instanceSettings, navigate, requestedTab, selectedCompanyId]);
 
+  const [selectedDivision, setSelectedDivision] = useState<string>("all");
+
   if (!selectedCompanyId) {
     return <EmptyState icon={Bot} message="Select a company to view agents." />;
   }
@@ -332,8 +368,8 @@ export function Agents() {
     return <PageSkeleton variant="list" />;
   }
 
-  const filtered = filterAgents(agents ?? [], tab, builtInAgentIds);
-  const filteredOrg = filterOrgTree(orgTree ?? [], tab, builtInAgentIds);
+  const filtered = filterAgents(agents ?? [], tab, builtInAgentIds, selectedDivision);
+  const filteredOrg = filterOrgTree(orgTree ?? [], tab, builtInAgentIds, agentMap, selectedDivision);
   const environmentDataLoading = environmentsEnabled && environments === undefined;
   const showEnvironmentColumn = environmentsEnabled && (environments === undefined || environments.length > 1);
   const resolveRenderedEnvironment = (agentId: string) => (
@@ -537,6 +573,45 @@ export function Agents() {
             New Agent
           </Button>
         </div>
+      </div>
+
+      {/* Division filter selector bar */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full scrollbar-none text-xs border-b border-border/50 pb-2">
+        <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1">
+          <Layers className="h-3.5 w-3.5 text-primary" /> Divisione:
+        </span>
+        {COMPANY_DIVISIONS.map((div) => {
+          const isSelected = selectedDivision === div.id;
+          const count = agents
+            ? div.id === "all"
+              ? agents.length
+              : agents.filter((a) => getAgentDivision(a) === div.id).length
+            : 0;
+          return (
+            <button
+              key={div.id}
+              onClick={() => setSelectedDivision(div.id)}
+              className={cn(
+                "px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all border shrink-0 flex items-center gap-1.5",
+                isSelected
+                  ? "bg-primary text-primary-foreground border-primary shadow-2xs font-semibold"
+                  : "bg-muted/30 hover:bg-muted/60 text-muted-foreground border-border/50"
+              )}
+            >
+              <span>{div.label}</span>
+              <span
+                className={cn(
+                  "text-[10px] px-1.5 py-0.2 rounded-full font-mono",
+                  isSelected
+                    ? "bg-primary-foreground/20 text-primary-foreground font-bold"
+                    : "bg-muted text-foreground"
+                )}
+              >
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {filtered.length > 0 && (

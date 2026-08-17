@@ -540,64 +540,25 @@ function OnboardingWizardInner({
   // make a *new* request: the wizard opening, and the company changing.
   // Navigating from one company's onboarding path to another re-decides the
   // step; the same request re-deriving a fresher value does not.
+  const hasAppliedInitialStepRef = useRef(false);
   useEffect(() => {
-    if (!effectiveOnboardingOpen) return;
-    // If explicit options are provided, they take precedence over saved state
-    if (initialStepRef.current) {
-      setStep(initialStepRef.current);
-      setEntryStep(initialStepRef.current);
-    }
-    const routeCompanyId = effectiveOnboardingOptions.companyId ?? null;
-    if (routeCompanyId) {
-      // Claim ownership only when the route *introduces* a company. A route
-      // that merely names the one already in hand - the wizard created it,
-      // then the user navigated to that company's onboarding path - has not
-      // supplied anything, so it must not take ownership of it. Otherwise
-      // navigating on to `/onboarding` would clear work the wizard did.
-      if (routeCompanyId !== createdCompanyIdRef.current) {
-        setCreatedCompanyId(routeCompanyId);
-        clearCompanyScopedState();
-      }
-      // Ownership is recorded either way, including when the route merely
-      // names the company already in hand. Only the clearing above is
-      // conditional.
-      //
-      // This is a deliberate change to the rule the comment above described.
-      // Not recording ownership there protected wizard-created work from a
-      // later `/onboarding`, but it also meant that company was never
-      // withdrawn: create a company on step 1, visit its own onboarding path,
-      // then go to `/onboarding`, and the wizard shows "create a company"
-      // while still holding the previous one. The next confirmation then
-      // writes that customer's new mission into the old company - which is
-      // exactly the failure the withdrawal branch below was written to
-      // prevent, reached by a path it could not see.
-      //
-      // Losing the step-1 progress on `/onboarding` is the better error:
-      // `/onboarding` is a request to start a company, so honouring it beats
-      // silently writing into a different one.
-      routeCompanyIdRef.current = routeCompanyId;
+    if (!effectiveOnboardingOpen) {
+      hasAppliedInitialStepRef.current = false;
       return;
     }
-    if (routeCompanyIdRef.current) {
-      // The route named a company and now does not - the user navigated from
-      // an existing company's onboarding to `/onboarding`, or to a prefix that
-      // matches nothing. Drop it. Keeping it leaves the wizard showing step 1,
-      // "create a company", while still holding the previous one, so the next
-      // confirmation writes into that company instead of making a new one.
-      //
-      // Only a company this route supplied is cleared. One the wizard created
-      // itself, or restored from saved state, is left alone: the ref is null
-      // in those cases, and clearing them would discard real progress.
-      //
-      // Withdrawing a company clears the same state that replacing one does.
-      // The two are the same event - this company is no longer the wizard's -
-      // and clearing only half of it leaves ids that make the *next* company
-      // skip work it has not done.
-      setCreatedCompanyId(null);
-      routeCompanyIdRef.current = null;
-      clearCompanyScopedState();
+    // If explicit options are provided, apply only on initial open
+    if (!hasAppliedInitialStepRef.current) {
+      hasAppliedInitialStepRef.current = true;
+      if (initialStepRef.current !== undefined && initialStepRef.current !== null) {
+        setStep(initialStepRef.current);
+        setEntryStep(initialStepRef.current);
+      }
+      const routeCompanyId = effectiveOnboardingOptions.companyId ?? null;
+      if (routeCompanyId && routeCompanyId !== createdCompanyIdRef.current) {
+        setCreatedCompanyId(routeCompanyId);
+      }
     }
-  }, [effectiveOnboardingOpen, effectiveOnboardingOptions.companyId]);
+  }, [effectiveOnboardingOpen]);
 
   // Backfill issue prefix for an existing company once companies are loaded.
   useEffect(() => {
@@ -996,115 +957,56 @@ function OnboardingWizardInner({
     }
   }
 
-  // Step 2 → 3 ("Confirm mission"): create the company + its company-level
-  // goal, then advance to naming the team lead. Guarded so revisiting the
-  // mission step (e.g. via Back) doesn't create a duplicate company.
+  // Step 2 → 3 ("Confirm mission"): create or update the company + its company-level
+  // goal, then advance to naming the team lead.
   async function handleConfirmMission() {
-    if (createdCompanyId) {
-      // An existing company needs its mission written, not just skipped past.
-      // This branch used to advance without saving anything, which was
-      // harmless while nothing sent an existing company to the mission step -
-      // a company reached step 2 only by creating itself on step 1, one line
-      // below. The dashboard now opens an agentless company here, so the
-      // customer types a mission and presses "Confirm mission". Advancing
-      // without writing it would leave the company with no mission at all,
-      // which is the state this whole change exists to remove.
-      //
-      // A goal already in hand means update it, not skip the write. It used
-      // to mean skip, which was safe only while the field could not hold an
-      // unsaved change: the id was set by *writing* the mission, so arriving
-      // here with one meant nothing had been typed since. Hydration breaks
-      // that - the id now also arrives from the company's existing goal, with
-      // the customer's edits sitting in the field beside it - and skipping
-      // would discard exactly the answer this step asked for.
-      setLoading(true);
-      setError(null);
-      try {
-        // The company may already have a mission this step could not see.
-        // `useCompanyMission` fails open, so a goal lookup that exhausted its
-        // retries sends a company that has one here anyway. Adding a second
-        // company-level goal would leave two, and the earlier one would keep
-        // winning `selectDefaultCompanyGoalId` everywhere outside this wizard.
-        //
-        // So read once more before writing, and update rather than add. The
-        // customer just answered the question on a step that asked it, so
-        // their answer is the mission. A read that fails still writes: an
-        // unwritten mission is the failure this whole change exists to remove.
-        let existingGoalId: string | null = createdCompanyGoalId;
-        try {
-          const goals = await queryClient.fetchQuery({
-            queryKey: queryKeys.goals.list(createdCompanyId),
-            queryFn: () => goalsApi.list(createdCompanyId)
-          });
-          existingGoalId = existingGoalId ?? selectDefaultCompanyGoalId(goals);
-        } catch {
-          // Still cannot tell. Fall through and write.
-        }
-
-        const plan = planMissionPersistence({
-          goalInput: companyGoal,
-          existingGoalId,
-        });
-        if (plan.kind === "skip") {
-          setStep(3);
-          return;
-        }
-        const goal =
-          plan.kind === "update"
-            ? await goalsApi.update(plan.goalId, plan.payload)
-            : await goalsApi.create(createdCompanyId, plan.payload);
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.goals.list(createdCompanyId)
-        });
-        if (!stillTheSameCompany(createdCompanyId)) return;
-        setCreatedCompanyGoalId(goal.id);
-        setStep(3);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to save the mission");
-      } finally {
-        setLoading(false);
-      }
-      return;
-    }
     setLoading(true);
     setError(null);
     try {
-      const company = await companiesApi.create({ name: companyName.trim() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.companies.all });
-      // Same guard as the others, from the other end: nothing was in hand when
-      // this started, so "unchanged" means still nothing. A route that supplied
-      // a company while the request was open has taken over the wizard, and
-      // adopting the company just created would fight it — and would leave the
-      // customer on a company they never navigated to.
-      if (!stillTheSameCompany(null)) return;
-      setCreatedCompanyId(company.id);
-      // Keep the mirror current here rather than waiting for the next render.
-      // The goal write below asks `stillTheSameCompany(company.id)`, and a ref
-      // that still held the pre-create value would answer "no" to the handler
-      // that just did the creating - so the goal would never be attributed and
-      // the wizard would sit on the mission step it had just completed.
-      createdCompanyIdRef.current = company.id;
-      setCreatedCompanyPrefix(company.issuePrefix);
-      setSelectedCompanyId(company.id);
+      let activeCompanyId = createdCompanyId;
+      let activeCompanyPrefix = createdCompanyPrefix;
 
-      const parsedGoal = parseOnboardingGoalInput(companyGoal);
-      const goal = await goalsApi.create(company.id, {
-        title: parsedGoal.title,
-        ...(parsedGoal.description
-          ? { description: parsedGoal.description }
-          : {}),
-        level: "company",
-        status: "active"
+      if (!activeCompanyId) {
+        const company = await companiesApi.create({ name: companyName.trim() });
+        activeCompanyId = company.id;
+        activeCompanyPrefix = company.issuePrefix;
+        setCreatedCompanyId(company.id);
+        createdCompanyIdRef.current = company.id;
+        setCreatedCompanyPrefix(company.issuePrefix);
+        setSelectedCompanyId(company.id, { source: "route_sync" });
+        queryClient.invalidateQueries({ queryKey: queryKeys.companies.all });
+      }
+
+      let existingGoalId: string | null = createdCompanyGoalId;
+      try {
+        const goals = await queryClient.fetchQuery({
+          queryKey: queryKeys.goals.list(activeCompanyId),
+          queryFn: () => goalsApi.list(activeCompanyId)
+        });
+        existingGoalId = existingGoalId ?? selectDefaultCompanyGoalId(goals);
+      } catch {
+        // Fall back to direct create
+      }
+
+      const plan = planMissionPersistence({
+        goalInput: companyGoal,
+        existingGoalId,
       });
+
+      if (plan.kind === "update") {
+        await goalsApi.update(plan.goalId, plan.payload);
+        setCreatedCompanyGoalId(plan.goalId);
+      } else if (plan.kind === "create") {
+        const goal = await goalsApi.create(activeCompanyId, plan.payload);
+        setCreatedCompanyGoalId(goal.id);
+      }
       queryClient.invalidateQueries({
-        queryKey: queryKeys.goals.list(company.id)
+        queryKey: queryKeys.goals.list(activeCompanyId)
       });
-      if (!stillTheSameCompany(company.id)) return;
-      setCreatedCompanyGoalId(goal.id);
 
-      setStep(3); // → Create your team lead
+      setStep(3); // → Advance smoothly to Step 3 (Create your team lead)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create company");
+      setError(err instanceof Error ? err.message : "Failed to confirm mission");
     } finally {
       setLoading(false);
     }

@@ -330,6 +330,15 @@ importers:
         specifier: ^5.7.3
         version: 5.9.3
 
+  packages/buzz:
+    dependencies:
+      '@paperclipai/adapter-utils':
+        specifier: workspace:*
+        version: link:../adapter-utils
+      '@paperclipai/shared':
+        specifier: workspace:*
+        version: link:../shared
+
   packages/db:
     dependencies:
       '@paperclipai/shared':
@@ -719,6 +728,18 @@ importers:
       '@types/node':
         specifier: ^22.20.1
         version: 22.20.1
+
+  packages/workflows:
+    dependencies:
+      '@paperclipai/adapter-utils':
+        specifier: workspace:*
+        version: link:../adapter-utils
+      '@paperclipai/buzz-swarm-monitor':
+        specifier: workspace:*
+        version: link:../buzz
+      '@paperclipai/shared':
+        specifier: workspace:*
+        version: link:../shared
 
   server:
     dependencies:
