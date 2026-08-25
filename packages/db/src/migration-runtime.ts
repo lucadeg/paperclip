@@ -128,12 +128,24 @@ async function ensureEmbeddedPostgresConnection(
   if (runningPid) {
     const port = runningPort ?? preferredPort;
     const adminConnectionString = `postgres://paperclip:paperclip@127.0.0.1:${port}/postgres`;
-    await ensurePostgresDatabase(adminConnectionString, "paperclip");
-    return {
-      connectionString: `postgres://paperclip:paperclip@127.0.0.1:${port}/paperclip`,
-      source: `embedded-postgres@${port}`,
-      stop: async () => {},
-    };
+    try {
+      const actualDataDir = await getPostgresDataDirectory(adminConnectionString);
+      if (typeof actualDataDir === "string" && path.resolve(actualDataDir) === path.resolve(dataDir)) {
+        await ensurePostgresDatabase(adminConnectionString, "paperclip");
+        return {
+          connectionString: `postgres://paperclip:paperclip@127.0.0.1:${port}/paperclip`,
+          source: `embedded-postgres@${port}`,
+          stop: async () => {},
+        };
+      }
+    } catch {
+      // Stale PID file; clean it up so we can start fresh
+      if (existsSync(postmasterPidFile)) {
+        try {
+          rmSync(postmasterPidFile, { force: true });
+        } catch {}
+      }
+    }
   }
 
   const instance = new EmbeddedPostgres({

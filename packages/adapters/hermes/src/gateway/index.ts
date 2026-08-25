@@ -1,10 +1,20 @@
-import type { AdapterSessionManagement, ServerAdapterModule } from "@paperclipai/adapter-utils";
-import { ADAPTER_LABEL, ADAPTER_TYPE } from "./shared/constants.js";
+import type {
+  AdapterSessionManagement,
+  ServerAdapterModule,
+} from "@paperclipai/adapter-utils";
+import { ADAPTER_TYPE, ADAPTER_LABEL } from "./shared/constants.js";
 import { execute, getConfigSchema, sessionCodec, testEnvironment } from "./server/index.js";
+import {
+  listModels,
+  refreshModels,
+  modelProfiles,
+  curatedModels,
+} from "../server/index.js";
 
 export const type = ADAPTER_TYPE;
 export const label = ADAPTER_LABEL;
-export const models: { id: string; label: string }[] = [];
+export const models = curatedModels;
+export { listModels, refreshModels, modelProfiles };
 
 const sessionManagement: AdapterSessionManagement = {
   supportsSessionResume: true,
@@ -64,6 +74,9 @@ export function createServerAdapter(): ServerAdapterModule {
     sessionCodec,
     sessionManagement,
     models,
+    listModels,
+    refreshModels,
+    modelProfiles,
     supportsLocalAgentJwt: false,
     supportsInstructionsBundle: false,
     requiresMaterializedRuntimeSkills: false,

@@ -24,6 +24,11 @@ import "./index.css";
 
 initPluginBridge(React, ReactDOM);
 
+(window as any).formatCents = function (cents?: number | null): string {
+  if (typeof cents !== "number" || isNaN(cents)) return "$0.00";
+  return `$${(cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+};
+
 // React 19.2 emits an unbounded stream of performance.measure() entries for its
 // DevTools performance tracks and never clears them; on a long-lived tab they
 // accumulate into millions of native objects (GBs). Reap them periodically.

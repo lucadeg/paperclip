@@ -39,10 +39,22 @@ export interface ToastItem {
   createdAt: number;
 }
 
+/** Legacy-compat shape accepted by addToast shim. */
+export interface LegacyToastInput {
+  title: string;
+  /** Maps to `body` on ToastInput. */
+  message?: string;
+  /** Maps to `tone` on ToastInput. "danger" is aliased to "error". */
+  type?: "success" | "info" | "warning" | "warn" | "danger" | "error";
+  ttlMs?: number;
+}
+
 interface ToastActionsContextValue {
   pushToast: (input: ToastInput) => string | null;
   dismissToast: (id: string) => void;
   clearToasts: () => void;
+  /** Shim: accepts legacy {type, message} shape and delegates to pushToast. */
+  addToast: (input: LegacyToastInput) => string | null;
 }
 
 interface ToastContextValue extends ToastActionsContextValue {
@@ -162,6 +174,22 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       pushToast,
       dismissToast,
       clearToasts,
+      addToast: (input: LegacyToastInput) => {
+        const toneMap: Record<string, ToastTone> = {
+          success: "success",
+          info: "info",
+          warning: "warn",
+          warn: "warn",
+          danger: "error",
+          error: "error",
+        };
+        return pushToast({
+          title: input.title,
+          body: input.message,
+          tone: input.type ? (toneMap[input.type] ?? "info") : "info",
+          ttlMs: input.ttlMs,
+        });
+      },
     }),
     [pushToast, dismissToast, clearToasts],
   );

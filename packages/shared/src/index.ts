@@ -2511,3 +2511,8 @@ export {
   isPaperclipDevRunnerCommand,
   rewriteUrlHostToLoopback,
 } from "./runtime-exposure/loopback-bind.js";
+export * from "./types/directive.js";
+export * from "./types/task-evaluation.js";
+export * from "./types/approval.js";
+
+

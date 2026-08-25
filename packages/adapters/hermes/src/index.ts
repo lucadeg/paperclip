@@ -24,6 +24,10 @@ import {
   syncSkills,
   detectModel,
   getConfigSchema,
+  listModels,
+  refreshModels,
+  modelProfiles,
+  curatedModels,
 } from "./server/index.js";
 import { resolveHermesCommand } from "./server/execute.js";
 
@@ -35,16 +39,17 @@ export {
   label as hermesGatewayLabel,
   models as hermesGatewayModels,
   type as hermesGatewayType,
+  listModels as hermesGatewayListModels,
+  refreshModels as hermesGatewayRefreshModels,
+  modelProfiles as hermesGatewayModelProfiles,
 } from "./gateway/index.js";
 
+export { listModels, refreshModels, modelProfiles };
+
 /**
- * Models available through Hermes Agent.
- *
- * Hermes supports any model via any provider. The Paperclip UI should
- * prefer detectModel() plus manual entry over curated placeholder models,
- * since Hermes availability depends on the user's local configuration.
+ * Curated and discovered models available through Hermes Agent.
  */
-export const models: { id: string; label: string }[] = [];
+export const models = curatedModels;
 
 const sessionManagement: AdapterSessionManagement = {
   supportsSessionResume: true,
@@ -162,6 +167,9 @@ export function createServerAdapter(): ServerAdapterModule {
     listSkills,
     syncSkills,
     models,
+    listModels,
+    refreshModels,
+    modelProfiles,
     supportsLocalAgentJwt: true,
     supportsInstructionsBundle: true,
     instructionsPathKey: "instructionsFilePath",

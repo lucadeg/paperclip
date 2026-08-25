@@ -137,6 +137,9 @@ import { useIssueExternalObjects } from "../hooks/useIssueExternalObjects";
 import { useIssuePlanDocument } from "../hooks/useIssuePlanDocument";
 import { IssueRunLedger } from "../components/IssueRunLedger";
 import { IssueWorkspaceCard } from "../components/IssueWorkspaceCard";
+import { IssueBlockerResolutionBar } from "../components/IssueBlockerResolutionBar";
+import { IssueSwarmHierarchy } from "../components/IssueSwarmHierarchy";
+import { IssueCognitiveTrace } from "../components/IssueCognitiveTrace";
 import type { MentionOption } from "../components/MarkdownEditor";
 import { ImageGalleryModal, type GalleryMediaItem } from "../components/ImageGalleryModal";
 import { FileViewerProvider, useRequiredFileViewer } from "../context/FileViewerContext";
@@ -147,6 +150,8 @@ import { StatusIcon } from "../components/StatusIcon";
 import { PriorityIcon } from "../components/PriorityIcon";
 import { SHOW_TASK_PRIORITY_UI } from "../lib/ui-flags";
 import { ProductivityReviewBadge } from "../components/ProductivityReviewBadge";
+import { TaskEvaluationCard } from "../components/TaskEvaluationCard";
+import { getIssueEvaluation } from "../api/task-evaluations";
 import { Identity } from "../components/Identity";
 import { PluginSlotMount, PluginSlotOutlet, usePluginSlots } from "@/plugins/slots";
 import { PluginLauncherOutlet } from "@/plugins/launchers";
@@ -204,6 +209,7 @@ import {
   Plus,
   Repeat,
   SlidersHorizontal,
+  Sparkles,
   XCircle,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -2020,6 +2026,12 @@ export function IssueDetail() {
     [issuePluginDetailSlots],
   );
   const activePluginTab = issuePluginTabItems.find((item) => item.value === detailTab) ?? null;
+  const { data: issueTaskEvaluation, refetch: refetchTaskEvaluation } = useQuery({
+    queryKey: ["task-evaluation", issue?.companyId, issueId],
+    queryFn: () => getIssueEvaluation(issue!.companyId, issueId!),
+    enabled: Boolean(issue?.companyId && issueId),
+    retry: false,
+  });
   const {
     data: treeControlPreview,
     isFetching: treeControlPreviewLoading,
@@ -3431,6 +3443,12 @@ export function IssueDetail() {
         if (presence !== "unknown") confirmLocalInboxArchive(context.companyId, id);
       }
     },
+  });
+
+  const { data: parentIssue = null } = useQuery({
+    queryKey: ["issue-parent", issue?.parentId],
+    queryFn: () => issuesApi.get(issue!.parentId!),
+    enabled: !!issue?.parentId,
   });
 
   useEffect(() => {
@@ -4918,6 +4936,29 @@ export function IssueDetail() {
     <>
       {ancestorsNav}
       {issueHeaderBlock}
+      <IssueBlockerResolutionBar
+        issue={issue}
+        agentMap={agentMap}
+        onRefresh={() => {
+          invalidateIssueDetail();
+          invalidateIssueCollections();
+        }}
+      />
+      <IssueCognitiveTrace
+        issue={issue}
+        agent={issue.assigneeAgentId ? agentMap.get(issue.assigneeAgentId) : null}
+        workProducts={workProducts?.map((wp) => ({ id: wp.id, title: wp.title, kind: wp.type, createdAt: wp.createdAt }))}
+      />
+      <IssueSwarmHierarchy
+        currentIssue={issue}
+        parentIssue={parentIssue}
+        childIssues={childIssues}
+        agentMap={agentMap}
+        onRefresh={() => {
+          invalidateIssueDetail();
+          invalidateIssueCollections();
+        }}
+      />
       {pluginOutletsBlock}
     </>
   ) : undefined;
@@ -5215,6 +5256,10 @@ export function IssueDetail() {
             <ListTree className="h-3.5 w-3.5" />
             Related work
           </TabsTrigger>
+          <TabsTrigger value="evaluation" className="gap-1.5">
+            <Sparkles className="h-3.5 w-3.5 text-primary" />
+            Valutazione & Learning
+          </TabsTrigger>
           {issuePluginTabItems.map((item) => (
             <TabsTrigger key={item.value} value={item.value}>
               {item.label}
@@ -5401,6 +5446,15 @@ export function IssueDetail() {
             externalObjectsLoading={externalObjectsState.isEnabled ? externalObjectsState.isLoading : undefined}
             externalObjectsError={externalObjectsState.isEnabled ? externalObjectsState.isError : undefined}
             onRetryExternalObjects={externalObjectsState.isEnabled ? externalObjectsState.refetch : undefined}
+          />
+        </TabsContent>
+
+        <TabsContent value="evaluation" className={shellSectionClass}>
+          <TaskEvaluationCard
+            companyId={issue.companyId}
+            issueId={issue.id}
+            evaluation={issueTaskEvaluation ?? null}
+            onRefresh={refetchTaskEvaluation}
           />
         </TabsContent>
 

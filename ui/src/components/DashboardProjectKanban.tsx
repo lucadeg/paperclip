@@ -4,6 +4,7 @@ import { Link } from "@/lib/router";
 import { issuesApi } from "../api/issues";
 import { projectsApi } from "../api/projects";
 import { agentsApi } from "../api/agents";
+import { companiesApi } from "../api/companies";
 import { queryKeys } from "../lib/queryKeys";
 import { Identity } from "./Identity";
 import { Badge } from "@/components/ui/badge";
@@ -32,11 +33,13 @@ import {
   SlidersHorizontal,
   Bot,
   Shield,
+  ShieldAlert,
   Code2,
   Globe,
   Database,
   Mail,
   Zap,
+  Ban,
 } from "lucide-react";
 
 interface DashboardProjectKanbanProps {
@@ -84,9 +87,19 @@ export function DashboardProjectKanban({ companyId }: DashboardProjectKanbanProp
   }, [agents]);
 
   // Mutations
+  const unblockAllMutation = useMutation({
+    mutationFn: () => companiesApi.unblockAllIssues(companyId),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.issues.list(companyId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.dashboard(companyId) });
+      setSwarmTriggerStatus(`✅ Sbloccati con successo ${data.unblockedCount} task! Ora sono pronti in Backlog / To Do.`);
+      setTimeout(() => setSwarmTriggerStatus(null), 5000);
+    },
+  });
+
   const updateIssueMutation = useMutation({
     mutationFn: ({ issueId, status }: { issueId: string; status: string }) =>
-      issuesApi.update(issueId, { status }, companyId),
+      issuesApi.update(issueId, { status }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.issues.list(companyId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.dashboard(companyId) });
@@ -121,13 +134,12 @@ export function DashboardProjectKanban({ companyId }: DashboardProjectKanbanProp
 
   // Group by Kanban columns
   const columns = useMemo(() => {
-    const todo = filteredIssues.filter((i) => i.status === "todo");
+    const todo = filteredIssues.filter((i) => i.status === "todo" || i.status === "backlog");
     const inProgress = filteredIssues.filter((i) => i.status === "in_progress");
-    const inReview = filteredIssues.filter(
-      (i) => i.status === "in_review" || i.status === "blocked"
-    );
+    const blocked = filteredIssues.filter((i) => i.status === "blocked");
+    const inReview = filteredIssues.filter((i) => i.status === "in_review");
     const done = filteredIssues.filter((i) => i.status === "done");
-    return { todo, inProgress, inReview, done };
+    return { todo, inProgress, blocked, inReview, done };
   }, [filteredIssues]);
 
   const activeProject = useMemo(() => {
@@ -144,16 +156,13 @@ export function DashboardProjectKanban({ companyId }: DashboardProjectKanbanProp
   const handleTriggerSwarm = async () => {
     setSwarmTriggerStatus("🚀 Triggering Swarm Execution for project...");
     try {
-      // Trigger execution via buzz comms service or direct adapter
-      const res = await fetch("http://127.0.0.1:5198/api/buzz/telemetry", {
+      const res = await fetch(`/api/companies/${companyId}/buzz/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          eventType: "PROJECT_SWARM_SPRINT_TRIGGERED",
-          projectId: selectedProjectId,
-          projectName: activeProject?.name || "All Projects",
-          triggeredBy: "LDG Admin (God Tier)",
-          timestamp: new Date().toISOString(),
+          channel: "executive-direction",
+          sender: "LDG Admin (God)",
+          content: `Swarm Sprint Triggered per Progetto "${activeProject?.name || "All Projects"}": tutti gli agenti assegnati sono attivati in parallelo.`,
         }),
       });
       setSwarmTriggerStatus("✅ Swarm Sprint avviato con successo! Tutti gli agenti assegnati sono attivi.");
@@ -194,6 +203,21 @@ export function DashboardProjectKanban({ companyId }: DashboardProjectKanbanProp
 
         {/* Global Project Action Buttons */}
         <div className="flex flex-wrap items-center gap-2">
+          {columns.blocked.length > 0 && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => unblockAllMutation.mutate()}
+              disabled={unblockAllMutation.isPending}
+              className="h-8 text-xs font-semibold gap-1.5 border-rose-500/40 bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 cursor-pointer"
+            >
+              <ShieldAlert className="h-3.5 w-3.5" />
+              {unblockAllMutation.isPending
+                ? "Sblocco in corso..."
+                : `Sblocca Task Bloccate (${columns.blocked.length})`}
+            </Button>
+          )}
+
           <Button
             size="sm"
             onClick={handleTriggerSwarm}
@@ -340,8 +364,8 @@ export function DashboardProjectKanban({ companyId }: DashboardProjectKanbanProp
         </div>
       </div>
 
-      {/* KANBAN BOARD (4 COLUMNS) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3.5">
+      {/* KANBAN BOARD (5 COLUMNS: TO DO, IN PROGRESS, BLOCKED, IN REVIEW, DONE) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
         {/* COLUMN 1: TO DO / BACKLOG */}
         <KanbanColumn
           title="Backlog & To Do"
@@ -366,7 +390,19 @@ export function DashboardProjectKanban({ companyId }: DashboardProjectKanbanProp
           onUpdateStatus={(issueId, status) => updateIssueMutation.mutate({ issueId, status })}
         />
 
-        {/* COLUMN 3: IN REVIEW / BLOCKED */}
+        {/* COLUMN 3: BLOCKED / SOSPESI */}
+        <KanbanColumn
+          title="Bloccati / Attenzione"
+          count={columns.blocked.length}
+          color="rose"
+          icon={Ban}
+          companyId={companyId}
+          issues={columns.blocked}
+          agentMap={agentMap}
+          onUpdateStatus={(issueId, status) => updateIssueMutation.mutate({ issueId, status })}
+        />
+
+        {/* COLUMN 4: IN REVIEW / QA */}
         <KanbanColumn
           title="In Review / QA"
           count={columns.inReview.length}
@@ -378,9 +414,9 @@ export function DashboardProjectKanban({ companyId }: DashboardProjectKanbanProp
           onUpdateStatus={(issueId, status) => updateIssueMutation.mutate({ issueId, status })}
         />
 
-        {/* COLUMN 4: DONE / VERIFIED */}
+        {/* COLUMN 5: DONE / VERIFIED */}
         <KanbanColumn
-          title="Done & Fact Verified"
+          title="Done & Verified"
           count={columns.done.length}
           color="emerald"
           icon={CheckCircle2}
@@ -530,7 +566,7 @@ function KanbanColumn({
 }: {
   title: string;
   count: number;
-  color: "slate" | "blue" | "amber" | "emerald";
+  color: "slate" | "blue" | "rose" | "amber" | "emerald";
   icon: any;
   issues: Issue[];
   agentMap: Map<string, Agent>;
@@ -540,6 +576,7 @@ function KanbanColumn({
   const colorStyles = {
     slate: "border-border/60 bg-muted/10 text-muted-foreground",
     blue: "border-blue-500/30 bg-blue-500/[0.04] text-blue-600 dark:text-blue-400",
+    rose: "border-rose-500/30 bg-rose-500/[0.04] text-rose-600 dark:text-rose-400",
     amber: "border-amber-500/30 bg-amber-500/[0.04] text-amber-600 dark:text-amber-400",
     emerald: "border-emerald-500/30 bg-emerald-500/[0.04] text-emerald-600 dark:text-emerald-400",
   };
@@ -623,7 +660,26 @@ function KanbanColumn({
 
                 {/* Quick Transition Action Bar */}
                 <div className="pt-1 flex items-center justify-between gap-1 border-t border-border/30 text-[9px]">
-                  {issue.status !== "todo" && (
+                  {issue.status === "blocked" && (
+                    <>
+                      <button
+                        onClick={() => onUpdateStatus(issue.id, "todo")}
+                        className="px-1.5 py-0.5 rounded bg-muted/60 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                        title="Sblocca e sposta in To Do"
+                      >
+                        Sblocca → To Do
+                      </button>
+                      <button
+                        onClick={() => onUpdateStatus(issue.id, "in_progress")}
+                        className="px-1.5 py-0.5 rounded bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 font-semibold transition-colors cursor-pointer ml-auto"
+                        title="Riavvia esecuzione"
+                      >
+                        Riavvia →
+                      </button>
+                    </>
+                  )}
+
+                  {issue.status !== "todo" && issue.status !== "blocked" && (
                     <button
                       onClick={() => onUpdateStatus(issue.id, "todo")}
                       className="px-1.5 py-0.5 rounded bg-muted/60 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
@@ -644,13 +700,22 @@ function KanbanColumn({
                   )}
 
                   {issue.status === "in_progress" && (
-                    <button
-                      onClick={() => onUpdateStatus(issue.id, "in_review")}
-                      className="px-1.5 py-0.5 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 font-semibold transition-colors cursor-pointer ml-auto flex items-center gap-0.5"
-                      title="Richiedi Review"
-                    >
-                      <span>Review</span> →
-                    </button>
+                    <>
+                      <button
+                        onClick={() => onUpdateStatus(issue.id, "blocked")}
+                        className="px-1.5 py-0.5 rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-semibold transition-colors cursor-pointer"
+                        title="Segna come Bloccato"
+                      >
+                        Blocca
+                      </button>
+                      <button
+                        onClick={() => onUpdateStatus(issue.id, "in_review")}
+                        className="px-1.5 py-0.5 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 font-semibold transition-colors cursor-pointer ml-auto flex items-center gap-0.5"
+                        title="Richiedi Review"
+                      >
+                        <span>Review</span> →
+                      </button>
+                    </>
                   )}
 
                   {issue.status === "in_review" && (

@@ -989,3 +989,6 @@ export type {
   PluginDatabaseNamespaceStatus,
 } from "./plugin.js";
 export * from "./app-definition.js";
+export * from "./directive.js";
+export * from "./task-evaluation.js";
+

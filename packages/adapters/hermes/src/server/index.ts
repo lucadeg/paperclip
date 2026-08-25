@@ -11,6 +11,12 @@ export {
   syncHermesSkills as syncSkills,
   resolveHermesDesiredSkillNames as resolveDesiredSkillNames,
 } from "./skills.js";
+export {
+  listHermesModels as listModels,
+  refreshHermesModels as refreshModels,
+  hermesModelProfiles as modelProfiles,
+  HERMES_CURATED_MODELS as curatedModels,
+} from "./models.js";
 
 import type { AdapterSessionCodec } from "@paperclipai/adapter-utils";
 

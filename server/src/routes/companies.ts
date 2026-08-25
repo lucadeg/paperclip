@@ -1,10 +1,17 @@
 import { createHash, randomUUID } from "node:crypto";
 import express, { Router, type Request, type Response } from "express";
 import multer from "multer";
-import { and, count as countFn, eq } from "drizzle-orm";
+import { and, count as countFn, desc, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import type { Db } from "@paperclipai/db";
-import { agents as agentsTable } from "@paperclipai/db";
+import {
+  activityLog,
+  agents as agentsTable,
+  heartbeatRuns,
+  issues as issuesTable,
+  issueWorkProducts,
+  workspaceOperations,
+} from "@paperclipai/db";
 import type { CompanyPortabilityImportResult } from "@paperclipai/shared";
 import {
   MAX_ZIP_ENTRY_DECOMPRESSED_BYTES,
@@ -458,6 +465,290 @@ export function companyRoutes(db: Db, storage?: StorageService, options?: Compan
       return;
     }
     res.json(company);
+  });
+
+  router.get("/:companyId/governance-status", async (req, res) => {
+    const companyId = req.params.companyId as string;
+    assertCompanyAccess(req, companyId);
+
+    const allAgents = await db
+      .select({ id: agentsTable.id, status: agentsTable.status })
+      .from(agentsTable)
+      .where(eq(agentsTable.companyId, companyId));
+
+    let pausedAgentsCount = 0;
+    let runningAgentsCount = 0;
+    let idleAgentsCount = 0;
+
+    for (const a of allAgents) {
+      if (a.status === "paused") pausedAgentsCount++;
+      else if (a.status === "running") runningAgentsCount++;
+      if (a.status === "idle" || a.status === "active") idleAgentsCount++;
+    }
+
+    const activeRuns = await db
+      .select({ count: countFn() })
+      .from(heartbeatRuns)
+      .where(
+        and(
+          eq(heartbeatRuns.companyId, companyId),
+          inArray(heartbeatRuns.status, ["running", "queued"]),
+        ),
+      )
+      .then((rows) => Number(rows[0]?.count ?? 0));
+
+    res.json({
+      emergencyStopped: pausedAgentsCount > 0 && pausedAgentsCount === allAgents.length && allAgents.length > 0,
+      manualApprovalEnforced: true,
+      activeProcessesCount: activeRuns,
+      totalAgents: allAgents.length,
+      pausedAgentsCount,
+      runningAgentsCount,
+      idleAgentsCount,
+    });
+  });
+
+  router.post("/:companyId/emergency-stop", async (req, res) => {
+    const companyId = req.params.companyId as string;
+    assertCompanyAccess(req, companyId);
+    assertBoard(req);
+
+    const pausedAgents = await db
+      .update(agentsTable)
+      .set({ status: "paused", updatedAt: new Date() })
+      .where(eq(agentsTable.companyId, companyId))
+      .returning();
+
+    const cancelledRuns = await db
+      .update(heartbeatRuns)
+      .set({
+        status: "cancelled",
+        finishedAt: new Date(),
+        error: "Cancelled by Emergency Stop / Kill-Switch",
+      })
+      .where(
+        and(
+          eq(heartbeatRuns.companyId, companyId),
+          inArray(heartbeatRuns.status, ["running", "queued"]),
+        ),
+      )
+      .returning();
+
+    await logActivity(db, {
+      companyId,
+      actorType: "user",
+      actorId: req.actor.userId ?? "board",
+      action: "company.emergency_stopped",
+      entityType: "company",
+      entityId: companyId,
+      details: {
+        pausedAgentsCount: pausedAgents.length,
+        cancelledRunsCount: cancelledRuns.length,
+      },
+    });
+
+    res.json({
+      success: true,
+      pausedAgentsCount: pausedAgents.length,
+      cancelledRunsCount: cancelledRuns.length,
+    });
+  });
+
+  router.post("/:companyId/pause-all-agents", async (req, res) => {
+    const companyId = req.params.companyId as string;
+    assertCompanyAccess(req, companyId);
+    assertBoard(req);
+
+    const pausedAgents = await db
+      .update(agentsTable)
+      .set({ status: "paused", updatedAt: new Date() })
+      .where(and(eq(agentsTable.companyId, companyId), inArray(agentsTable.status, ["idle", "running", "active"])))
+      .returning();
+
+    const cancelledRuns = await db
+      .update(heartbeatRuns)
+      .set({
+        status: "cancelled",
+        finishedAt: new Date(),
+        error: "Cancelled by Pause All Agents",
+      })
+      .where(
+        and(
+          eq(heartbeatRuns.companyId, companyId),
+          inArray(heartbeatRuns.status, ["running", "queued"]),
+        ),
+      )
+      .returning();
+
+    await logActivity(db, {
+      companyId,
+      actorType: "user",
+      actorId: req.actor.userId ?? "board",
+      action: "company.paused_all_agents",
+      entityType: "company",
+      entityId: companyId,
+      details: {
+        pausedCount: pausedAgents.length,
+        cancelledRunsCount: cancelledRuns.length,
+      },
+    });
+
+    res.json({
+      success: true,
+      pausedCount: pausedAgents.length,
+      cancelledRunsCount: cancelledRuns.length,
+    });
+  });
+
+  router.post("/:companyId/resume-all-agents", async (req, res) => {
+    const companyId = req.params.companyId as string;
+    assertCompanyAccess(req, companyId);
+    assertBoard(req);
+
+    const resumedAgents = await db
+      .update(agentsTable)
+      .set({ status: "idle", updatedAt: new Date() })
+      .where(and(eq(agentsTable.companyId, companyId), eq(agentsTable.status, "paused")))
+      .returning();
+
+    await logActivity(db, {
+      companyId,
+      actorType: "user",
+      actorId: req.actor.userId ?? "board",
+      action: "company.resumed_all_agents",
+      entityType: "company",
+      entityId: companyId,
+      details: {
+        resumedCount: resumedAgents.length,
+      },
+    });
+
+    res.json({
+      success: true,
+      resumedCount: resumedAgents.length,
+    });
+  });
+
+  router.get("/:companyId/file-activities", async (req, res) => {
+    const companyId = req.params.companyId as string;
+    assertCompanyAccess(req, companyId);
+
+    const [workProducts, activities, allAgents] = await Promise.all([
+      db
+        .select()
+        .from(issueWorkProducts)
+        .where(eq(issueWorkProducts.companyId, companyId))
+        .orderBy(desc(issueWorkProducts.createdAt))
+        .limit(50),
+      db
+        .select()
+        .from(activityLog)
+        .where(eq(activityLog.companyId, companyId))
+        .orderBy(desc(activityLog.createdAt))
+        .limit(50),
+      db
+        .select({ id: agentsTable.id, name: agentsTable.name })
+        .from(agentsTable)
+        .where(eq(agentsTable.companyId, companyId)),
+    ]);
+
+    const agentNameMap = new Map(allAgents.map((a) => [a.id, a.name]));
+
+    const fileOps: Array<{
+      id: string;
+      operationType: "ANALYZED" | "CREATED" | "MODIFIED" | "MOVED" | "DELETED";
+      path: string;
+      agentId: string | null;
+      agentName: string;
+      issueId: string | null;
+      details: string;
+      timestamp: string;
+      status: "approved" | "pending" | "in_progress" | "flagged";
+    }> = [];
+
+    for (const wp of workProducts) {
+      const details = (wp.metadata as Record<string, any>) || {};
+      const filePath = wp.title || details.filePath || details.path || `deliverable-${wp.id.slice(0, 8)}`;
+      const agentId = (details.agentId || details.creatorAgentId || null) as string | null;
+      fileOps.push({
+        id: `wp-${wp.id}`,
+        operationType: "CREATED",
+        path: filePath,
+        agentId: agentId,
+        agentName: agentId ? agentNameMap.get(agentId) ?? "Agent" : "Swarm Specialist",
+        issueId: wp.issueId ?? null,
+        details: wp.summary || "Work product deliverable rilasciato con successo",
+        timestamp: wp.createdAt.toISOString(),
+        status: "approved",
+      });
+    }
+
+    for (const act of activities) {
+      const d = (act.details as Record<string, any>) || {};
+      const action = act.action.toLowerCase();
+      let operationType: "ANALYZED" | "CREATED" | "MODIFIED" | "MOVED" | "DELETED" = "ANALYZED";
+      if (action.includes("create") || action.includes("new")) operationType = "CREATED";
+      else if (action.includes("update") || action.includes("edit") || action.includes("patch")) operationType = "MODIFIED";
+      else if (action.includes("move") || action.includes("transfer")) operationType = "MOVED";
+      else if (action.includes("delete") || action.includes("remove") || action.includes("terminate")) operationType = "DELETED";
+      else if (action.includes("eval") || action.includes("read") || action.includes("inspect")) operationType = "ANALYZED";
+
+      const path = d.path || d.filePath || d.title || `${act.entityType}/${act.entityId.slice(0, 8)}`;
+      const details = d.summary || d.description || d.reason || `Azione ${act.action} registrata su log di governance`;
+
+      fileOps.push({
+        id: `act-${act.id}`,
+        operationType,
+        path,
+        agentId: act.agentId ?? null,
+        agentName: act.agentId ? agentNameMap.get(act.agentId) ?? "Agent Specialist" : act.actorId === "local-board" ? "LDG Admin" : "System",
+        issueId: act.entityType === "issue" ? act.entityId : null,
+        details,
+        timestamp: act.createdAt.toISOString(),
+        status: "approved",
+      });
+    }
+
+    fileOps.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+    res.json(fileOps.slice(0, 40));
+  });
+
+  router.post("/:companyId/issues/unblock-all", async (req, res) => {
+    const companyId = req.params.companyId as string;
+    assertCompanyAccess(req, companyId);
+    assertBoard(req);
+
+    const unblockedIssues = await db
+      .update(issuesTable)
+      .set({
+        status: "todo",
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(issuesTable.companyId, companyId),
+          eq(issuesTable.status, "blocked"),
+        ),
+      )
+      .returning();
+
+    await logActivity(db, {
+      companyId,
+      actorType: "user",
+      actorId: req.actor.userId ?? "board",
+      action: "issues.unblocked_all",
+      entityType: "company",
+      entityId: companyId,
+      details: {
+        unblockedCount: unblockedIssues.length,
+      },
+    });
+
+    res.json({
+      success: true,
+      unblockedCount: unblockedIssues.length,
+    });
   });
 
   router.get("/:companyId/feedback-traces", async (req, res) => {
@@ -1278,6 +1569,287 @@ export function companyRoutes(db: Db, storage?: StorageService, options?: Compan
       return;
     }
     res.json({ ok: true });
+  });
+
+  router.post("/:companyId/emergency-stop", async (req, res) => {
+    const companyId = req.params.companyId as string;
+    assertCompanyAccess(req, companyId);
+    assertBoard(req);
+    const actor = getActorInfo(req);
+
+    // 1. Pause all agents in company
+    const updatedAgents = await db
+      .update(agentsTable)
+      .set({
+        status: "paused",
+        pauseReason: "emergency_stop",
+        updatedAt: new Date(),
+      })
+      .where(eq(agentsTable.companyId, companyId))
+      .returning({ id: agentsTable.id, name: agentsTable.name });
+
+    // 2. Cancel all active/queued heartbeat runs
+    const activeRuns = await db
+      .select({ id: heartbeatRuns.id })
+      .from(heartbeatRuns)
+      .where(
+        and(
+          eq(heartbeatRuns.companyId, companyId),
+          inArray(heartbeatRuns.status, ["queued", "running"]),
+        ),
+      );
+
+    if (activeRuns.length > 0) {
+      await db
+        .update(heartbeatRuns)
+        .set({
+          status: "cancelled",
+          finishedAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(heartbeatRuns.companyId, companyId),
+            inArray(heartbeatRuns.status, ["queued", "running"]),
+          ),
+        );
+    }
+
+    // 3. Log activity
+    await logActivity(db, {
+      companyId,
+      actorType: actor.actorType,
+      actorId: actor.actorId,
+      action: "company.emergency_stop",
+      entityType: "company",
+      entityId: companyId,
+      details: {
+        pausedAgentsCount: updatedAgents.length,
+        cancelledRunsCount: activeRuns.length,
+        reason: "Emergency kill-switch triggered by operator",
+      },
+    });
+
+    res.json({
+      success: true,
+      pausedAgentsCount: updatedAgents.length,
+      cancelledRunsCount: activeRuns.length,
+      status: "emergency_stopped",
+      message: `Emergency stop executed. ${updatedAgents.length} agents paused, ${activeRuns.length} active runs cancelled.`,
+    });
+  });
+
+  router.post("/:companyId/pause-all-agents", async (req, res) => {
+    const companyId = req.params.companyId as string;
+    assertCompanyAccess(req, companyId);
+    assertBoard(req);
+    const actor = getActorInfo(req);
+
+    const updatedAgents = await db
+      .update(agentsTable)
+      .set({
+        status: "paused",
+        pauseReason: "manual_pause",
+        updatedAt: new Date(),
+      })
+      .where(eq(agentsTable.companyId, companyId))
+      .returning({ id: agentsTable.id });
+
+    const cancelled = await db
+      .update(heartbeatRuns)
+      .set({
+        status: "cancelled",
+        finishedAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(heartbeatRuns.companyId, companyId),
+          inArray(heartbeatRuns.status, ["queued", "running"]),
+        ),
+      )
+      .returning({ id: heartbeatRuns.id });
+
+    await logActivity(db, {
+      companyId,
+      actorType: actor.actorType,
+      actorId: actor.actorId,
+      action: "company.paused_all_agents",
+      entityType: "company",
+      entityId: companyId,
+      details: { count: updatedAgents.length, cancelledRuns: cancelled.length },
+    });
+
+    res.json({ success: true, pausedCount: updatedAgents.length, cancelledRunsCount: cancelled.length });
+  });
+
+  router.post("/:companyId/resume-all-agents", async (req, res) => {
+    const companyId = req.params.companyId as string;
+    assertCompanyAccess(req, companyId);
+    assertBoard(req);
+    const actor = getActorInfo(req);
+
+    const updatedAgents = await db
+      .update(agentsTable)
+      .set({
+        status: "idle",
+        pauseReason: null,
+        updatedAt: new Date(),
+      })
+      .where(eq(agentsTable.companyId, companyId))
+      .returning({ id: agentsTable.id });
+
+    await logActivity(db, {
+      companyId,
+      actorType: actor.actorType,
+      actorId: actor.actorId,
+      action: "company.resumed_all_agents",
+      entityType: "company",
+      entityId: companyId,
+      details: { count: updatedAgents.length, governance: "manual_approval_enforced" },
+    });
+
+    res.json({ success: true, resumedCount: updatedAgents.length });
+  });
+
+  router.get("/:companyId/governance-status", async (req, res) => {
+    const companyId = req.params.companyId as string;
+    assertCompanyAccess(req, companyId);
+
+    const agentList = await db
+      .select({ id: agentsTable.id, status: agentsTable.status })
+      .from(agentsTable)
+      .where(eq(agentsTable.companyId, companyId));
+
+    const pausedCount = agentList.filter((a) => a.status === "paused").length;
+    const runningCount = agentList.filter((a) => a.status === "running").length;
+    const idleCount = agentList.filter((a) => a.status === "idle").length;
+
+    const liveRuns = await db
+      .select({ id: heartbeatRuns.id })
+      .from(heartbeatRuns)
+      .where(
+        and(
+          eq(heartbeatRuns.companyId, companyId),
+          inArray(heartbeatRuns.status, ["queued", "running"]),
+        ),
+      );
+
+    res.json({
+      emergencyStopped: pausedCount > 0 && liveRuns.length === 0 && runningCount === 0,
+      manualApprovalEnforced: true,
+      activeProcessesCount: liveRuns.length,
+      totalAgents: agentList.length,
+      pausedAgentsCount: pausedCount,
+      runningAgentsCount: runningCount,
+      idleAgentsCount: idleCount,
+    });
+  });
+
+  router.get("/:companyId/file-activities", async (req, res) => {
+    const companyId = req.params.companyId as string;
+    assertCompanyAccess(req, companyId);
+
+    const [ops, workProducts, activities] = await Promise.all([
+      db
+        .select()
+        .from(workspaceOperations)
+        .where(eq(workspaceOperations.companyId, companyId))
+        .orderBy(desc(workspaceOperations.createdAt))
+        .limit(100),
+      db
+        .select()
+        .from(issueWorkProducts)
+        .where(eq(issueWorkProducts.companyId, companyId))
+        .orderBy(desc(issueWorkProducts.createdAt))
+        .limit(50),
+      db
+        .select()
+        .from(activityLog)
+        .where(eq(activityLog.companyId, companyId))
+        .orderBy(desc(activityLog.createdAt))
+        .limit(100),
+    ]);
+
+    const items: Array<{
+      id: string;
+      operationType: "ANALYZED" | "CREATED" | "MODIFIED" | "MOVED" | "DELETED";
+      path: string;
+      agentId: string | null;
+      agentName: string;
+      issueId: string | null;
+      details: string;
+      timestamp: Date;
+      status: "approved" | "pending" | "in_progress" | "flagged";
+    }> = [];
+
+    for (const p of workProducts) {
+      items.push({
+        id: p.id,
+        operationType: "CREATED",
+        path: p.title || p.summary || "Artifact / Deliverable",
+        agentId: null,
+        agentName: "Swarm Specialist",
+        issueId: p.issueId,
+        details: p.summary || "Deliverable generated and attached to task",
+        timestamp: p.createdAt,
+        status: "approved",
+      });
+    }
+
+    for (const op of ops) {
+      let opType: "ANALYZED" | "CREATED" | "MODIFIED" | "MOVED" | "DELETED" = "ANALYZED";
+      const cmd = (op.command || "").toLowerCase();
+      if (cmd.includes("write") || cmd.includes("touch") || cmd.includes("mkdir") || cmd.includes("npm init") || cmd.includes("create")) {
+        opType = "CREATED";
+      } else if (cmd.includes("edit") || cmd.includes("patch") || cmd.includes("sed") || cmd.includes("build") || cmd.includes("update")) {
+        opType = "MODIFIED";
+      } else if (cmd.includes("mv ") || cmd.includes("rename")) {
+        opType = "MOVED";
+      } else if (cmd.includes("rm ") || cmd.includes("delete") || cmd.includes("unlink")) {
+        opType = "DELETED";
+      }
+
+      items.push({
+        id: op.id,
+        operationType: opType,
+        path: op.cwd ? `${op.cwd}/${op.command?.slice(0, 40) || ""}` : (op.command || "Workspace command"),
+        agentId: null,
+        agentName: "Agent Worker",
+        issueId: op.issueId,
+        details: op.stdoutExcerpt ? op.stdoutExcerpt.slice(0, 120) : (op.phase || "Execution step"),
+        timestamp: op.createdAt,
+        status: op.status === "running" ? "in_progress" : op.status === "completed" ? "approved" : "flagged",
+      });
+    }
+
+    for (const act of activities) {
+      if (act.action.includes("document") || act.action.includes("artifact") || act.action.includes("file") || act.action.includes("issue")) {
+        let opType: "ANALYZED" | "CREATED" | "MODIFIED" | "MOVED" | "DELETED" = "ANALYZED";
+        if (act.action.includes("created") || act.action.includes("upload")) opType = "CREATED";
+        else if (act.action.includes("updated") || act.action.includes("patch")) opType = "MODIFIED";
+        else if (act.action.includes("deleted") || act.action.includes("remove")) opType = "DELETED";
+
+        const detailsObj = act.details as Record<string, unknown> | null;
+        items.push({
+          id: act.id,
+          operationType: opType,
+          path: (detailsObj && (detailsObj.path || detailsObj.title || detailsObj.name))
+            ? String(detailsObj.path || detailsObj.title || detailsObj.name)
+            : `${act.entityType}/${act.entityId.slice(0, 8)}`,
+          agentId: act.agentId,
+          agentName: "Responsible Agent",
+          issueId: act.entityType === "issue" ? act.entityId : null,
+          details: act.action,
+          timestamp: act.createdAt,
+          status: "approved",
+        });
+      }
+    }
+
+    items.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+    res.json(items.slice(0, 100));
   });
 
   return router;

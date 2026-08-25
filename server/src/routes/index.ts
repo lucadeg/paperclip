@@ -39,3 +39,9 @@ export { llmRoutes } from "./llms.js";
 export { accessRoutes } from "./access.js";
 export { instanceSettingsRoutes } from "./instance-settings.js";
 export { instanceDatabaseBackupRoutes } from "./instance-database-backups.js";
+export { directiveRoutes } from "./directives.js";
+export { taskEvaluationRoutes } from "./task-evaluations.js";
+export { buzzRoutes } from "./buzz.js";
+export { projectSessionRoutes } from "./project-sessions.js";
+
+

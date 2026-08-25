@@ -18,6 +18,8 @@ export const queryKeys = {
     detail: (id: string) => ["companies", id] as const,
     stats: ["companies", "stats"] as const,
     exportFidelity: (companyId: string) => ["companies", companyId, "export-fidelity"] as const,
+    governanceStatus: (companyId: string) => ["companies", companyId, "governance-status"] as const,
+    fileActivities: (companyId: string) => ["companies", companyId, "file-activities"] as const,
   },
   apps: {
     gallery: (companyId: string) => ["apps", companyId, "gallery"] as const,

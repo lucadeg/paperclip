@@ -170,4 +170,52 @@ export const companiesApi = {
       `/companies${companyImportTransferApplyPath(transferId)}?async=1`,
       meta,
     ),
+  emergencyStop: (companyId: string) =>
+    api.post<{
+      success: boolean;
+      pausedAgentsCount: number;
+      cancelledRunsCount: number;
+      status: string;
+      message: string;
+    }>(`/companies/${companyId}/emergency-stop`, {}),
+  pauseAllAgents: (companyId: string) =>
+    api.post<{ success: boolean; pausedCount: number; cancelledRunsCount: number }>(
+      `/companies/${companyId}/pause-all-agents`,
+      {},
+    ),
+  resumeAllAgents: (companyId: string) =>
+    api.post<{ success: boolean; resumedCount: number }>(
+      `/companies/${companyId}/resume-all-agents`,
+      {},
+    ),
+  getGovernanceStatus: (companyId: string) =>
+    api.get<{
+      emergencyStopped: boolean;
+      manualApprovalEnforced: boolean;
+      activeProcessesCount: number;
+      totalAgents: number;
+      pausedAgentsCount: number;
+      runningAgentsCount: number;
+      idleAgentsCount: number;
+    }>(`/companies/${companyId}/governance-status`),
+  getFileActivities: (companyId: string) =>
+    api.get<
+      Array<{
+        id: string;
+        operationType: "ANALYZED" | "CREATED" | "MODIFIED" | "MOVED" | "DELETED";
+        path: string;
+        agentId: string | null;
+        agentName: string;
+        issueId: string | null;
+        details: string;
+        timestamp: string;
+        status: "approved" | "pending" | "in_progress" | "flagged";
+      }>
+    >(`/companies/${companyId}/file-activities`),
+  unblockAllIssues: (companyId: string) =>
+    api.post<{ success: boolean; unblockedCount: number }>(
+      `/companies/${companyId}/issues/unblock-all`,
+      {},
+    ),
 };
+

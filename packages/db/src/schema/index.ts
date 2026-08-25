@@ -175,3 +175,13 @@ export { pluginDatabaseNamespaces, pluginMigrations } from "./plugin_database.js
 export { pluginJobs, pluginJobRuns } from "./plugin_jobs.js";
 export { pluginWebhookDeliveries } from "./plugin_webhooks.js";
 export { pluginLogs } from "./plugin_logs.js";
+export { directives } from "./directives.js";
+export { directiveLineageEvents } from "./directive_lineage.js";
+export { taskEvaluations } from "./task_evaluations.js";
+export {
+  projectSessions,
+  PROJECT_WORKFLOW_STEPS,
+  type WorkflowStep,
+  type SessionStatus,
+  type SessionTopic,
+} from "./project_sessions.js";

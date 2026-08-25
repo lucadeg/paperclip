@@ -8,6 +8,11 @@ export interface InlineEntityOption {
   id: string;
   label: string;
   searchText?: string;
+  isFree?: boolean;
+  pricingType?: "free" | "local" | "paid";
+  contextWindow?: number;
+  limits?: string;
+  description?: string;
 }
 
 interface InlineEntitySelectorProps {
@@ -216,8 +221,33 @@ export const InlineEntitySelector = forwardRef<HTMLButtonElement, InlineEntitySe
                     onMouseEnter={() => setHighlightedIndexValue(index)}
                     onClick={() => commitSelection(index, true)}
                   >
-                    {renderOption ? renderOption(option, isSelected) : <span className="truncate">{option.label}</span>}
-                    <Check className={cn("ml-auto h-3.5 w-3.5 text-muted-foreground", isSelected ? "opacity-100" : "opacity-0")} />
+                    {renderOption ? (
+                      renderOption(option, isSelected)
+                    ) : (
+                      <div className="flex flex-col min-w-0 flex-1 py-0.5">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="truncate font-medium">{option.label}</span>
+                          {option.isFree && (
+                            <span className="inline-flex items-center px-1.5 py-0.2 rounded text-3xs font-bold uppercase tracking-wider bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
+                              {option.pricingType === "local" ? "LOCAL" : "FREE"}
+                            </span>
+                          )}
+                          {option.contextWindow && (
+                            <span className="inline-flex items-center px-1 py-0.2 rounded text-3xs font-mono bg-muted text-muted-foreground">
+                              {option.contextWindow >= 1000000
+                                ? `${Math.round(option.contextWindow / 1000000)}M ctx`
+                                : `${Math.round(option.contextWindow / 1000)}k ctx`}
+                            </span>
+                          )}
+                        </div>
+                        {option.limits && (
+                          <span className="text-3xs text-muted-foreground/80 truncate">
+                            {option.limits}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    <Check className={cn("ml-auto h-3.5 w-3.5 shrink-0 text-muted-foreground", isSelected ? "opacity-100" : "opacity-0")} />
                   </button>
                 );
               })

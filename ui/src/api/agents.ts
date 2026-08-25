@@ -45,6 +45,15 @@ export interface AgentKey {
 export interface AdapterModel {
   id: string;
   label: string;
+  isFree?: boolean;
+  pricingType?: "free" | "local" | "paid";
+  contextWindow?: number;
+  maxOutputTokens?: number;
+  costPerMillionInputTokens?: number;
+  costPerMillionOutputTokens?: number;
+  limits?: string;
+  provider?: string;
+  description?: string;
 }
 
 export type { AdapterModelProfileKey };

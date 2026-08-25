@@ -1,4 +1,6 @@
 import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useBreadcrumbs } from "../context/BreadcrumbContext";
 import { useCompany } from "../context/CompanyContext";
 import { Button } from "@/components/ui/button";
@@ -38,7 +40,18 @@ import {
   BookOpen,
   Library,
   FileText,
+  FolderOpen,
+  Plus,
+  ArrowRight,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  projectSessionsApi,
+  type ProjectSession,
+  type CreateProjectSessionInput,
+  PROJECT_WORKFLOW_STEPS,
+  type WorkflowStepDef,
+} from "../api/project-sessions";
 
 interface BuzzMessage {
   id: string;
@@ -119,7 +132,7 @@ export function BuzzPage() {
   const [facts, setFacts] = useState<VerifiableFact[]>([]);
   const [agentsList, setAgentsList] = useState<any[]>([]);
   const [knowledgeData, setKnowledgeData] = useState<any | null>(null);
-  const [activeTab, setActiveTab] = useState<"stream" | "facts" | "agents" | "knowledge">("stream");
+  const [activeTab, setActiveTab] = useState<"stream" | "facts" | "agents" | "knowledge" | "sessions">("stream");
   const [searchQuery, setSearchQuery] = useState("");
   
   // Selected Agent for Personal Control Panel Modal
@@ -132,6 +145,45 @@ export function BuzzPage() {
   const [sprintSuccess, setSprintSuccess] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Sessions state
+  const [newSessionOpen, setNewSessionOpen] = useState(false);
+  const [newSessionTitle, setNewSessionTitle] = useState("");
+  const [newSessionTopic, setNewSessionTopic] = useState("engineering");
+  const [newSessionStep, setNewSessionStep] = useState(1);
+  const [newSessionModel, setNewSessionModel] = useState("claude-sonnet-4-5");
+  const [creatingSession, setCreatingSession] = useState(false);
+
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const { data: sessions, refetch: refetchSessions } = useQuery({
+    queryKey: ["project-sessions", companyId],
+    queryFn: () => projectSessionsApi.list(companyId),
+    enabled: !!companyId && activeTab === "sessions",
+    refetchInterval: 15_000,
+  });
+
+  async function handleCreateSession(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newSessionTitle.trim() || creatingSession) return;
+    setCreatingSession(true);
+    try {
+      await projectSessionsApi.create(companyId, {
+        title: newSessionTitle.trim(),
+        topic: newSessionTopic,
+        workflowStep: newSessionStep,
+        selectedModel: newSessionModel,
+      });
+      setNewSessionTitle("");
+      setNewSessionOpen(false);
+      void refetchSessions();
+    } catch (err) {
+      console.error("Failed to create session:", err);
+    } finally {
+      setCreatingSession(false);
+    }
+  }
+
   useEffect(() => {
     setBreadcrumbs([
       { label: "Swarm Hub", href: "/buzz" },
@@ -142,11 +194,11 @@ export function BuzzPage() {
   async function fetchBuzzData() {
     try {
       const [msgRes, telRes, factsRes, agentsRes, knowRes] = await Promise.all([
-        fetch("http://127.0.0.1:5198/api/buzz/messages"),
-        fetch("http://127.0.0.1:5198/api/buzz/telemetry"),
-        fetch("http://127.0.0.1:5198/api/buzz/facts"),
-        fetch(`http://127.0.0.1:3100/api/companies/${companyId}/agents`),
-        fetch("http://127.0.0.1:5198/api/buzz/knowledge")
+        fetch(`/api/companies/${companyId}/buzz/messages`),
+        fetch(`/api/companies/${companyId}/buzz/telemetry`),
+        fetch(`/api/companies/${companyId}/buzz/facts`),
+        fetch(`/api/companies/${companyId}/agents`),
+        fetch(`/api/companies/${companyId}/buzz/knowledge`),
       ]);
 
       if (msgRes.ok) {
@@ -183,10 +235,12 @@ export function BuzzPage() {
   async function loadAgentProfile(agentId: string) {
     setLoadingProfile(true);
     try {
-      const res = await fetch(`http://127.0.0.1:5198/api/buzz/agent-profile/${agentId}`);
+      const res = await fetch(`/api/companies/${companyId}/buzz/agent-profile/${agentId}`);
       if (res.ok) {
         const data = await res.json();
-        setSelectedAgentProfile(data);
+        if (data.profile) {
+          setSelectedAgentProfile(data.profile);
+        }
       }
     } catch (e) {
       console.error(e);
@@ -201,7 +255,7 @@ export function BuzzPage() {
 
     setSending(true);
     try {
-      const res = await fetch("http://127.0.0.1:5198/api/buzz/messages", {
+      const res = await fetch(`/api/companies/${companyId}/buzz/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -229,19 +283,14 @@ export function BuzzPage() {
     setSprintRunning(true);
     setSprintSuccess(false);
     try {
-      // Trigger swarm heartbeat wakeups
-      const res = await fetch("http://127.0.0.1:5198/api/buzz/telemetry", {
+      const res = await fetch(`/api/companies/${companyId}/buzz/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          agent_name: "Direzione Generale",
-          role: "ceo",
-          model_used: "proxima-claude-3-5-sonnet",
-          latency_ms: 320,
-          tokens: 2450,
-          benchmark_score: 100.0,
-          details: { task: "Swarm Sprint Orchestration Triggered by LDG Admin" }
-        })
+          channel: "executive-direction",
+          sender: "LDG Admin (God)",
+          content: "🚀 Swarm Sprint Orchestration Triggered: tutti gli agenti operativi sono sincronizzati.",
+        }),
       });
       if (res.ok) {
         setSprintSuccess(true);
@@ -326,6 +375,15 @@ export function BuzzPage() {
             >
               <FileCheck2 className="h-3.5 w-3.5 text-emerald-500" />
               Facts Ledger ({facts.length})
+            </button>
+            <button
+              onClick={() => setActiveTab("sessions")}
+              className={`px-3 py-1 text-xs rounded-md font-medium transition-all flex items-center gap-1 ${
+                activeTab === "sessions" ? "bg-background text-foreground shadow-xs font-bold" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <FolderOpen className="h-3.5 w-3.5 text-violet-500" />
+              Sessioni ({sessions?.length ?? 0})
             </button>
           </div> 
           
@@ -806,7 +864,7 @@ export function BuzzPage() {
                   <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-mono">
                     <span>Modello: <strong>{f.model}</strong></span>
                     <span>Tokens: <strong>{f.tokens}</strong></span>
-                    <span>Score: <strong className="text-emerald-500">{f.benchmarkScore}.0</strong></span>
+                    <span>Score: <strong className="text-emerald-500">{typeof f.benchmarkScore === "number" ? `${f.benchmarkScore}%` : "N/D"}</strong></span>
                   </div>
                 </div>
 
@@ -837,12 +895,12 @@ export function BuzzPage() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h2 className="text-base font-bold text-foreground">{selectedAgentProfile.agent.name}</h2>
+                    <h2 className="text-base font-bold text-foreground">{selectedAgentProfile.name ?? selectedAgentProfile.agent?.name}</h2>
                     <Badge variant="outline" className="font-mono text-xs uppercase bg-primary/10 text-primary border-primary/30">
-                      {selectedAgentProfile.agent.role}
+                      {selectedAgentProfile.role ?? selectedAgentProfile.agent?.role}
                     </Badge>
                   </div>
-                  <p className="text-xs text-muted-foreground">{selectedAgentProfile.agent.title}</p>
+                  <p className="text-xs text-muted-foreground">{selectedAgentProfile.title ?? selectedAgentProfile.agent?.title}</p>
                 </div>
               </div>
 
@@ -863,104 +921,398 @@ export function BuzzPage() {
               {/* Agent KPI Metrics */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div className="p-3 rounded-xl border border-border/80 bg-muted/20 space-y-1">
-                  <span className="text-[10px] text-muted-foreground uppercase font-semibold">Totale Task Assegnati</span>
-                  <div className="text-lg font-bold font-mono text-foreground">{selectedAgentProfile.agent.totalTasks}</div>
+                  <span className="text-[10px] text-muted-foreground uppercase font-semibold">Esecuzioni Totali</span>
+                  <div className="text-lg font-bold font-mono text-foreground">
+                    {selectedAgentProfile.metrics?.totalRuns ?? selectedAgentProfile.agent?.totalRuns ?? 0}
+                  </div>
                 </div>
                 <div className="p-3 rounded-xl border border-border/80 bg-muted/20 space-y-1">
-                  <span className="text-[10px] text-muted-foreground uppercase font-semibold">Esecuzioni Swarm</span>
-                  <div className="text-lg font-bold font-mono text-foreground">{selectedAgentProfile.agent.totalRuns}</div>
+                  <span className="text-[10px] text-muted-foreground uppercase font-semibold">Tasso di Successo</span>
+                  <div className="text-lg font-bold font-mono text-foreground">
+                    {selectedAgentProfile.metrics?.successRatePct ?? "N/D"}
+                  </div>
                 </div>
                 <div className="p-3 rounded-xl border border-border/80 bg-muted/20 space-y-1">
                   <span className="text-[10px] text-muted-foreground uppercase font-semibold">Tokens Consumati</span>
-                  <div className="text-lg font-bold font-mono text-foreground">{selectedAgentProfile.agent.totalTokens}</div>
+                  <div className="text-lg font-bold font-mono text-foreground">
+                    {selectedAgentProfile.metrics?.totalTokens?.toLocaleString() ?? selectedAgentProfile.agent?.totalTokens ?? 0}
+                  </div>
                 </div>
                 <div className="p-3 rounded-xl border border-border/80 bg-muted/20 space-y-1">
-                  <span className="text-[10px] text-muted-foreground uppercase font-semibold">Costo Computazionale</span>
-                  <div className="text-lg font-bold font-mono text-emerald-500">${selectedAgentProfile.agent.totalCostUsd}</div>
+                  <span className="text-[10px] text-muted-foreground uppercase font-semibold">Tempo Computazionale</span>
+                  <div className="text-lg font-bold font-mono text-emerald-500">
+                    {selectedAgentProfile.metrics?.totalExecutionSeconds ?? 0}s
+                  </div>
                 </div>
               </div>
 
               {/* Persona & Capabilities */}
               <div className="p-4 rounded-xl border border-border bg-muted/10 space-y-2">
-                <h3 className="font-semibold text-xs text-foreground uppercase tracking-wider">Profilo & Capabilities</h3>
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">{selectedAgentProfile.agent.capabilities}</p>
+                <h3 className="font-semibold text-xs text-foreground uppercase tracking-wider">Profilo & Adapter Config</h3>
+                <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap font-mono text-[11px]">
+                  {typeof selectedAgentProfile.adapterConfig === "object"
+                    ? JSON.stringify(selectedAgentProfile.adapterConfig, null, 2)
+                    : (selectedAgentProfile.agent?.capabilities ?? "Nessuna configurazione custom")}
+                </p>
                 <div className="pt-2 border-t border-border/60 flex items-center justify-between text-[11px] text-muted-foreground font-mono">
-                  <span>Suprema Autorità: <strong className="text-amber-500">{selectedAgentProfile.agent.supremeAuthority}</strong></span>
-                  <span>Adapter: <strong>{selectedAgentProfile.agent.adapterType}</strong></span>
+                  <span>Stato Operativo: <strong className="text-emerald-500">{selectedAgentProfile.status ?? "active"}</strong></span>
+                  <span>Adapter: <strong>{selectedAgentProfile.adapterType ?? "hermes_local"}</strong></span>
                 </div>
               </div>
 
-              {/* Tasks per Project */}
-              <div className="space-y-3">
-                <h3 className="font-semibold text-xs text-foreground uppercase tracking-wider flex items-center gap-1.5">
-                  <ListTodo className="h-4 w-4 text-primary" />
-                  Elenco Task Svolti & In Corso per Progetto
-                </h3>
-
+              {/* Recent Runs */}
+              {Array.isArray(selectedAgentProfile.recentRuns) && selectedAgentProfile.recentRuns.length > 0 && (
                 <div className="space-y-3">
-                  {Object.entries(selectedAgentProfile.tasksPerProject).map(([projName, projData]: [string, any]) => (
-                    <div key={projName} className="border border-border rounded-xl p-3.5 bg-card space-y-2.5">
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-xs text-foreground">{projName}</span>
-                        <Badge variant="outline" className="text-[10px] font-mono">
-                          {projData.tasks.length} tasks
-                        </Badge>
-                      </div>
+                  <h3 className="font-semibold text-xs text-foreground uppercase tracking-wider flex items-center gap-1.5">
+                    <ListTodo className="h-4 w-4 text-primary" />
+                    Cronologia Ultimi Run Eseguiti
+                  </h3>
 
-                      {projData.tasks.length > 0 ? (
-                        <div className="space-y-2">
-                          {projData.tasks.map((t: any) => (
-                            <div key={t.id} className="p-2.5 rounded-lg border border-border/60 bg-muted/20 space-y-1">
-                              <div className="flex items-center justify-between">
-                                <span className="font-mono text-[10px] text-primary font-bold">{t.identifier}</span>
-                                <Badge variant="outline" className="text-[9px] uppercase font-mono bg-emerald-500/10 text-emerald-500 border-emerald-500/30">
-                                  {t.status}
-                                </Badge>
-                              </div>
-                              <p className="font-semibold text-xs text-foreground">{t.title}</p>
-                              <div className="flex items-center justify-between text-[10px] text-muted-foreground font-mono pt-1">
-                                <span>Priorità: {t.priority.toUpperCase()}</span>
-                                <span>Creato: {new Date(t.createdAt).toLocaleDateString()}</span>
-                              </div>
-                            </div>
-                          ))}
+                  <div className="space-y-2">
+                    {selectedAgentProfile.recentRuns.map((r: any) => (
+                      <div key={r.id} className="p-2.5 rounded-lg border border-border/60 bg-muted/20 flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <span className="font-mono text-[10px] text-primary font-bold">{r.id.slice(0, 8)}</span>
+                          <p className="text-[10px] text-muted-foreground">
+                            {r.startedAt ? new Date(r.startedAt).toLocaleString() : "Data non disponibile"}
+                          </p>
                         </div>
-                      ) : (
-                        <p className="text-[11px] text-muted-foreground italic">Nessun task attivo in questo progetto.</p>
-                      )}
-                    </div>
-                  ))}
+                        <div className="flex items-center gap-3 font-mono text-[10px]">
+                          <span>{r.tokens} tokens</span>
+                          <Badge variant="outline" className={cn(
+                            "text-[9px] uppercase",
+                            r.status === "succeeded" ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30" : "bg-muted text-muted-foreground"
+                          )}>
+                            {r.status}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Tasks per Project if available */}
+              {selectedAgentProfile.tasksPerProject && (
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-xs text-foreground uppercase tracking-wider flex items-center gap-1.5">
+                    <ListTodo className="h-4 w-4 text-primary" />
+                    Elenco Task Svolti & In Corso per Progetto
+                  </h3>
+
+                  <div className="space-y-3">
+                    {Object.entries(selectedAgentProfile.tasksPerProject).map(([projName, projData]: [string, any]) => (
+                      <div key={projName} className="border border-border rounded-xl p-3.5 bg-card space-y-2.5">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-xs text-foreground">{projName}</span>
+                          <Badge variant="outline" className="text-[10px] font-mono">
+                            {projData.tasks?.length ?? 0} tasks
+                          </Badge>
+                        </div>
+
+                        {Array.isArray(projData.tasks) && projData.tasks.length > 0 ? (
+                          <div className="space-y-2">
+                            {projData.tasks.map((t: any) => (
+                              <div key={t.id} className="p-2.5 rounded-lg border border-border/60 bg-muted/20 space-y-1">
+                                <div className="flex items-center justify-between">
+                                  <span className="font-mono text-[10px] text-primary font-bold">{t.identifier}</span>
+                                  <Badge variant="outline" className="text-[9px] uppercase font-mono bg-emerald-500/10 text-emerald-500 border-emerald-500/30">
+                                    {t.status}
+                                  </Badge>
+                                </div>
+                                <p className="font-semibold text-xs text-foreground">{t.title}</p>
+                                <div className="flex items-center justify-between text-[10px] text-muted-foreground font-mono pt-1">
+                                  <span>Priorità: {t.priority?.toUpperCase()}</span>
+                                  <span>Creato: {new Date(t.createdAt).toLocaleDateString()}</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-[11px] text-muted-foreground italic">Nessun task attivo in questo progetto.</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Verifiable Facts */}
-              <div className="space-y-3">
-                <h3 className="font-semibold text-xs text-foreground uppercase tracking-wider flex items-center gap-1.5">
-                  <FileCheck2 className="h-4 w-4 text-emerald-500" />
-                  Fatti Verificati & Prove di Esecuzione (SHA-256)
-                </h3>
+              {Array.isArray(selectedAgentProfile.facts) && selectedAgentProfile.facts.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-xs text-foreground uppercase tracking-wider flex items-center gap-1.5">
+                    <FileCheck2 className="h-4 w-4 text-emerald-500" />
+                    Fatti Verificati & Prove di Esecuzione (SHA-256)
+                  </h3>
 
-                <div className="space-y-2">
-                  {selectedAgentProfile.facts.map((f: any) => (
-                    <div key={f.id} className="p-3 rounded-xl border border-border bg-card space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="text-[10px] font-mono text-emerald-500 border-emerald-500/30">
-                            {f.id}
-                          </Badge>
-                          <span className="font-semibold text-xs text-foreground">{f.taskTitle}</span>
+                  <div className="space-y-2">
+                    {selectedAgentProfile.facts.map((f: any) => (
+                      <div key={f.id} className="p-3 rounded-xl border border-border bg-card space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="text-[10px] font-mono text-emerald-500 border-emerald-500/30">
+                              {f.id}
+                            </Badge>
+                            <span className="font-semibold text-xs text-foreground">{f.taskTitle}</span>
+                          </div>
+                          <span className="text-[10px] font-mono text-muted-foreground">{new Date(f.timestamp).toLocaleTimeString()}</span>
                         </div>
-                        <span className="text-[10px] font-mono text-muted-foreground">{new Date(f.timestamp).toLocaleTimeString()}</span>
+                        <p className="text-muted-foreground text-[11px] leading-relaxed">{f.proofOfWork}</p>
+                        <div className="font-mono text-[9px] bg-muted/40 p-1.5 rounded border border-border/50 text-foreground/80 truncate">
+                          Hash: {f.hash}
+                        </div>
                       </div>
-                      <p className="text-muted-foreground text-[11px] leading-relaxed">{f.proofOfWork}</p>
-                      <div className="font-mono text-[9px] bg-muted/40 p-1.5 rounded border border-border/50 text-foreground/80 truncate">
-                        Hash: {f.hash}
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== SESSIONS TAB ===== */}
+      {activeTab === "sessions" && (
+        <div className="flex flex-col flex-1 overflow-hidden">
+          {/* Sessions Header */}
+          <div className="border-b border-border px-6 py-3 flex items-center justify-between bg-card/40 shrink-0">
+            <div>
+              <h2 className="font-semibold text-sm flex items-center gap-2">
+                <FolderOpen className="h-4 w-4 text-violet-500" />
+                Sessioni di Progetto
+              </h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Ogni sessione raccoglie direttive per topic con un workflow 1-14 associato
+              </p>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => setNewSessionOpen(true)}
+              className="gap-1.5 text-xs bg-violet-600 hover:bg-violet-700 text-white h-8"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              Nuova Sessione
+            </Button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+            {/* Create Session Form */}
+            {newSessionOpen && (
+              <form
+                onSubmit={handleCreateSession}
+                className="border border-violet-500/30 rounded-xl bg-violet-500/5 p-4 space-y-3"
+              >
+                <h3 className="font-semibold text-sm text-foreground flex items-center gap-2">
+                  <Plus className="h-4 w-4 text-violet-500" />
+                  Crea nuova sessione di progetto
+                </h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="col-span-2">
+                    <label className="text-xs text-muted-foreground font-medium block mb-1">
+                      Titolo sessione *
+                    </label>
+                    <input
+                      type="text"
+                      value={newSessionTitle}
+                      onChange={(e) => setNewSessionTitle(e.target.value)}
+                      placeholder="Es: Architettura LDG Innovation Core Platform"
+                      className="w-full text-sm border border-border rounded-lg px-3 py-1.5 bg-background focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-muted-foreground font-medium block mb-1">
+                      Topic
+                    </label>
+                    <select
+                      value={newSessionTopic}
+                      onChange={(e) => setNewSessionTopic(e.target.value)}
+                      className="w-full text-sm border border-border rounded-lg px-3 py-1.5 bg-background focus:outline-none"
+                    >
+                      <option value="engineering">Engineering</option>
+                      <option value="executive">Executive</option>
+                      <option value="marketing">Marketing</option>
+                      <option value="legal">Legal</option>
+                      <option value="fiscal">Fiscal</option>
+                      <option value="commercial">Commercial</option>
+                      <option value="customer_success">Customer Success</option>
+                      <option value="resource">Resource Management</option>
+                      <option value="security">Security</option>
+                      <option value="product">Product</option>
+                      <option value="other">Altro</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs text-muted-foreground font-medium block mb-1">
+                      Workflow Step iniziale
+                    </label>
+                    <select
+                      value={newSessionStep}
+                      onChange={(e) => setNewSessionStep(Number(e.target.value))}
+                      className="w-full text-sm border border-border rounded-lg px-3 py-1.5 bg-background focus:outline-none"
+                    >
+                      {PROJECT_WORKFLOW_STEPS.map((s: WorkflowStepDef) => (
+                        <option key={s.step} value={s.step}>
+                          Step {s.step}: {s.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs text-muted-foreground font-medium block mb-1">
+                      AI Model
+                    </label>
+                    <select
+                      value={newSessionModel}
+                      onChange={(e) => setNewSessionModel(e.target.value)}
+                      className="w-full text-sm border border-border rounded-lg px-3 py-1.5 bg-background focus:outline-none"
+                    >
+                      <option value="claude-sonnet-4-5">Claude Sonnet 4.5</option>
+                      <option value="claude-opus-4">Claude Opus 4</option>
+                      <option value="claude-haiku-3-5">Claude Haiku 3.5</option>
+                      <option value="gpt-4o">GPT-4o</option>
+                      <option value="gpt-4o-mini">GPT-4o Mini</option>
+                      <option value="gemini-2-5-pro">Gemini 2.5 Pro</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 pt-1">
+                  <Button
+                    type="submit"
+                    size="sm"
+                    disabled={creatingSession || !newSessionTitle.trim()}
+                    className="gap-1.5 text-xs bg-violet-600 hover:bg-violet-700 text-white h-8"
+                  >
+                    {creatingSession ? (
+                      <RefreshCw className="h-3 w-3 animate-spin" />
+                    ) : (
+                      <Plus className="h-3 w-3" />
+                    )}
+                    Crea Sessione
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setNewSessionOpen(false)}
+                    className="text-xs h-8"
+                  >
+                    <X className="h-3 w-3 mr-1" />
+                    Annulla
+                  </Button>
+                </div>
+              </form>
+            )}
+
+            {/* Sessions List */}
+            {!sessions || sessions.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <FolderOpen className="h-12 w-12 text-muted-foreground/30 mb-3" />
+                <p className="text-sm font-medium text-muted-foreground">Nessuna sessione di progetto</p>
+                <p className="text-xs text-muted-foreground/60 mt-1">
+                  Crea la tua prima sessione per catalogare le direttive per topic e workflow
+                </p>
+                <Button
+                  size="sm"
+                  onClick={() => setNewSessionOpen(true)}
+                  className="mt-4 gap-1.5 text-xs bg-violet-600 hover:bg-violet-700 text-white h-8"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  Prima Sessione
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {sessions.map((session) => {
+                  const wfStep = PROJECT_WORKFLOW_STEPS.find(
+                    (s: WorkflowStepDef) => s.step === session.workflowStep,
+                  );
+                  return (
+                    <div
+                      key={session.id}
+                      className="border border-border rounded-xl bg-card hover:border-violet-500/40 transition-colors p-4"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-semibold text-sm text-foreground truncate">
+                              {session.title}
+                            </span>
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] uppercase font-mono shrink-0 capitalize"
+                            >
+                              {session.topic}
+                            </Badge>
+                            <Badge
+                              variant="outline"
+                              className={cn(
+                                "text-[10px] font-mono shrink-0",
+                                session.status === "active"
+                                  ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/30"
+                                  : session.status === "paused"
+                                    ? "bg-amber-500/10 text-amber-600 border-amber-500/30"
+                                    : "bg-muted text-muted-foreground",
+                              )}
+                            >
+                              {session.status}
+                            </Badge>
+                          </div>
+                          {/* Workflow progress bar */}
+                          <div className="mt-2">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[10px] font-medium text-muted-foreground">
+                                Step {session.workflowStep}/14 — {wfStep?.label ?? ""}
+                              </span>
+                              {session.selectedModel && (
+                                <span className="text-[10px] font-mono text-violet-500">
+                                  {session.selectedModel}
+                                </span>
+                              )}
+                            </div>
+                            <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                              <div
+                                className="h-full rounded-full bg-gradient-to-r from-violet-500 to-violet-400 transition-all"
+                                style={{
+                                  width: `${((session.workflowStep) / 14) * 100}%`,
+                                }}
+                              />
+                            </div>
+                          </div>
+                          {wfStep && (
+                            <p className="text-[11px] text-muted-foreground mt-1.5 leading-relaxed">
+                              {wfStep.description}
+                            </p>
+                          )}
+                          {/* Stats row */}
+                          <div className="flex items-center gap-3 mt-2 text-[10px] font-mono text-muted-foreground">
+                            <span>{session.chatHistory?.length ?? 0} msg</span>
+                            {session.linkedIssueIds?.length > 0 && (
+                              <span>{session.linkedIssueIds.length} task linkati</span>
+                            )}
+                            {session.linkedDirectiveIds?.length > 0 && (
+                              <span>{session.linkedDirectiveIds.length} direttive</span>
+                            )}
+                            <span>
+                              Aggiornata {new Date(session.updatedAt).toLocaleDateString("it-IT")}
+                            </span>
+                          </div>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-xs gap-1 text-violet-500 hover:text-violet-600 hover:bg-violet-500/10 shrink-0"
+                          onClick={() => navigate(`/buzz/sessions/${session.id}`)}
+                        >
+                          Apri
+                          <ArrowRight className="h-3 w-3" />
+                        </Button>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
-            </div>
+            )}
           </div>
         </div>
       )}

@@ -53,6 +53,8 @@ import {
 } from "lucide-react";
 import { ActiveAgentsPanel } from "../components/ActiveAgentsPanel";
 import { DashboardProjectKanban } from "../components/DashboardProjectKanban";
+import { EmergencyControlBar } from "../components/EmergencyControlBar";
+import { FileActivityInspector } from "../components/FileActivityInspector";
 import { ChartCard, RunActivityChart, PriorityChart, IssueStatusChart, SuccessRateChart } from "../components/ActivityCharts";
 import { PageSkeleton } from "../components/PageSkeleton";
 import { Card } from "@/components/ui/card";
@@ -60,8 +62,13 @@ import { Badge } from "@/components/ui/badge";
 import type { Agent, Issue } from "@paperclipai/shared";
 import { PluginSlotOutlet } from "@/plugins/slots";
 import { SmokeLabDashboardCard } from "../components/SmokeLabDashboardCard";
-import { cn, formatCents } from "../lib/utils";
+import { cn } from "../lib/utils";
 import { SHOW_TASK_PRIORITY_UI } from "../lib/ui-flags";
+
+function formatCents(cents?: number | null): string {
+  if (typeof cents !== "number" || isNaN(cents)) return "$0.00";
+  return `$${(cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
 
 const DASHBOARD_ACTIVITY_LIMIT = 10;
 
@@ -225,11 +232,17 @@ export function Dashboard() {
         </div>
       )}
 
+      {/* Central Emergency Kill-Switch & Governance Bar */}
+      <EmergencyControlBar companyId={selectedCompanyId!} />
+
       {/* Real-time Project Management & Kanban Suite */}
       <DashboardProjectKanban companyId={selectedCompanyId!} />
 
       {/* Live Running Agents Panel */}
       <ActiveAgentsPanel companyId={selectedCompanyId!} />
+
+      {/* Real-Time File & Asset Activity Inspector ("Files Analizzati / Modificati / Creati / Spostati / Cancellati") */}
+      <FileActivityInspector companyId={selectedCompanyId!} />
 
       {/* Interactive 9-Divisions Swarm Matrix & Department Hub */}
       <DashboardDivisionsHub agents={agents ?? []} />
@@ -245,7 +258,7 @@ export function Dashboard() {
               </h3>
             </div>
             <Link to="/approvals" className="text-xs font-semibold text-primary hover:underline flex items-center gap-1">
-              Vedi Tutte le Approvazioni ({data.pendingApprovals + 5}) →
+              Vedi Tutte le Approvazioni ({data.pendingApprovals}) →
             </Link>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">
@@ -253,6 +266,24 @@ export function Dashboard() {
           </p>
         </div>
       )}
+
+      {/* Master Directives & Authority Gate Banner */}
+      <div className="rounded-2xl border border-primary/30 bg-primary/[0.03] p-5 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-primary" />
+            <h3 className="text-sm font-bold text-foreground">
+              Direttive di Governance Swarm & Autorità Esecutiva
+            </h3>
+          </div>
+          <Link to="/directives" className="text-xs font-semibold text-primary hover:underline flex items-center gap-1">
+            Gestisci Direttive & Lineage →
+          </Link>
+        </div>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Tutti i task e gli agenti dello swarm operano esclusivamente sotto direttive certificate e validate dall'operatore. Il tracciamento lineage registra ogni singola azione, run autorizzato o tentativo bloccato nel tempo.
+        </p>
+      </div>
 
       {data && (
         <>
@@ -316,12 +347,12 @@ export function Dashboard() {
             />
             <MetricCard
               icon={ShieldCheck}
-              value={data.pendingApprovals + data.budgets.pendingApprovals + 5}
+              value={data.pendingApprovals}
               label="Pending Approvals"
               to="/approvals"
               description={
                 <span>
-                  5 direttive strategiche in attesa di review LDG Admin
+                  {data.pendingApprovals} direttive in attesa di review LDG Admin
                 </span>
               }
             />

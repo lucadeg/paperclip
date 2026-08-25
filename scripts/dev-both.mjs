@@ -24,10 +24,13 @@ function stopAll(code) {
   setTimeout(() => process.exit(code), 500).unref();
 }
 
+const pnpmBin = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
+
 for (const job of jobs) {
-  const child = spawn("pnpm", ["run", job.script], {
+  const child = spawn(pnpmBin, ["run", job.script], {
     stdio: ["ignore", "pipe", "pipe"],
     env: process.env,
+    shell: process.platform === "win32",
   });
   child.stdout.on("data", (d) => process.stdout.write(prefix(job.name, d)));
   child.stderr.on("data", (d) => process.stderr.write(prefix(job.name, d)));

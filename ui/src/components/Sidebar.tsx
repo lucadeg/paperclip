@@ -24,6 +24,7 @@ import {
   GanttChartSquare,
   LayoutGrid,
   Flame,
+  ShieldCheck,
 } from "lucide-react";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -228,6 +229,8 @@ export function Sidebar() {
 
         <SidebarSection label="Work" collapsible={{ open: workOpen, onOpenChange: setWorkOpen }}>
           <SidebarNavItem to="/issues" label="Tasks" icon={CircleDot} />
+          <SidebarNavItem to="/directives" label="Direttive" icon={ShieldCheck} />
+          <SidebarNavItem to="/approvals" label="Approvazioni" icon={ListChecks} />
           {showCases ? (
             <SidebarNavItem to="/cases" label="Cases" icon={Layers} textBadge="beta" />
           ) : null}

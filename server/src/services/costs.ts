@@ -5,6 +5,7 @@ import { activityLog, agents, companies, costEvents, heartbeatRuns, issues, proj
 import { notFound, unprocessable } from "../errors.js";
 import { budgetService, type BudgetServiceHooks } from "./budgets.js";
 import { visibleIssueCondition } from "./issue-visibility.js";
+import { isFreeOrLocalModel } from "./free-model-detector.js";
 
 export interface CostDateRange {
   from?: Date;
@@ -64,13 +65,17 @@ export function costService(db: Db, budgetHooks: BudgetServiceHooks = {}) {
         throw unprocessable("Agent does not belong to company");
       }
 
+      const isFree = isFreeOrLocalModel(data.model);
+      const sanitizedCostCents = isFree ? 0 : data.costCents;
+
       const event = await db
         .insert(costEvents)
         .values({
           ...data,
+          costCents: sanitizedCostCents,
           companyId,
           biller: data.biller ?? data.provider,
-          billingType: data.billingType ?? "unknown",
+          billingType: isFree ? "free_local" : (data.billingType ?? "unknown"),
           cachedInputTokens: data.cachedInputTokens ?? 0,
         })
         .returning()

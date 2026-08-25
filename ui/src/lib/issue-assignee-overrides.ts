@@ -1,7 +1,13 @@
 export const ISSUE_OVERRIDE_ADAPTER_TYPES = new Set([
+  "hermes_local",
+  "hermes_gateway",
   "claude_local",
   "codex_local",
   "opencode_local",
+  "gemini_local",
+  "pi_local",
+  "cursor",
+  "grok_local",
 ]);
 
 export type IssueModelLane = "primary" | "cheap" | "custom";

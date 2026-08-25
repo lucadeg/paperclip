@@ -50,7 +50,12 @@ export function dashboardService(db: Db) {
       const pendingApprovals = await db
         .select({ count: sql<number>`count(*)` })
         .from(approvals)
-        .where(and(eq(approvals.companyId, companyId), eq(approvals.status, "pending")))
+        .where(
+          and(
+            eq(approvals.companyId, companyId),
+            sql`${approvals.status} IN ('pending', 'revision_requested')`,
+          ),
+        )
         .then((rows) => Number(rows[0]?.count ?? 0));
 
       const agentCounts: Record<string, number> = {

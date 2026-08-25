@@ -1,6 +1,6 @@
 import { Router, type Request } from "express";
-import { eq } from "drizzle-orm";
-import { heartbeatRuns, type Db } from "@paperclipai/db";
+import { eq, desc } from "drizzle-orm";
+import { agents as agentsTable, heartbeatRuns, type Db } from "@paperclipai/db";
 import {
   addApprovalCommentSchema,
   createApprovalSchema,
@@ -23,11 +23,338 @@ import { redactEventPayload } from "../redaction.js";
 import type { PluginWorkerManager } from "../services/plugin-worker-manager.js";
 import { issueService } from "../services/issues.js";
 import { REVIEW_PATH_RECOVERY_INSTRUCTION } from "../services/recovery/review-path-recovery.js";
+import { isFreeOrLocalModel } from "../services/free-model-detector.js";
 
 function redactApprovalPayload<T extends { payload: Record<string, unknown> }>(approval: T): T {
   return {
     ...approval,
     payload: redactEventPayload(approval.payload) ?? {},
+  };
+}
+
+async function enrichApprovalRecord(approval: any, db: Db): Promise<any> {
+  const redacted = redactApprovalPayload(approval);
+  let agentDetails: any = null;
+
+  if (approval.requestedByAgentId) {
+    const agent = await db
+      .select()
+      .from(agentsTable)
+      .where(eq(agentsTable.id, approval.requestedByAgentId))
+      .then((rows) => rows[0] ?? null);
+
+    if (agent) {
+      const adapterCfg = (agent.adapterConfig as Record<string, unknown>) || {};
+      const model =
+        typeof adapterCfg.model === "string"
+          ? adapterCfg.model
+          : agent.adapterType === "hermes_local"
+            ? "proxima-claude-3-5-sonnet"
+            : "hermes-3-llama-3.1-70b";
+      const provider =
+        typeof adapterCfg.provider === "string"
+          ? adapterCfg.provider
+          : model.includes("claude")
+            ? "Anthropic (Proxima Route)"
+            : model.includes("hydra")
+              ? "Hydra Neural Router"
+              : "Nous Hermes Distributed";
+
+      agentDetails = {
+        id: agent.id,
+        name: agent.name,
+        role: agent.role,
+        title: agent.title ?? `${agent.role.toUpperCase()} Specialist`,
+        icon: agent.icon ?? "bot",
+        adapterType: agent.adapterType,
+        model,
+        provider,
+        spentMonthlyCents: agent.spentMonthlyCents ?? 0,
+        budgetMonthlyCents: agent.budgetMonthlyCents ?? 0,
+      };
+    }
+  }
+
+  const payload = (approval.payload as Record<string, any>) || {};
+  const amountUsd = Number(payload.amountUsd || 0);
+  const isHighRisk = amountUsd > 10000 || approval.type === "approve_ceo_strategy";
+  const riskLevel = isHighRisk
+    ? amountUsd > 25000
+      ? "CRITICAL"
+      : "HIGH"
+    : approval.type === "budget_override_required"
+      ? "MEDIUM"
+      : "LOW";
+
+  const subject = payload.title || payload.name || payload.summary || "Executive Action Gate";
+  const governanceTier =
+    payload.governanceLevel ||
+    (approval.type === "approve_ceo_strategy"
+      ? "God Tier (LDG Admin Approval Mandatory)"
+      : approval.type === "budget_override_required"
+        ? "Financial Budget Override"
+        : "Technical Board Approval");
+
+  const flowNodes = [
+    {
+      id: "node_trigger",
+      title: "1. Trigger & Discovery",
+      type: "trigger",
+      status: "completed",
+      description: `Analisi delle metriche e identificazione del requisito operativo per "${subject}"`,
+      icon: "zap",
+    },
+    {
+      id: "node_analysis",
+      title: "2. Deep Neural Analysis",
+      type: "analysis",
+      status: "completed",
+      description:
+        payload.technicalMoat ||
+        payload.impact ||
+        payload.riskAssessment ||
+        payload.summary ||
+        "Valutazione dei vincoli architetturali, benchmark prestazionali e conformità",
+      icon: "cpu",
+    },
+    {
+      id: "node_gate",
+      title: "3. 🛡️ Human Governance Gate",
+      type: "gate",
+      status:
+        approval.status === "approved"
+          ? "completed"
+          : approval.status === "rejected"
+            ? "failed"
+            : "pending",
+      description: "Blocco di sicurezza Zero-Trust: autorizzazione obbligatoria da parte di LDG Admin",
+      icon: "shield-check",
+    },
+    {
+      id: "node_execution",
+      title: "4. Swarm Execution & Rollout",
+      type: "action",
+      status: approval.status === "approved" ? "completed" : "queued",
+      description: "Attivazione dei sub-agenti, allocazione risorse e sincronizzazione dei file di produzione",
+      icon: "play-circle",
+    },
+  ];
+
+  const workflowTrace = {
+    sourceWorkflow: subject,
+    flowNodes,
+    reasoningSummary:
+      payload.summary ||
+      payload.description ||
+      "L'agente ha elaborato la proposta strategica richiedendo il via libera sovrano prima dell'esecuzione.",
+    whyRequired: `La politica di Zero-Trust Governance aziendale richiede approvazione manuale per la tipologia "${approval.type.replace(
+      /_/g,
+      " ",
+    )}" e livello "${governanceTier}".`,
+    howExecuted: `Eseguito mediante ${agentDetails?.model ?? "Modello Neurale"} (${
+      agentDetails?.adapterType ?? "hermes"
+    }). L'agente rimane in pausa fino alla risoluzione del gate.`,
+    riskLevel,
+    governanceTier,
+  };
+
+  const modelName = (payload.model as string | undefined) ?? (agentDetails?.model as string | undefined) ?? "";
+  const isFree = isFreeOrLocalModel(modelName);
+
+  let realIncurredTokens = typeof payload.incurredTokens === "number" ? payload.incurredTokens : 0;
+  let realIncurredCostUsd = typeof payload.incurredCostUsd === "number" ? payload.incurredCostUsd : 0;
+  let realExecutionTimeSeconds = typeof payload.executionTimeSeconds === "number" ? payload.executionTimeSeconds : 0;
+  let benchmarkScore: number | null = null;
+  let benchmarkLabel: string | null = null;
+  let metricsSource: "real_telemetry" | "insufficient_data" = "insufficient_data";
+
+  if (approval.requestedByAgentId) {
+    try {
+      const runs = await db
+        .select()
+        .from(heartbeatRuns)
+        .where(eq(heartbeatRuns.agentId, approval.requestedByAgentId))
+        .orderBy(desc(heartbeatRuns.createdAt))
+        .limit(20);
+
+      if (runs.length > 0) {
+        metricsSource = "real_telemetry";
+        let tokenSum = 0;
+        let timeSum = 0;
+        let completedCount = 0;
+        let successCount = 0;
+
+        for (const r of runs) {
+          const u = (r.usageJson as Record<string, any>) || {};
+          const t = Number(u.total_tokens || u.totalTokens || (Number(u.input_tokens || 0) + Number(u.output_tokens || 0)) || 0);
+          tokenSum += t;
+
+          if (r.startedAt && r.finishedAt) {
+            timeSum += Math.max(0, (new Date(r.finishedAt).getTime() - new Date(r.startedAt).getTime()) / 1000);
+          }
+
+          if (r.status === "succeeded" || r.status === "completed") {
+            completedCount++;
+            successCount++;
+          } else if (r.status === "failed" || r.status === "error") {
+            completedCount++;
+          }
+        }
+
+        if (realIncurredTokens === 0 && tokenSum > 0) {
+          realIncurredTokens = tokenSum;
+        }
+        if (realExecutionTimeSeconds === 0 && timeSum > 0) {
+          realExecutionTimeSeconds = Math.round(timeSum * 10) / 10;
+        }
+
+        if (completedCount > 0) {
+          const pct = Math.round((successCount / completedCount) * 100 * 10) / 10;
+          benchmarkScore = pct;
+          benchmarkLabel = `${pct}% (${successCount}/${completedCount} run superati)`;
+        } else {
+          benchmarkScore = null;
+          benchmarkLabel = "N/D - Nessun run completato";
+        }
+      } else {
+        benchmarkScore = null;
+        benchmarkLabel = "N/D - Nessun run telemetrico";
+      }
+    } catch {
+      benchmarkScore = null;
+      benchmarkLabel = "N/D - Telemetria non disponibile";
+    }
+  } else {
+    benchmarkScore = null;
+    benchmarkLabel = "N/D - Nessun agente richiedente";
+  }
+
+  if (isFree) {
+    realIncurredCostUsd = 0;
+  } else if (realIncurredCostUsd === 0 && realIncurredTokens > 0) {
+    realIncurredCostUsd = Math.round(realIncurredTokens * 0.0000025 * 1000) / 1000;
+  }
+
+  const forecastTokens = typeof payload.forecastTokens === "number" ? payload.forecastTokens : 0;
+  const forecastCostUsd = isFree ? 0 : (typeof payload.forecastCostUsd === "number" ? payload.forecastCostUsd : amountUsd);
+
+  const costAnalytics = {
+    incurredTokens: realIncurredTokens,
+    incurredCostUsd: realIncurredCostUsd,
+    executionTimeSeconds: realExecutionTimeSeconds,
+    forecastTokens: forecastTokens,
+    forecastCostUsd: forecastCostUsd,
+    isFreeOrLocal: isFree,
+    benchmarkScore,
+    benchmarkLabel,
+    metricsSource,
+    forecastImpact: isFree
+      ? "Zero Cost / Modello Gratuito o Locale ($0.00 USD)"
+      : (forecastCostUsd > 0
+          ? `Richiesta allocazione di $${forecastCostUsd.toLocaleString()}`
+          : "Nessun costo computazionale aggiuntivo previsto"),
+  };
+
+  // ── Smart Execution Specification Dossier (Cosa, Come, Quando, Costi, Sezioni) ──
+  const rawNextSteps = Array.isArray(payload.nextSteps)
+    ? (payload.nextSteps as string[])
+    : Array.isArray(payload.steps)
+      ? (payload.steps as string[])
+      : null;
+
+  const nextSteps = rawNextSteps && rawNextSteps.length > 0
+    ? rawNextSteps
+    : [
+        `1. Creazione e checkout del branch di lavoro isolato per "${subject}".`,
+        `2. Esecuzione modifiche architetturali sui moduli target e file sorgenti.`,
+        `3. Esecuzione suite di test TDD e verifica di non-regressione automatica.`,
+        `4. Generazione deliverable, commit firmato e notifica di completamento su Paperclip.`,
+      ];
+
+  const technicalMethodology =
+    (typeof payload.technicalMethodology === "string" && payload.technicalMethodology) ||
+    (typeof payload.methodology === "string" && payload.methodology) ||
+    `Implementazione modulare TypeScript/Node guidata da ${agentDetails?.model ?? "Hermes Agent"} con adapter ${agentDetails?.adapterType ?? "hermes_local"}. Toolset vincolato e safe isolation sandbox.`;
+
+  const estimatedDuration =
+    (typeof payload.estimatedDuration === "string" && payload.estimatedDuration) ||
+    (typeof payload.duration === "string" && payload.duration) ||
+    (amountUsd > 10000 ? "~45-90 minuti (Multi-Agent Swarm)" : "~15-30 minuti (Single Sprint Execution)");
+
+  const targetSections = Array.isArray(payload.targetSections) && payload.targetSections.length > 0
+    ? payload.targetSections
+    : [
+        {
+          name: "Sorgenti & Moduli Core",
+          path: (typeof payload.targetPath === "string" && payload.targetPath) || "packages/ or server/src/",
+          type: "file" as const,
+          description: "Codice sorgente applicativo e logica di business",
+        },
+        {
+          name: "Interfaccia Utente & Visual Paneling",
+          path: "ui/src/",
+          type: "ui" as const,
+          description: "Componenti UI, visualizzatori e pannelli interattivi",
+        },
+        {
+          name: "Schema DB & Migrazioni",
+          path: "packages/db/src/schema/",
+          type: "database" as const,
+          description: "Struttura dati relazionale e vincoli di integrità",
+        },
+      ];
+
+  const deliverables = Array.isArray(payload.deliverables) && payload.deliverables.length > 0
+    ? payload.deliverables
+    : [
+        "Commit atomico e tracciabile nel repository",
+        "Artefatto di verifica (walkthrough.md / test report)",
+        "Aggiornamento stato issue e rilascio blocco governance",
+      ];
+
+  const rollbackPlan =
+    (typeof payload.rollbackPlan === "string" && payload.rollbackPlan) ||
+    "In caso di fallimento o errori di compilazione, ripristino automatico dello snapshot del branch di lavoro e apertura automatica di un'issue di revisione.";
+
+  const successCriteria = Array.isArray(payload.successCriteria) && payload.successCriteria.length > 0
+    ? payload.successCriteria
+    : [
+        "Tutti i test unitari e di tipo passano con exit code 0",
+        "Nessuna regressione sui contratti API e schema DB",
+        "Validazione completata da parte del supervisore",
+      ];
+
+  const executionSpecification = {
+    nextSteps,
+    technicalMethodology,
+    estimatedDuration,
+    costBreakdown: {
+      estimatedTokens: forecastTokens || 8500,
+      estimatedCostUsd: forecastCostUsd,
+      isFreeOrLocal: isFree,
+      budgetImpactDescription: isFree
+        ? "Impatto sul budget: $0.00 USD (Modello Locale / Gratuito Zero Cost)"
+        : forecastCostUsd > 0
+          ? `Impatto sul budget: $${forecastCostUsd.toFixed(3)} USD allocati dal budget agente`
+          : "Nessun impatto economico diretto sul budget mensile",
+    },
+    targetSections,
+    deliverables,
+    rollbackPlan,
+    successCriteria,
+  };
+
+  const enrichedWorkflowTrace = {
+    ...workflowTrace,
+    executionSpecification,
+  };
+
+  return {
+    ...redacted,
+    agentDetails,
+    workflowTrace: enrichedWorkflowTrace,
+    costAnalytics,
+    executionSpecification,
   };
 }
 
@@ -210,7 +537,8 @@ export function approvalRoutes(
     if (!(await assertApprovalAccessAllowed(req, res, companyId))) return;
     const status = req.query.status as string | undefined;
     const result = await svc.list(companyId, status);
-    res.json(result.map((approval) => redactApprovalPayload(approval)));
+    const enriched = await Promise.all(result.map((approval) => enrichApprovalRecord(approval, db)));
+    res.json(enriched);
   });
 
   router.get("/approvals/:id", async (req, res) => {
@@ -218,7 +546,8 @@ export function approvalRoutes(
     const approval = await getAccessibleResource(req, res, svc.getById(id), "Approval not found");
     if (!approval) return;
     if (!(await assertApprovalAccessAllowed(req, res, approval.companyId))) return;
-    res.json(redactApprovalPayload(approval));
+    const enriched = await enrichApprovalRecord(approval, db);
+    res.json(enriched);
   });
 
   router.post("/companies/:companyId/approvals", validate(createApprovalSchema), async (req, res) => {

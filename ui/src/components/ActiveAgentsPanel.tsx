@@ -1,8 +1,9 @@
 import { memo, useMemo } from "react";
 import { Link } from "@/lib/router";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Issue, IssueRecoveryAction } from "@paperclipai/shared";
 import { heartbeatsApi, type LiveRunForIssue } from "../api/heartbeats";
+import { agentsApi } from "../api/agents";
 import type { TranscriptEntry } from "../adapters";
 import { issuesApi } from "../api/issues";
 import { queryKeys } from "../lib/queryKeys";
@@ -11,7 +12,7 @@ import {
   deriveActiveRecoveryDisplayState,
   RECOVERY_CHIP_DEFAULT_TONE,
 } from "../lib/recovery-display";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, OctagonAlert, PauseCircle, ShieldCheck } from "lucide-react";
 import { Identity } from "./Identity";
 import { RunChatSurface } from "./RunChatSurface";
 import { useLiveRunTranscripts } from "./transcript/useLiveRunTranscripts";
@@ -180,6 +181,16 @@ const AgentRunCard = memo(function AgentRunCard({
   isActive: boolean;
   className?: string;
 }) {
+  const queryClient = useQueryClient();
+
+  const cancelRunMutation = useMutation({
+    mutationFn: () => heartbeatsApi.cancel(run.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.liveRuns(companyId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.companies.governanceStatus(companyId) });
+    },
+  });
+
   return (
     <div className={cn(
       "flex h-(--sz-320px) flex-col overflow-hidden rounded-xl border shadow-sm",
@@ -207,12 +218,29 @@ const AgentRunCard = memo(function AgentRunCard({
             </div>
           </div>
 
-          <Link
-            to={`/agents/${run.agentId}/runs/${run.id}`}
-            className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-background/70 px-2 py-1 text-(length:--text-nano) text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ExternalLink className="h-2.5 w-2.5" />
-          </Link>
+          <div className="flex items-center gap-1.5 shrink-0">
+            {isActive && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  cancelRunMutation.mutate();
+                }}
+                disabled={cancelRunMutation.isPending}
+                className="inline-flex items-center gap-1 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30 px-2 py-0.5 text-xs font-bold transition-colors cursor-pointer disabled:opacity-50"
+                title="Ferma questo singolo processo immediatamente"
+              >
+                <OctagonAlert className="h-3 w-3" />
+                <span>{cancelRunMutation.isPending ? "..." : "Stop"}</span>
+              </button>
+            )}
+            <Link
+              to={`/agents/${run.agentId}/runs/${run.id}`}
+              className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-background/70 px-2 py-1 text-(length:--text-nano) text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <ExternalLink className="h-2.5 w-2.5" />
+            </Link>
+          </div>
         </div>
 
         {run.issueId && (

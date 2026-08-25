@@ -53,6 +53,10 @@ import { goalRoutes } from "./routes/goals.js";
 import { onboardingSeedRoutes } from "./routes/onboarding-seed.js";
 import { boardChatRoutes } from "./routes/board-chat.js";
 import { approvalRoutes } from "./routes/approvals.js";
+import { directiveRoutes } from "./routes/directives.js";
+import { taskEvaluationRoutes } from "./routes/task-evaluations.js";
+import { buzzRoutes } from "./routes/buzz.js";
+import { projectSessionRoutes } from "./routes/project-sessions.js";
 import { secretRoutes } from "./routes/secrets.js";
 import { toolAccessRoutes } from "./routes/tool-access.js";
 import { smokeLabRoutes } from "./routes/smoke-lab.js";
@@ -541,6 +545,10 @@ export async function createApp(
   api.use(resourceMembershipRoutes(db));
   api.use(inboxDismissalRoutes(db));
   api.use(instanceSettingsRoutes(db));
+  api.use(directiveRoutes(db));
+  api.use(taskEvaluationRoutes(db));
+  api.use(buzzRoutes(db));
+  api.use(projectSessionRoutes(db));
   if (opts.databaseBackupService) {
     api.use(instanceDatabaseBackupRoutes(opts.databaseBackupService));
   }

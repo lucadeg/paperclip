@@ -8,7 +8,7 @@ import {
 } from "react";
 import { cn } from "@/lib/utils";
 import { DRAFT_DEBOUNCE_MS, clearDraft, loadDraft, saveDraft } from "@/lib/composer-draft";
-import { ArrowUp, Check, ChevronDown, Loader2, Plus, X } from "lucide-react";
+import { ArrowUp, Check, CheckCircle2, ChevronDown, Edit3, Loader2, MessageSquarePlus, Plus, X, Zap } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -288,7 +288,7 @@ export function TaskChatComposer({
    * the caret); non-image files are attached to the task here. Only swallow
    * the paste when it carries no images the plugin should handle.
    */
-  function handlePasteCapture(evt: ReactClipboardEvent<HTMLDivElement>) {
+  function handlePasteCapture(evt: ReactClipboardEvent<any>) {
     if (!canAcceptFiles) return;
     const files = Array.from(evt.clipboardData?.files ?? []);
     if (files.length === 0) return;
@@ -313,6 +313,29 @@ export function TaskChatComposer({
   // clear its error state, so both hold submission until resolved or removed.
   const uploadPending = attachments.some((item) => item.status === "uploading");
   const uploadFailed = attachments.some((item) => item.status === "error");
+
+  const [approving, setApproving] = useState(false);
+
+  const handleApproveAndRun = async () => {
+    if (disabled || submitting || approving) return;
+    setApproving(true);
+    try {
+      const approvalText = body.trim()
+        ? (body.includes("[APPROVAZIONE]") ? body.trim() : `[APPROVAZIONE]: ${body.trim()}`)
+        : `[APPROVAZIONE]: Direttiva approvata. Avviare esecuzione immediata dei workflow.`;
+
+      const assigneeVal = pendingAssignee ?? currentAssigneeValue;
+      const reassignment = parseAssigneeValue(assigneeVal);
+
+      await onAdd(approvalText, true, reassignment);
+      setBody("");
+      if (draftKey) {
+        clearDraft(draftKey);
+      }
+    } finally {
+      setApproving(false);
+    }
+  };
 
   async function submit() {
     const submittedBody = bodyRef.current;
@@ -369,14 +392,24 @@ export function TaskChatComposer({
   }
 
   return (
-    <div
+    <form
+      data-testid="task-chat-composer"
       className={cn(
-        "paperclip-task-chat-composer rounded-xl border border-input bg-card p-(--sz-18px) shadow-(--shadow-extract-7) transition-[border-color,box-shadow] focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/15",
+        "rounded-(--radius-card) border border-border/80 bg-background/95 p-2 shadow-xs transition-colors focus-within:border-foreground/30",
+        disabled && "opacity-60",
       )}
-      onKeyDownCapture={(e) => {
-        // Shift+Tab cycles the pending mode; captured on the wrapper so it
-        // wins over Lexical's list-outdent binding inside the editor.
-        if (disabled) return;
+      style={
+        {
+          "--tc-mode-current": modeHue(pendingMode),
+        } as CSSProperties
+      }
+      onSubmit={(e) => {
+        e.preventDefault();
+        submit();
+      }}
+      onKeyDown={(e) => {
+        // Shift+Tab cycles the work mode. Captured at the container so Lexical
+        // never consumes it. Plain Tab stays focus navigation.
         if (e.key === "Tab" && e.shiftKey) {
           e.preventDefault();
           e.stopPropagation();
@@ -385,6 +418,92 @@ export function TaskChatComposer({
       }}
       onPasteCapture={handlePasteCapture}
     >
+      {/* Quick Action Buttons: Approva & Esegui, Correggi, Istruzioni, Sessione Hermes */}
+      <div className="mb-2 flex flex-wrap items-center gap-1.5 border-b border-border/40 pb-2 text-xs">
+        <span className="mr-0.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+          Azioni:
+        </span>
+
+        {/* 1. Approva & Esegui */}
+        <button
+          type="button"
+          onClick={handleApproveAndRun}
+          disabled={disabled || submitting || approving}
+          title="Approva la direttiva ed avvia l'esecuzione immediata del task"
+          className="inline-flex items-center gap-1.5 rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 font-medium text-emerald-600 transition-all hover:bg-emerald-500/20 active:scale-95 disabled:opacity-50 dark:text-emerald-400"
+        >
+          {approving ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
+          ) : (
+            <CheckCircle2 className="h-3.5 w-3.5" aria-hidden />
+          )}
+          <span>{approving ? "Avvio in corso..." : "Approva & Esegui"}</span>
+        </button>
+
+        {/* 2. Correggi Direttiva */}
+        <button
+          type="button"
+          onClick={() => {
+            setBody((prev) =>
+              prev
+                ? `${prev}\n\n[CORREZIONE]: `
+                : `[CORREZIONE]: `,
+            );
+            editorRef.current?.focus();
+          }}
+          disabled={disabled || submitting || approving}
+          title="Correggi o perfeziona la direttiva del task"
+          className="inline-flex items-center gap-1.5 rounded-md border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 font-medium text-amber-600 transition-all hover:bg-amber-500/20 active:scale-95 disabled:opacity-50 dark:text-amber-400"
+        >
+          <Edit3 className="h-3.5 w-3.5" aria-hidden />
+          <span>Correggi</span>
+        </button>
+
+        {/* 3. Fornisci Istruzioni */}
+        <button
+          type="button"
+          onClick={() => {
+            setBody((prev) =>
+              prev
+                ? `${prev}\n\n[ISTRUZIONI AGGIUNTIVE]: `
+                : `[ISTRUZIONI AGGIUNTIVE]: `,
+            );
+            editorRef.current?.focus();
+          }}
+          disabled={disabled || submitting || approving}
+          title="Fornisci istruzioni o indicazioni operative all'agente"
+          className="inline-flex items-center gap-1.5 rounded-md border border-blue-500/30 bg-blue-500/10 px-2.5 py-1 font-medium text-blue-600 transition-all hover:bg-blue-500/20 active:scale-95 disabled:opacity-50 dark:text-blue-400"
+        >
+          <MessageSquarePlus className="h-3.5 w-3.5" aria-hidden />
+          <span>Istruzioni</span>
+        </button>
+
+        {/* 4. Sincronizza Sessione Hermes (Bidirezionale) */}
+        <button
+          type="button"
+          onClick={async () => {
+            if (disabled || submitting || approving) return;
+            setApproving(true);
+            try {
+              const syncText = `[HERMES SESSION SYNC]: Sincronizzazione task attiva. Esecuzione autonoma Hermes Swarm in corso.`;
+              const assigneeVal = pendingAssignee ?? currentAssigneeValue;
+              const reassignment = parseAssigneeValue(assigneeVal);
+              await onAdd(syncText, true, reassignment);
+              setBody("");
+              if (draftKey) clearDraft(draftKey);
+            } finally {
+              setApproving(false);
+            }
+          }}
+          disabled={disabled || submitting || approving}
+          title="Sincronizza il task con la sessione autonoma di Hermes"
+          className="ml-auto inline-flex items-center gap-1.5 rounded-md border border-purple-500/30 bg-purple-500/10 px-2.5 py-1 font-medium text-purple-600 transition-all hover:bg-purple-500/20 active:scale-95 disabled:opacity-50 dark:text-purple-400"
+        >
+          <Zap className="h-3.5 w-3.5" aria-hidden />
+          <span>Hermes Session</span>
+        </button>
+      </div>
+
       <div data-testid="task-chat-composer-input">
         <MarkdownEditor
           ref={editorRef}
@@ -571,6 +690,6 @@ export function TaskChatComposer({
           )}
         </button>
       </div>
-    </div>
+    </form>
   );
 }

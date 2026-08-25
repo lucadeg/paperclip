@@ -100,6 +100,7 @@ import { costService } from "./costs.js";
 import { trackAgentFirstHeartbeat } from "@paperclipai/shared/telemetry";
 import { getTelemetryClient } from "../telemetry.js";
 import { companySkillService } from "./company-skills.js";
+import { directiveService } from "./directives.js";
 import { budgetService, type BudgetEnforcementScope } from "./budgets.js";
 import { secretService, type MissingRuntimeBinding } from "./secrets.js";
 import { resolveDefaultAgentWorkspaceDir, resolveManagedProjectWorkspaceDir } from "../home-paths.js";
@@ -6740,6 +6741,7 @@ export function heartbeatService(db: Db, options: HeartbeatServiceOptions = {}) 
     cancelWorkForScope: cancelBudgetScopeWork,
   };
   const budgets = budgetService(db, budgetHooks);
+  const directivesSvc = directiveService(db);
   const recovery = recoveryService(db, { enqueueWakeup });
 
   function isPlanApprovalConfirmationPayload(payload: unknown) {
@@ -17768,6 +17770,49 @@ export function heartbeatService(db: Db, options: HeartbeatServiceOptions = {}) 
     if (source !== "timer" && !policy.wakeOnDemand) {
       await writeSkippedRequest("heartbeat.wakeOnDemand.disabled");
       return null;
+    }
+
+    // DIRECTIVE AUTHORITY GATE:
+    // Autonomous background executions (timer, scheduler sweeps, automatic recovery, watchdogs)
+    // require an active, certified Directive issued or validated by the human operator.
+    if (opts.requestedByActorType !== "user") {
+      const activeDirective = await directivesSvc.findMatchingCertifiedDirective(
+        agent.companyId,
+        agent.id,
+        projectId,
+      );
+
+      if (!activeDirective) {
+        await writeSkippedHeartbeatRequest("directive.no_certified_directive", {
+          reason: `Autonomous wakeup for agent ${agent.name} blocked: no active certified user directive authorizes this run.`,
+          source,
+          triggerDetail,
+        });
+        return null;
+      }
+
+      // Inject verified directive into context snapshot
+      enrichedContextSnapshot.activeDirective = {
+        id: activeDirective.id,
+        identifier: activeDirective.identifier,
+        title: activeDirective.title,
+        priority: activeDirective.priority,
+        rawInstructions: activeDirective.rawInstructions,
+      };
+
+      await directivesSvc.recordLineageEvent({
+        companyId: agent.companyId,
+        directiveId: activeDirective.id,
+        agentId: agent.id,
+        eventType: "run_authorized",
+        details: {
+          source,
+          triggerDetail,
+          reason,
+          issueId: issueId ?? null,
+          taskKey: effectiveTaskKey ?? null,
+        },
+      });
     }
 
     const genericTimerWake =

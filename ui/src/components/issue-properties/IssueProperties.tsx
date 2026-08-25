@@ -584,10 +584,15 @@ export function IssueProperties({
   );
   const modelOverrideOptions = useMemo<InlineEntityOption[]>(() => {
     const models = sortAdapterModels(assigneeAdapterModels ?? []);
-    const options = models.map((model) => ({
+    const options: InlineEntityOption[] = models.map((model) => ({
       id: model.id,
       label: model.label,
-      searchText: `${model.id} ${extractProviderIdWithFallback(model.id)}`,
+      searchText: `${model.id} ${extractProviderIdWithFallback(model.id)} ${model.isFree ? "free local" : ""} ${model.limits ?? ""}`,
+      isFree: model.isFree,
+      pricingType: model.pricingType,
+      contextWindow: model.contextWindow,
+      limits: model.limits,
+      description: model.description,
     }));
     if (assigneeOverrideModel && !options.some((option) => option.id === assigneeOverrideModel)) {
       options.unshift({

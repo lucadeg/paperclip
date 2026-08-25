@@ -426,10 +426,28 @@ export async function startServer(): Promise<StartedServer> {
       }
     };
   
-    const runningPid = getRunningPid();
-    if (runningPid) {
-      logger.warn(`Embedded PostgreSQL already running; reusing existing process (pid=${runningPid}, port=${port})`);
-    } else {
+    let isReachable = false;
+    if (getRunningPid()) {
+      const runningPort = port;
+      const adminConnectionString = `postgres://paperclip:paperclip@127.0.0.1:${runningPort}/postgres`;
+      try {
+        const actualDataDir = await getPostgresDataDirectory(adminConnectionString);
+        if (typeof actualDataDir === "string" && resolve(actualDataDir) === resolve(dataDir)) {
+          isReachable = true;
+          await ensurePostgresDatabase(adminConnectionString, "paperclip");
+          logger.warn(`Embedded PostgreSQL already running; reusing existing process (port=${runningPort})`);
+        }
+      } catch {
+        isReachable = false;
+        if (existsSync(postmasterPidFile)) {
+          try {
+            rmSync(postmasterPidFile, { force: true });
+          } catch {}
+        }
+      }
+    }
+
+    if (!isReachable) {
       const configuredAdminConnectionString = `postgres://paperclip:paperclip@127.0.0.1:${configuredPort}/postgres`;
       try {
         const actualDataDir = await getPostgresDataDirectory(configuredAdminConnectionString);
