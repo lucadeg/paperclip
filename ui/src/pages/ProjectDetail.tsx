@@ -45,10 +45,11 @@ import {
   useResourceMembershipMutation,
   useResourceMemberships,
 } from "../hooks/useResourceMemberships";
+import { InfiniteCanvasWorkflowBuilder } from "../components/workflow-builder/InfiniteCanvasWorkflowBuilder";
 
 /* ── Top-level tab types ── */
 
-type ProjectBaseTab = "list" | "plugin-operations" | "workspaces" | "configuration" | "budget";
+type ProjectBaseTab = "list" | "workflows" | "plugin-operations" | "workspaces" | "configuration" | "budget";
 type ProjectPluginTab = `plugin:${string}`;
 type ProjectTab = ProjectBaseTab | ProjectPluginTab;
 
@@ -63,6 +64,7 @@ function resolveProjectTab(pathname: string, projectId: string): ProjectTab | nu
   const tab = segments[projectsIdx + 2];
   if (tab === "overview") return "configuration";
   if (tab === "configuration") return "configuration";
+  if (tab === "workflows") return "workflows";
   if (tab === "budget") return "budget";
   if (tab === "issues") return "list";
   if (tab === "plugin-operations") return "plugin-operations";
@@ -648,6 +650,9 @@ export function ProjectDetail() {
     if (project?.id) {
       try { cachedTab = localStorage.getItem(`paperclip:project-tab:${project.id}`); } catch {}
     }
+    if (cachedTab === "workflows") {
+      return <Navigate to={`/projects/${canonicalProjectRef}/workflows`} replace />;
+    }
     if (cachedTab === "overview") {
       return <Navigate to={`/projects/${canonicalProjectRef}/configuration`} replace />;
     }
@@ -696,6 +701,8 @@ export function ProjectDetail() {
     }
     if (tab === "workspaces") {
       navigate(`/projects/${canonicalProjectRef}/workspaces`);
+    } else if (tab === "workflows") {
+      navigate(`/projects/${canonicalProjectRef}/workflows`);
     } else if (tab === "budget") {
       navigate(`/projects/${canonicalProjectRef}/budget`);
     } else if (tab === "plugin-operations") {
@@ -831,7 +838,7 @@ export function ProjectDetail() {
         <PageTabBar
           items={[
             { value: "list", label: "Tasks" },
-
+            { value: "workflows", label: "Workflows (Make / n8n)" },
             ...(project.managedByPlugin ? [{ value: "plugin-operations", label: "Plugin operations" }] : []),
             ...(showWorkspacesTab ? [{ value: "workspaces", label: "Workspaces" }] : []),
             { value: "configuration", label: "Configuration" },
@@ -847,7 +854,13 @@ export function ProjectDetail() {
         />
       </Tabs>
 
-
+      {activeTab === "workflows" && project?.id && (
+        <InfiniteCanvasWorkflowBuilder
+          projectId={project.id}
+          companyId={resolvedCompanyId ?? ""}
+          projectName={project.name}
+        />
+      )}
 
       {activeTab === "list" && project?.id && resolvedCompanyId && (
         <ProjectIssuesList projectId={project.id} companyId={resolvedCompanyId} />

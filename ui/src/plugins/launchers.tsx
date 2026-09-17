@@ -800,6 +800,14 @@ export function PluginLauncherOutlet({
   });
 
   if (errorMessage) {
+    if (
+      className?.includes("sidebar") ||
+      placementZones.some((z) => z.includes("sidebar")) ||
+      errorMessage.includes("502") ||
+      errorMessage.includes("Failed to fetch")
+    ) {
+      return null;
+    }
     return (
       <div className={cn("rounded-md border border-destructive/30 bg-destructive/5 px-2 py-1 text-xs text-destructive", errorClassName)}>
         Plugin launchers unavailable: {errorMessage}

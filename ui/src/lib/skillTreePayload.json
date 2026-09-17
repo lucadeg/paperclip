@@ -1,0 +1,3459 @@
+{
+  "ok": true,
+  "title": "Sovereign 25-Agent Skill Tree & Department Constellation",
+  "source": "altari.ai/skilltree & MVX Auto-Company Standard",
+  "totalDepartments": 7,
+  "totalNodes": 105,
+  "totalEdges": 104,
+  "departments": [
+    {
+      "id": "dept-operations",
+      "name": "OPERATIONS",
+      "label": "Operations & Infrastructure",
+      "color": "#38bdf8",
+      "icon": "\u2699\ufe0f",
+      "agentsCount": 4,
+      "agents": [
+        "devops-hightower",
+        "operations-pg",
+        "fullstack-dhh",
+        "cto-vogels"
+      ]
+    },
+    {
+      "id": "dept-intelligence",
+      "name": "INTELLIGENCE",
+      "label": "Intelligence & Strategy",
+      "color": "#818cf8",
+      "icon": "\ud83e\udde0",
+      "agentsCount": 4,
+      "agents": [
+        "research-thompson",
+        "ai-karpathy",
+        "consulting-bower",
+        "critic-munger"
+      ]
+    },
+    {
+      "id": "dept-customer",
+      "name": "CUSTOMER",
+      "label": "Customer & Experience",
+      "color": "#34d399",
+      "icon": "\ud83d\udc65",
+      "agentsCount": 4,
+      "agents": [
+        "product-norman",
+        "interaction-cooper",
+        "comm-voss",
+        "community-garyvee"
+      ]
+    },
+    {
+      "id": "dept-back-office",
+      "name": "BACK OFFICE",
+      "label": "Back Office & Governance",
+      "color": "#f472b6",
+      "icon": "\ud83d\udee1\ufe0f",
+      "agentsCount": 3,
+      "agents": [
+        "cfo-campbell",
+        "mindset-naval",
+        "qa-bach"
+      ]
+    },
+    {
+      "id": "dept-sales",
+      "name": "SALES",
+      "label": "Sales & Direct Outreach",
+      "color": "#fbbf24",
+      "icon": "\ud83d\udcc8",
+      "agentsCount": 3,
+      "agents": [
+        "sales-ross",
+        "sales-hormozi",
+        "psych-cialdini"
+      ]
+    },
+    {
+      "id": "dept-deals",
+      "name": "DEALS",
+      "label": "Deals & Commerce",
+      "color": "#fb7185",
+      "icon": "\ud83e\udd1d",
+      "agentsCount": 3,
+      "agents": [
+        "ceo-bezos",
+        "ecommerce-lutke",
+        "growth-ellis"
+      ]
+    },
+    {
+      "id": "dept-marketing",
+      "name": "MARKETING",
+      "label": "Marketing & Brand Scale",
+      "color": "#a78bfa",
+      "icon": "\ud83d\ude80",
+      "agentsCount": 4,
+      "agents": [
+        "marketing-godin",
+        "social-zuckerberg",
+        "branding-neumeier",
+        "ui-duarte"
+      ]
+    }
+  ],
+  "graph": {
+    "nodes": [
+      {
+        "id": "core-council",
+        "type": "core",
+        "name": "SOVEREIGN COUNCIL",
+        "title": "25-Agent Sovereign Decision Core",
+        "color": "#ec4899",
+        "icon": "\u26a1",
+        "size": 42,
+        "x": 0,
+        "y": 0,
+        "details": {
+          "atAGlance": "The Sovereign Decision Core coordinates all 25 agents across 7 departments, enforcing Munger's pre-mortem vetoes and Bezos's Day 1 velocity.",
+          "whatItDoes": "Forms consensus, materializes tasks in Paperclip, executes high-velocity strategy, and guides autonomous money-making.",
+          "howToRun": "Tell Claude: 'Assemble the Sovereign Council to deliberate on [Objective].'"
+        }
+      },
+      {
+        "id": "dept-operations",
+        "type": "department",
+        "name": "OPERATIONS",
+        "title": "Operations & Infrastructure",
+        "color": "#38bdf8",
+        "icon": "\u2699\ufe0f",
+        "angle": 90,
+        "distance": 320,
+        "size": 32,
+        "description": "Cloud-native SRE, robust deployment pipelines, pragmatic software delivery, and distributed resilience.",
+        "details": {
+          "atAGlance": "OPERATIONS Department coordinates sovereign capabilities, agents, and pipelines.",
+          "whatItDoes": "Cloud-native SRE, robust deployment pipelines, pragmatic software delivery, and distributed resilience."
+        }
+      },
+      {
+        "id": "node-devops-hightower",
+        "type": "agent",
+        "agentId": "devops-hightower",
+        "name": "Devops Hightower",
+        "department": "OPERATIONS",
+        "color": "#38bdf8",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Cloud-Native & SRE Commander automates immutable deployments, zero-downtime releases, and observability pipelines across Cloudflare, Docker, and Kubernetes.",
+          "needs": "Wrangler CLI, Docker, GitHub CLI, Cloudflare API tokens (Graceful degradation to local container runtime).",
+          "coversOnMap": "OPERATIONS -> Infrastructure & CI/CD",
+          "whatItDoes": "Architects declarative deployment pipelines, monitors runtime health, hardens security boundaries, executes blue-green rollouts, and provides instant incident diagnosis.",
+          "apiKeys": [
+            {
+              "key": "CLOUDFLARE_API_TOKEN",
+              "where": "https://dash.cloudflare.com/profile/api-tokens",
+              "env": "CLOUDFLARE_API_TOKEN"
+            },
+            {
+              "key": "DOCKER_AUTH",
+              "where": "https://hub.docker.com/settings/security",
+              "env": "DOCKER_AUTH_CONFIG"
+            },
+            {
+              "key": "GITHUB_TOKEN",
+              "where": "https://github.com/settings/tokens",
+              "env": "GITHUB_TOKEN"
+            }
+          ],
+          "configuration": "Looks for knowledge/infrastructure.md (topology, runtime endpoints, secrets policy).",
+          "howToRun": "Tell Claude: 'Run devops-hightower to deploy [Project] to production and verify healthchecks.'",
+          "kpis": [
+            {
+              "metric": "Deployment Success Rate",
+              "target": ">= 99.9%",
+              "description": "Percentage of successful production deployments without rollback"
+            },
+            {
+              "metric": "Mean Time to Recovery (MTTR)",
+              "target": "< 15 minutes",
+              "description": "Duration from incident detection to complete automated service restoration"
+            },
+            {
+              "metric": "Zero Secret Leakage",
+              "target": "100% compliance",
+              "description": "Zero credentials or API keys exposed in code, commits, or logs"
+            },
+            {
+              "metric": "Automated Healthcheck Coverage",
+              "target": "100%",
+              "description": "Every deployed service monitored with live status & probe endpoints"
+            }
+          ],
+          "successIndicators": [
+            "**Deterministic, repeatable infrastructure defined 100% as code (Wrangler / Docker / Terraform).**: Deterministic, repeatable infrastructure defined 100% as code (Wrangler / Docker / Terraform).",
+            "**Continuous deployment pipeline completes with zero manual intervention in under 5 minutes.**: Continuous deployment pipeline completes with zero manual intervention in under 5 minutes.",
+            "**Instant automated rollback triggered upon any healthcheck failure without data loss.**: Instant automated rollback triggered upon any healthcheck failure without data loss.",
+            "**Immutable audit trail logged for every infrastructure modification.**: Immutable audit trail logged for every infrastructure modification."
+          ],
+          "failureIndicators": [
+            "**Deployment failure rate exceeding 1% over a 7-day rolling window.**: Deployment failure rate exceeding 1% over a 7-day rolling window.",
+            "**Any secret, token, or private key detected in repository or log files (CRITICAL VETO TRIGGER).**: Any secret, token, or private key detected in repository or log files (CRITICAL VETO TRIGGER).",
+            "**MTTR exceeding 60 minutes during a production disruption.**: MTTR exceeding 60 minutes during a production disruption.",
+            "**Manual, unversioned changes executed on production environments.**: Manual, unversioned changes executed on production environments."
+          ]
+        }
+      },
+      {
+        "id": "node-operations-pg",
+        "type": "agent",
+        "agentId": "operations-pg",
+        "name": "Operations Pg",
+        "department": "OPERATIONS",
+        "color": "#38bdf8",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Founder Strategy & Growth Catalyst drives zero-to-one traction, talk-to-users discipline, early monetization, and high-velocity iteration.",
+          "needs": "Analytics dashboard access, Customer communication channel, Stripe ledger.",
+          "coversOnMap": "OPERATIONS -> Founder Operations & Traction",
+          "whatItDoes": "Identifies the core user cohort, uncovers true customer motivations, strips away vanity distractions, and forces high-impact operational experiments.",
+          "apiKeys": [
+            {
+              "key": "STRIPE_SECRET_KEY",
+              "where": "https://dashboard.stripe.com/apikeys",
+              "env": "STRIPE_SECRET_KEY"
+            },
+            {
+              "key": "ANALYTICS_KEY",
+              "where": "https://app.posthog.com / Google Analytics",
+              "env": "POSTHOG_API_KEY"
+            }
+          ],
+          "configuration": "Looks for knowledge/company.md and knowledge/traction_log.md.",
+          "howToRun": "Tell Claude: 'Run operations-pg to analyze user retention and design this week's iteration.'",
+          "kpis": [
+            {
+              "metric": "Weekly Active User (WAU) Growth",
+              "target": "7-10% WoW",
+              "description": "Sustainable organic user growth compounding weekly"
+            },
+            {
+              "metric": "Day-7 Cohort Retention",
+              "target": ">= 40%",
+              "description": "Percentage of users returning 7 days post-onboarding"
+            },
+            {
+              "metric": "Direct User Conversations",
+              "target": ">= 5 per week",
+              "description": "Real qualitative conversations with active customers"
+            },
+            {
+              "metric": "Cycle Velocity (Idea to Customer)",
+              "target": "< 7 days",
+              "description": "Time taken to put an operational iteration in front of real users"
+            }
+          ],
+          "successIndicators": [
+            "**Core value proposition validated through organic user pull and repeat engagement.**: Core value proposition validated through organic user pull and repeat engagement.",
+            "**Demonstrated willingness of users to pay real money for product utility (Ramen Profitability).**: Demonstrated willingness of users to pay real money for product utility (Ramen Profitability).",
+            "**Relentless elimination of non-essential features to focus exclusively on what users love.**: Relentless elimination of non-essential features to focus exclusively on what users love.",
+            "**Fast feedback loops converting customer pain points into shipped fixes within 48 hours.**: Fast feedback loops converting customer pain points into shipped fixes within 48 hours."
+          ],
+          "failureIndicators": [
+            "**Two consecutive weeks with sub-10% Day-7 retention.**: Two consecutive weeks with sub-10% Day-7 retention.",
+            "**Zero direct customer conversations conducted in an operational cycle (Delusion Warning).**: Zero direct customer conversations conducted in an operational cycle (Delusion Warning).",
+            "**Premature scaling or paid user acquisition prior to establishing clear Product-Market Fit.**: Premature scaling or paid user acquisition prior to establishing clear Product-Market Fit.",
+            "**Vanity metric obsession (pageviews/signups) disconnected from real activation and retention.**: Vanity metric obsession (pageviews/signups) disconnected from real activation and retention."
+          ]
+        }
+      },
+      {
+        "id": "node-fullstack-dhh",
+        "type": "agent",
+        "agentId": "fullstack-dhh",
+        "name": "Fullstack Dhh",
+        "department": "OPERATIONS",
+        "color": "#38bdf8",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Fullstack Pragmatist & Software Lead crafts lean, majestic monoliths with high delivery velocity and zero architectural bloat.",
+          "needs": "Node.js/Python, Git, PostgreSQL/SQLite, Unit test runners.",
+          "coversOnMap": "OPERATIONS -> Core Codebase & Monolith",
+          "whatItDoes": "Implements core features end-to-end, enforces convention over configuration, refactors bloated abstractions, and writes pragmatic test suites.",
+          "apiKeys": [
+            {
+              "key": "DATABASE_URL",
+              "where": "Local or Managed DB URL",
+              "env": "DATABASE_URL"
+            },
+            {
+              "key": "APP_SECRET",
+              "where": "Application encryption key",
+              "env": "APP_SECRET"
+            }
+          ],
+          "configuration": "Looks for knowledge/architecture.md and schema definitions.",
+          "howToRun": "Tell Claude: 'Run fullstack-dhh to implement [Feature] with pragmatic test coverage.'",
+          "kpis": [
+            {
+              "metric": "Feature Lead Time",
+              "target": "< 48 hours",
+              "description": "Time elapsed from approved specification to runnable code"
+            },
+            {
+              "metric": "Zero Bloat Index",
+              "target": "< 5 core dependencies",
+              "description": "Strict control over third-party runtime package bloat"
+            },
+            {
+              "metric": "Automated Test Suite Pass Rate",
+              "target": "100%",
+              "description": "Every pull request and build passing without flaky tests"
+            },
+            {
+              "metric": "Monolith Simplicity Score",
+              "target": ">= 90/100",
+              "description": "Single deployable unit without unnecessary microservice fragmentation"
+            }
+          ],
+          "successIndicators": [
+            "**Clean, readable, convention-over-configuration code written for human developers.**: Clean, readable, convention-over-configuration code written for human developers.",
+            "**Runnable majestic monolith delivered first before considering distributed complexity.**: Runnable majestic monolith delivered first before considering distributed complexity.",
+            "**High test coverage on critical business logic and transaction boundaries.**: High test coverage on critical business logic and transaction boundaries.",
+            "**Zero unhandled exceptions in production hot paths.**: Zero unhandled exceptions in production hot paths."
+          ],
+          "failureIndicators": [
+            "**Architectural paralysis exceeding 72 hours without working code.**: Architectural paralysis exceeding 72 hours without working code.",
+            "**Introducing distributed microservices or message queues for sub-10k user workloads.**: Introducing distributed microservices or message queues for sub-10k user workloads.",
+            "**Build failures left broken on main branch exceeding 30 minutes.**: Build failures left broken on main branch exceeding 30 minutes.",
+            "**Installing heavy npm/pip libraries for problems solvable with 20 lines of vanilla code.**: Installing heavy npm/pip libraries for problems solvable with 20 lines of vanilla code."
+          ]
+        }
+      },
+      {
+        "id": "node-cto-vogels",
+        "type": "agent",
+        "agentId": "cto-vogels",
+        "name": "Cto Vogels",
+        "department": "OPERATIONS",
+        "color": "#38bdf8",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Distributed Systems & Scalability CTO enforces resilient event-driven architectures, fault tolerance, and zero-downtime scaling.",
+          "needs": "Redis, Cloudflare Workers/Queues, PostgreSQL, Monitoring tooling.",
+          "coversOnMap": "OPERATIONS -> Distributed Scalability & Fault Tolerance",
+          "whatItDoes": "Reviews system architecture, decouples synchronous bottlenecks, implements backoff and circuit breakers, and verifies failure survival.",
+          "apiKeys": [
+            {
+              "key": "REDIS_URL",
+              "where": "Redis connection string",
+              "env": "REDIS_URL"
+            },
+            {
+              "key": "SENTRY_DSN",
+              "where": "Sentry error reporting DSN",
+              "env": "SENTRY_DSN"
+            }
+          ],
+          "configuration": "Looks for knowledge/architecture.md and infrastructure runbooks.",
+          "howToRun": "Tell Claude: 'Run cto-vogels to audit system resiliency and eliminate single points of failure.'",
+          "kpis": [
+            {
+              "metric": "System Uptime",
+              "target": ">= 99.95%",
+              "description": "High availability across all public endpoints and background workers"
+            },
+            {
+              "metric": "P99 Response Latency",
+              "target": "< 250 ms",
+              "description": "99th percentile response time under standard production load"
+            },
+            {
+              "metric": "Fault Isolation Quotient",
+              "target": "100%",
+              "description": "Zero cascading failures across decoupled system components"
+            },
+            {
+              "metric": "Asynchronous Queue Backlog",
+              "target": "< 1,000 items",
+              "description": "Queue processing velocity outpacing ingress rate"
+            }
+          ],
+          "successIndicators": [
+            "**Systems designed assuming that 'everything fails all the time' with graceful degradation.**: Systems designed assuming that 'everything fails all the time' with graceful degradation.",
+            "**Loose coupling between ingestion, processing, and presentation layers.**: Loose coupling between ingestion, processing, and presentation layers.",
+            "**Automated circuit breakers, exponential backoff, and idempotency keys on every external API.**: Automated circuit breakers, exponential backoff, and idempotency keys on every external API.",
+            "**Comprehensive distributed tracing for rapid root-cause diagnosis.**: Comprehensive distributed tracing for rapid root-cause diagnosis."
+          ],
+          "failureIndicators": [
+            "**Single point of failure (SPOF) causing total platform outage.**: Single point of failure (SPOF) causing total platform outage.",
+            "**Cascading crash where one failing micro-endpoint brings down core business flows.**: Cascading crash where one failing micro-endpoint brings down core business flows.",
+            "**Unbounded retry loops amplifying downtime during downstream service throttling.**: Unbounded retry loops amplifying downtime during downstream service throttling.",
+            "**Unmonitored background jobs failing silently without alerts.**: Unmonitored background jobs failing silently without alerts."
+          ]
+        }
+      },
+      {
+        "id": "hub-ci-cd",
+        "type": "hub",
+        "name": "CI/CD & Cloud Infrastructure",
+        "department": "OPERATIONS",
+        "color": "#38bdf8",
+        "icon": "cloud",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for CI/CD & Cloud Infrastructure in OPERATIONS.",
+          "whatItDoes": "Clusters specialized execution skills assigned to devops-hightower."
+        }
+      },
+      {
+        "id": "skill-wrangler-deploy",
+        "type": "skill",
+        "name": "Wrangler / Edge Deploy",
+        "badge": "Core",
+        "department": "OPERATIONS",
+        "color": "#38bdf8",
+        "icon": "check",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Wrangler / Edge Deploy.",
+          "coversOnMap": "OPERATIONS -> CI/CD & Cloud Infrastructure -> Wrangler / Edge Deploy",
+          "whatItDoes": "Executes Wrangler / Edge Deploy with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-auto-rollback",
+        "type": "skill",
+        "name": "Automated Rollback",
+        "badge": "SRE",
+        "department": "OPERATIONS",
+        "color": "#38bdf8",
+        "icon": "filter",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Automated Rollback.",
+          "coversOnMap": "OPERATIONS -> CI/CD & Cloud Infrastructure -> Automated Rollback",
+          "whatItDoes": "Executes Automated Rollback with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-secret-audit",
+        "type": "skill",
+        "name": "Secret Leak Gate",
+        "badge": "Security",
+        "department": "OPERATIONS",
+        "color": "#38bdf8",
+        "icon": "shield",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Secret Leak Gate.",
+          "coversOnMap": "OPERATIONS -> CI/CD & Cloud Infrastructure -> Secret Leak Gate",
+          "whatItDoes": "Executes Secret Leak Gate with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-monolith-runtime",
+        "type": "hub",
+        "name": "Pragmatic Monolith Core",
+        "department": "OPERATIONS",
+        "color": "#38bdf8",
+        "icon": "code",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Pragmatic Monolith Core in OPERATIONS.",
+          "whatItDoes": "Clusters specialized execution skills assigned to fullstack-dhh."
+        }
+      },
+      {
+        "id": "skill-clean-monolith",
+        "type": "skill",
+        "name": "Monolith Delivery",
+        "badge": "Code",
+        "department": "OPERATIONS",
+        "color": "#38bdf8",
+        "icon": "layers",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Monolith Delivery.",
+          "coversOnMap": "OPERATIONS -> Pragmatic Monolith Core -> Monolith Delivery",
+          "whatItDoes": "Executes Monolith Delivery with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-convention-config",
+        "type": "skill",
+        "name": "Convention over Config",
+        "badge": "Design",
+        "department": "OPERATIONS",
+        "color": "#38bdf8",
+        "icon": "check",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Convention over Config.",
+          "coversOnMap": "OPERATIONS -> Pragmatic Monolith Core -> Convention over Config",
+          "whatItDoes": "Executes Convention over Config with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-resilience-queues",
+        "type": "hub",
+        "name": "Distributed Resilience & Queues",
+        "department": "OPERATIONS",
+        "color": "#38bdf8",
+        "icon": "network",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Distributed Resilience & Queues in OPERATIONS.",
+          "whatItDoes": "Clusters specialized execution skills assigned to cto-vogels."
+        }
+      },
+      {
+        "id": "skill-circuit-breaker",
+        "type": "skill",
+        "name": "Circuit Breakers",
+        "badge": "Fault Tol.",
+        "department": "OPERATIONS",
+        "color": "#38bdf8",
+        "icon": "filter",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Circuit Breakers.",
+          "coversOnMap": "OPERATIONS -> Distributed Resilience & Queues -> Circuit Breakers",
+          "whatItDoes": "Executes Circuit Breakers with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-async-queues",
+        "type": "skill",
+        "name": "Event Backlog Queue",
+        "badge": "Async",
+        "department": "OPERATIONS",
+        "color": "#38bdf8",
+        "icon": "database",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Event Backlog Queue.",
+          "coversOnMap": "OPERATIONS -> Distributed Resilience & Queues -> Event Backlog Queue",
+          "whatItDoes": "Executes Event Backlog Queue with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "dept-intelligence",
+        "type": "department",
+        "name": "INTELLIGENCE",
+        "title": "Intelligence & Strategy",
+        "color": "#818cf8",
+        "icon": "\ud83e\udde0",
+        "angle": 45,
+        "distance": 330,
+        "size": 32,
+        "description": "Aggregation theory, foundation model engineering, MECE Issue Trees, and Charlie Munger's pre-mortem veto gate.",
+        "details": {
+          "atAGlance": "INTELLIGENCE Department coordinates sovereign capabilities, agents, and pipelines.",
+          "whatItDoes": "Aggregation theory, foundation model engineering, MECE Issue Trees, and Charlie Munger's pre-mortem veto gate."
+        }
+      },
+      {
+        "id": "node-research-thompson",
+        "type": "agent",
+        "agentId": "research-thompson",
+        "name": "Research Thompson",
+        "department": "INTELLIGENCE",
+        "color": "#818cf8",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Aggregation Theory & Tech Strategist deconstructs market value chains, identifies structural moats, and maps industry shifts.",
+          "needs": "Web search tools, Industry report access, Financial filing databases.",
+          "coversOnMap": "INTELLIGENCE -> Market & Competitor Intelligence",
+          "whatItDoes": "Performs deep competitive analysis, evaluates aggregation potential, maps platform risk, and validates addressable market size.",
+          "apiKeys": [
+            {
+              "key": "SERP_API_KEY",
+              "where": "Search Engine API for market queries",
+              "env": "SERP_API_KEY"
+            }
+          ],
+          "configuration": "Looks for knowledge/market_research.md and competitor profiles.",
+          "howToRun": "Tell Claude: 'Run research-thompson to analyze the competitive landscape for [Product Idea].'",
+          "kpis": [
+            {
+              "metric": "Opportunity Validation Score",
+              "target": ">= 85/100",
+              "description": "Structured assessment of customer demand and market dynamics"
+            },
+            {
+              "metric": "Value Chain Moat Rating",
+              "target": "High / Defensible",
+              "description": "Clear defense against commoditization and platform shifts"
+            },
+            {
+              "metric": "Competitor Intelligence Depth",
+              "target": ">= 5 competitors",
+              "description": "Deep breakdown of competitor pricing, unit economics, and weaknesses"
+            },
+            {
+              "metric": "Customer Acquisition Moat",
+              "target": "Sovereign / Direct",
+              "description": "Zero reliance on a single hostile intermediary for distribution"
+            }
+          ],
+          "successIndicators": [
+            "**Rigorous decomposition of the industry value chain identifying shifts in modularity and integration.**: Rigorous decomposition of the industry value chain identifying shifts in modularity and integration.",
+            "**Clear articulation of how the product aggregates direct end-user demand.**: Clear articulation of how the product aggregates direct end-user demand.",
+            "**Empirical identification of competitor blind spots and under-served market niches.**: Empirical identification of competitor blind spots and under-served market niches.",
+            "**Actionable synthesis delivered within 24 hours of market shift detection.**: Actionable synthesis delivered within 24 hours of market shift detection."
+          ],
+          "failureIndicators": [
+            "**Recommending business models dependent on third-party platform gatekeepers without leverage.**: Recommending business models dependent on third-party platform gatekeepers without leverage.",
+            "**Superficial competitor analysis based solely on marketing copy rather than structural economics.**: Superficial competitor analysis based solely on marketing copy rather than structural economics.",
+            "**Entering commoditized markets with zero supplier pricing power or differentiation.**: Entering commoditized markets with zero supplier pricing power or differentiation.",
+            "**Failing to anticipate platform policy changes that extinguish the company's distribution.**: Failing to anticipate platform policy changes that extinguish the company's distribution."
+          ]
+        }
+      },
+      {
+        "id": "node-ai-karpathy",
+        "type": "agent",
+        "agentId": "ai-karpathy",
+        "name": "Ai Karpathy",
+        "department": "INTELLIGENCE",
+        "color": "#818cf8",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Deep Learning Systems & Software 3.0 Pioneer crafts deterministic harnesses around foundation models with first-principles simplicity.",
+          "needs": "OpenAI / Anthropic / Local model endpoints, Pydantic, Python 3.11+.",
+          "coversOnMap": "INTELLIGENCE -> Foundation Models & Software 3.0",
+          "whatItDoes": "Designs token-efficient agentic loops, enforces Pydantic output schemas, optimizes inference costs, and eliminates hallucination escapes.",
+          "apiKeys": [
+            {
+              "key": "OPENAI_API_KEY",
+              "where": "https://platform.openai.com/api-keys",
+              "env": "OPENAI_API_KEY"
+            },
+            {
+              "key": "ANTHROPIC_API_KEY",
+              "where": "https://console.anthropic.com/settings/keys",
+              "env": "ANTHROPIC_API_KEY"
+            }
+          ],
+          "configuration": "Looks for knowledge/ai_harness.md and prompt templates.",
+          "howToRun": "Tell Claude: 'Run ai-karpathy to build a deterministic validation harness for [Agent Workflow].'",
+          "kpis": [
+            {
+              "metric": "Prompt Token Efficiency",
+              "target": "< 1,500 tokens/task",
+              "description": "Minimalist context window hygiene without unstructured garbage"
+            },
+            {
+              "metric": "Schema Conformance Rate",
+              "target": "99.9%",
+              "description": "Outputs strictly adhering to deterministic JSON / Pydantic schemas"
+            },
+            {
+              "metric": "Zero Hallucination Escape",
+              "target": "100%",
+              "description": "Zero unvalidated model strings passed directly to execution tools"
+            },
+            {
+              "metric": "Inference Cost per Cycle",
+              "target": "< $0.05",
+              "description": "Optimized routing across local and cloud foundation models"
+            }
+          ],
+          "successIndicators": [
+            "**First-principles implementations (Zero-to-Hero) written in pure, inspectable Python.**: First-principles implementations (Zero-to-Hero) written in pure, inspectable Python.",
+            "**Foundation models treated strictly as stochastic CPUs with deterministic validation harnesses.**: Foundation models treated strictly as stochastic CPUs with deterministic validation harnesses.",
+            "**Modular decomposition forcing chain-of-thought scratchpad execution before tool dispatch.**: Modular decomposition forcing chain-of-thought scratchpad execution before tool dispatch.",
+            "**Regression test suites for every discovered hallucination or prompt degradation.**: Regression test suites for every discovered hallucination or prompt degradation."
+          ],
+          "failureIndicators": [
+            "**Allowing unvalidated LLM output to directly mutate database records or execute shell scripts.**: Allowing unvalidated LLM output to directly mutate database records or execute shell scripts.",
+            "**Bloating system prompts with massive unstructured dumps that degrade attention mechanisms.**: Bloating system prompts with massive unstructured dumps that degrade attention mechanisms.",
+            "**Introducing complex monolithic agent frameworks when a 30-line script accomplishes the task.**: Introducing complex monolithic agent frameworks when a 30-line script accomplishes the task.",
+            "**Ignoring tokenomics costs leading to runaway inference billing spikes.**: Ignoring tokenomics costs leading to runaway inference billing spikes."
+          ]
+        }
+      },
+      {
+        "id": "node-consulting-bower",
+        "type": "agent",
+        "agentId": "consulting-bower",
+        "name": "Consulting Bower",
+        "department": "INTELLIGENCE",
+        "color": "#818cf8",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Fact-Based Strategy & McKinsey Problem-Solving Architect structures complex challenges into MECE Issue Trees and rigorous governance.",
+          "needs": "Data analysis tools, Structured memo templates.",
+          "coversOnMap": "INTELLIGENCE -> Fact-Based Strategy & Issue Trees",
+          "whatItDoes": "Constructs hypothesis-driven issue trees, conducts fact-based strategic audits, prioritizes corporate initiatives, and enforces governance standards.",
+          "apiKeys": [],
+          "configuration": "Looks for knowledge/strategy_memos.md and corporate guidelines.",
+          "howToRun": "Tell Claude: 'Run consulting-bower to structure a MECE Issue Tree for [Strategic Problem].'",
+          "kpis": [
+            {
+              "metric": "MECE Disaggregation Rigor",
+              "target": "100%",
+              "description": "Problem trees completely Mutually Exclusive and Collectively Exhaustive"
+            },
+            {
+              "metric": "Hypothesis Validation Velocity",
+              "target": "< 24 hours",
+              "description": "Rapid testing of strategic assumptions with empirical data"
+            },
+            {
+              "metric": "Client Value Integrity Index",
+              "target": "100%",
+              "description": "Zero recommendations compromising long-term customer trust for short-term gain"
+            },
+            {
+              "metric": "Actionable Roadmap Precision",
+              "target": "100% assignable",
+              "description": "Every strategic initiative broken down into concrete deliverables with owners"
+            }
+          ],
+          "successIndicators": [
+            "**Complex corporate dilemmas broken down into transparent, verifiable Issue Trees.**: Complex corporate dilemmas broken down into transparent, verifiable Issue Trees.",
+            "**Uncompromising fact-based problem solving grounded exclusively in empirical evidence.**: Uncompromising fact-based problem solving grounded exclusively in empirical evidence.",
+            "**Executive memos written with top-down pyramid structure (Conclusion first, supporting pillars below).**: Executive memos written with top-down pyramid structure (Conclusion first, supporting pillars below).",
+            "**Institutional governance frameworks that eliminate organizational drift and ambiguity.**: Institutional governance frameworks that eliminate organizational drift and ambiguity."
+          ],
+          "failureIndicators": [
+            "**Overlapping or incomplete problem decomposition that leaves critical blind spots.**: Overlapping or incomplete problem decomposition that leaves critical blind spots.",
+            "**Advancing recommendations based on gut feelings or executive politics rather than verifiable facts.**: Advancing recommendations based on gut feelings or executive politics rather than verifiable facts.",
+            "**Putting short-term monetization ahead of client sustainability and reputation.**: Putting short-term monetization ahead of client sustainability and reputation.",
+            "**Lengthy abstract reports that lack concrete operational assignments and timelines.**: Lengthy abstract reports that lack concrete operational assignments and timelines."
+          ]
+        }
+      },
+      {
+        "id": "node-critic-munger",
+        "type": "agent",
+        "agentId": "critic-munger",
+        "name": "Critic Munger",
+        "department": "INTELLIGENCE",
+        "color": "#818cf8",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Chief Skeptic & Inversion Critic applies Charlie Munger's mental models to conduct ruthless Pre-Mortems and enforce mandatory veto gates.",
+          "needs": "Direct access to Council proposals, Financial models, System specs.",
+          "coversOnMap": "INTELLIGENCE -> Pre-Mortem & Inversion Veto",
+          "whatItDoes": "Inverts strategic goals, predicts fatal failure vectors, flags psychological traps, and issues binding vetoes with required prescriptions.",
+          "apiKeys": [],
+          "configuration": "Looks for knowledge/risk_audit.md and proposal documents.",
+          "howToRun": "Tell Claude: 'Run critic-munger to perform a Pre-Mortem on [Initiative / Launch Plan].'",
+          "kpis": [
+            {
+              "metric": "Blind Spot Detection Rate",
+              "target": "100%",
+              "description": "Every fatal assumption challenged before capital deployment"
+            },
+            {
+              "metric": "Pre-Mortem Defense Ratio",
+              "target": ">= 3 mitigations",
+              "description": "Mandatory operational safeguards for every identified failure mode"
+            },
+            {
+              "metric": "Cognitive Bias Flagging",
+              "target": ">= 3 biases analyzed",
+              "description": "Incentive-caused, confirmation, and social proof biases audited"
+            },
+            {
+              "metric": "Veto Integrity Enforcement",
+              "target": "100% compliance",
+              "description": "Zero unmitigated veto holds bypassed without unanimous resolution"
+            }
+          ],
+          "successIndicators": [
+            "**Inversion analysis conducted**: clearly documenting how the initiative will fail if launched as is.",
+            "**Identification of the 3 lethal killers that would wipe out the project within 6 months.**: Identification of the 3 lethal killers that would wipe out the project within 6 months.",
+            "**Concrete, verifiable pre-launch mitigations integrated into the operational roadmap.**: Concrete, verifiable pre-launch mitigations integrated into the operational roadmap.",
+            "**Fearless intellectual independence stopping group delusion and wishful thinking.**: Fearless intellectual independence stopping group delusion and wishful thinking."
+          ],
+          "failureIndicators": [
+            "**Rubber-stamping a major initiative without conducting an authentic Pre-Mortem.**: Rubber-stamping a major initiative without conducting an authentic Pre-Mortem.",
+            "**Allowing team euphoria or sunken costs to push forward a project with unresolved fatal flaws (VETO FAILURE).**: Allowing team euphoria or sunken costs to push forward a project with unresolved fatal flaws (VETO FAILURE).",
+            "**Failing to disclose incentive-caused biases in growth or revenue projections.**: Failing to disclose incentive-caused biases in growth or revenue projections.",
+            "**Overly theoretical criticism that fails to provide concrete operational mitigations.**: Overly theoretical criticism that fails to provide concrete operational mitigations."
+          ]
+        }
+      },
+      {
+        "id": "hub-software-3",
+        "type": "hub",
+        "name": "Software 3.0 & Foundation Models",
+        "department": "INTELLIGENCE",
+        "color": "#818cf8",
+        "icon": "cpu",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Software 3.0 & Foundation Models in INTELLIGENCE.",
+          "whatItDoes": "Clusters specialized execution skills assigned to ai-karpathy."
+        }
+      },
+      {
+        "id": "skill-tokenomics",
+        "type": "skill",
+        "name": "Tokenomics Optimization",
+        "badge": "AI",
+        "department": "INTELLIGENCE",
+        "color": "#818cf8",
+        "icon": "layers",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Tokenomics Optimization.",
+          "coversOnMap": "INTELLIGENCE -> Software 3.0 & Foundation Models -> Tokenomics Optimization",
+          "whatItDoes": "Executes Tokenomics Optimization with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-pydantic-schema",
+        "type": "skill",
+        "name": "Pydantic Schema Enforcer",
+        "badge": "JSON",
+        "department": "INTELLIGENCE",
+        "color": "#818cf8",
+        "icon": "check",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Pydantic Schema Enforcer.",
+          "coversOnMap": "INTELLIGENCE -> Software 3.0 & Foundation Models -> Pydantic Schema Enforcer",
+          "whatItDoes": "Executes Pydantic Schema Enforcer with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-hallucination-gate",
+        "type": "skill",
+        "name": "Hallucination Defense",
+        "badge": "Guard",
+        "department": "INTELLIGENCE",
+        "color": "#818cf8",
+        "icon": "shield",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Hallucination Defense.",
+          "coversOnMap": "INTELLIGENCE -> Software 3.0 & Foundation Models -> Hallucination Defense",
+          "whatItDoes": "Executes Hallucination Defense with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-munger-gate",
+        "type": "hub",
+        "name": "Inversion & Pre-Mortem Veto",
+        "department": "INTELLIGENCE",
+        "color": "#818cf8",
+        "icon": "scale",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Inversion & Pre-Mortem Veto in INTELLIGENCE.",
+          "whatItDoes": "Clusters specialized execution skills assigned to critic-munger."
+        }
+      },
+      {
+        "id": "skill-pre-mortem",
+        "type": "skill",
+        "name": "Pre-Mortem Analysis",
+        "badge": "VETO",
+        "department": "INTELLIGENCE",
+        "color": "#818cf8",
+        "icon": "search",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Pre-Mortem Analysis.",
+          "coversOnMap": "INTELLIGENCE -> Inversion & Pre-Mortem Veto -> Pre-Mortem Analysis",
+          "whatItDoes": "Executes Pre-Mortem Analysis with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-cognitive-bias",
+        "type": "skill",
+        "name": "25 Biases Audit",
+        "badge": "Cognitive",
+        "department": "INTELLIGENCE",
+        "color": "#818cf8",
+        "icon": "filter",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: 25 Biases Audit.",
+          "coversOnMap": "INTELLIGENCE -> Inversion & Pre-Mortem Veto -> 25 Biases Audit",
+          "whatItDoes": "Executes 25 Biases Audit with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-mece-strategy",
+        "type": "hub",
+        "name": "MECE Issue Trees & Governance",
+        "department": "INTELLIGENCE",
+        "color": "#818cf8",
+        "icon": "tree",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for MECE Issue Trees & Governance in INTELLIGENCE.",
+          "whatItDoes": "Clusters specialized execution skills assigned to consulting-bower."
+        }
+      },
+      {
+        "id": "skill-issue-trees",
+        "type": "skill",
+        "name": "MECE Issue Trees",
+        "badge": "McKinsey",
+        "department": "INTELLIGENCE",
+        "color": "#818cf8",
+        "icon": "layers",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: MECE Issue Trees.",
+          "coversOnMap": "INTELLIGENCE -> MECE Issue Trees & Governance -> MECE Issue Trees",
+          "whatItDoes": "Executes MECE Issue Trees with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-fact-governance",
+        "type": "skill",
+        "name": "Fact-Based Synthesis",
+        "badge": "Strategy",
+        "department": "INTELLIGENCE",
+        "color": "#818cf8",
+        "icon": "check",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Fact-Based Synthesis.",
+          "coversOnMap": "INTELLIGENCE -> MECE Issue Trees & Governance -> Fact-Based Synthesis",
+          "whatItDoes": "Executes Fact-Based Synthesis with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "dept-customer",
+        "type": "department",
+        "name": "CUSTOMER",
+        "title": "Customer & Experience",
+        "color": "#34d399",
+        "icon": "\ud83d\udc65",
+        "angle": 0,
+        "distance": 330,
+        "size": 32,
+        "description": "Ergonomic conceptual affordances, goal-directed persona journeys, tactical empathy, and community cult engagement.",
+        "details": {
+          "atAGlance": "CUSTOMER Department coordinates sovereign capabilities, agents, and pipelines.",
+          "whatItDoes": "Ergonomic conceptual affordances, goal-directed persona journeys, tactical empathy, and community cult engagement."
+        }
+      },
+      {
+        "id": "node-product-norman",
+        "type": "agent",
+        "agentId": "product-norman",
+        "name": "Product Norman",
+        "department": "CUSTOMER",
+        "color": "#34d399",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Principal Product & Usability Architect designs intuitive conceptual models, obvious affordances, and mistake-proof product workflows.",
+          "needs": "UI wireframes, Interactive prototypes, User session recordings.",
+          "coversOnMap": "CUSTOMER -> Product Usability & Affordances",
+          "whatItDoes": "Reviews UX flows, audits signifiers and feedback mechanisms, eliminates cognitive friction, and designs error-proof interfaces.",
+          "apiKeys": [],
+          "configuration": "Looks for knowledge/product_spec.md and usability test logs.",
+          "howToRun": "Tell Claude: 'Run product-norman to audit the usability and affordances of [User Flow].'",
+          "kpis": [
+            {
+              "metric": "First-Time User Task Completion",
+              "target": ">= 95%",
+              "description": "Users successfully completing key action on first attempt"
+            },
+            {
+              "metric": "Time to Aha Moment",
+              "target": "< 60 seconds",
+              "description": "Duration from landing to experiencing the core product payoff"
+            },
+            {
+              "metric": "User Error Rate",
+              "target": "< 2%",
+              "description": "Percentage of sessions encountering user slips or conceptual confusion"
+            },
+            {
+              "metric": "System Feedback Latency",
+              "target": "< 100 ms",
+              "description": "Immediate visual or tactile acknowledgment for all user inputs"
+            }
+          ],
+          "successIndicators": [
+            "**Intuitive affordances and signifiers that make controls immediately understandable without manuals.**: Intuitive affordances and signifiers that make controls immediately understandable without manuals.",
+            "**Human-centered error design that prevents mistakes and provides clear recovery paths.**: Human-centered error design that prevents mistakes and provides clear recovery paths.",
+            "**Consistent conceptual models between user expectations and system behavior.**: Consistent conceptual models between user expectations and system behavior.",
+            "**Clean visual hierarchy guiding user attention effortlessly toward their primary goal.**: Clean visual hierarchy guiding user attention effortlessly toward their primary goal."
+          ],
+          "failureIndicators": [
+            "**Requiring user documentation or onboarding tooltips to explain basic interface buttons.**: Requiring user documentation or onboarding tooltips to explain basic interface buttons.",
+            "**Ambiguous button labels or hidden clickable elements that cause user frustration.**: Ambiguous button labels or hidden clickable elements that cause user frustration.",
+            "**Sudden state transitions or silent failures without immediate, clear visual feedback.**: Sudden state transitions or silent failures without immediate, clear visual feedback.",
+            "**Blaming users for errors caused by poor system affordance and design.**: Blaming users for errors caused by poor system affordance and design."
+          ]
+        }
+      },
+      {
+        "id": "node-interaction-cooper",
+        "type": "agent",
+        "agentId": "interaction-cooper",
+        "name": "Interaction Cooper",
+        "department": "CUSTOMER",
+        "color": "#34d399",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Interaction & Goal-Directed Designer maps persona journeys, streamlines navigation hierarchies, and eliminates workflow friction.",
+          "needs": "Persona definitions, Journey mapping tools, Information architecture specs.",
+          "coversOnMap": "CUSTOMER -> Persona Flows & Interaction",
+          "whatItDoes": "Defines behavioral personas, drafts step-by-step goal flows, structures information hierarchies, and eliminates navigational dead-ends.",
+          "apiKeys": [],
+          "configuration": "Looks for knowledge/personas.md and journey_maps.md.",
+          "howToRun": "Tell Claude: 'Run interaction-cooper to map the goal-directed flow for [Target Persona].'",
+          "kpis": [
+            {
+              "metric": "Maximum Navigation Depth",
+              "target": "<= 3 clicks",
+              "description": "Every primary action accessible in 3 clicks or fewer"
+            },
+            {
+              "metric": "Persona Goal Alignment",
+              "target": "100%",
+              "description": "Every feature directly serving an explicitly defined primary persona goal"
+            },
+            {
+              "metric": "Flow Abandonment Rate",
+              "target": "< 10%",
+              "description": "Drop-off rate during multi-step user workflows"
+            },
+            {
+              "metric": "Cognitive Friction Index",
+              "target": "Minimal",
+              "description": "Zero redundant data entry or unnecessary confirmation modals"
+            }
+          ],
+          "successIndicators": [
+            "**Explicit definition of primary and secondary personas based on real behavioral patterns.**: Explicit definition of primary and secondary personas based on real behavioral patterns.",
+            "**Frictionless goal-directed paths eliminating all technical artifacts from the user's view.**: Frictionless goal-directed paths eliminating all technical artifacts from the user's view.",
+            "**Graceful state persistence preventing lost progress during session interruptions.**: Graceful state persistence preventing lost progress during session interruptions.",
+            "**Streamlined navigation structures optimized for high-frequency user tasks.**: Streamlined navigation structures optimized for high-frequency user tasks."
+          ],
+          "failureIndicators": [
+            "**Designing for an imaginary 'average user' instead of concrete, goal-driven personas.**: Designing for an imaginary 'average user' instead of concrete, goal-driven personas.",
+            "**Multi-step forms that erase user input upon validation errors.**: Multi-step forms that erase user input upon validation errors.",
+            "**Exposing internal database IDs or server status codes directly in user-facing flows.**: Exposing internal database IDs or server status codes directly in user-facing flows.",
+            "**Complex menus and nested navigation that disorient users.**: Complex menus and nested navigation that disorient users."
+          ]
+        }
+      },
+      {
+        "id": "node-comm-voss",
+        "type": "agent",
+        "agentId": "comm-voss",
+        "name": "Comm Voss",
+        "department": "CUSTOMER",
+        "color": "#34d399",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Tactical Empathy & Master Negotiation Strategist applies FBI-proven negotiation techniques to disarm resistance and close deals.",
+          "needs": "Customer correspondence history, Deal transcripts, Objection logs.",
+          "coversOnMap": "CUSTOMER -> Tactical Empathy & Negotiation",
+          "whatItDoes": "Drafts negotiation scripts, conducts accusation audits, formulates calibrated questions, and resolves high-stakes conflicts.",
+          "apiKeys": [],
+          "configuration": "Looks for knowledge/negotiation_playbook.md and objection handling guides.",
+          "howToRun": "Tell Claude: 'Run comm-voss to prepare a negotiation strategy for [Customer Situation].'",
+          "kpis": [
+            {
+              "metric": "Negotiation Success Rate",
+              "target": ">= 80%",
+              "description": "High-stakes interactions resolved with mutual commitment"
+            },
+            {
+              "metric": "Time to 'That's Right'",
+              "target": "< 2 interactions",
+              "description": "Rapid validation of customer viewpoint through emotional labeling"
+            },
+            {
+              "metric": "Objection Overcome Ratio",
+              "target": ">= 85%",
+              "description": "Customer objections disarmed using calibrated questions"
+            },
+            {
+              "metric": "Relationship Preservation Score",
+              "target": "100%",
+              "description": "Zero scorched-earth outcomes; all parties leave with dignity"
+            }
+          ],
+          "successIndicators": [
+            "**Flawless Accusation Audits conducted up-front to defuse underlying fears and hesitations.**: Flawless Accusation Audits conducted up-front to defuse underlying fears and hesitations.",
+            "**Tactical empathy applied via precise mirroring and emotional labeling.**: Tactical empathy applied via precise mirroring and emotional labeling.",
+            "**Use of calibrated 'How' and 'What' questions that shift negotiation ownership to the counterpart.**: Use of calibrated 'How' and 'What' questions that shift negotiation ownership to the counterpart.",
+            "**Triggering authentic 'That's Right' breakthroughs rather than polite 'You're Right' dismissals.**: Triggering authentic 'That's Right' breakthroughs rather than polite 'You're Right' dismissals."
+          ],
+          "failureIndicators": [
+            "**Engaging in defensive arguments or trying to prove the customer wrong logically.**: Engaging in defensive arguments or trying to prove the customer wrong logically.",
+            "**Accepting superficial 'Yes' commitments that fail to translate into concrete action.**: Accepting superficial 'Yes' commitments that fail to translate into concrete action.",
+            "**Issuing ultimatums that damage long-term customer partnerships.**: Issuing ultimatums that damage long-term customer partnerships.",
+            "**Ignoring subtle emotional undertones and hidden leverage in high-stakes negotiations.**: Ignoring subtle emotional undertones and hidden leverage in high-stakes negotiations."
+          ]
+        }
+      },
+      {
+        "id": "node-community-garyvee",
+        "type": "agent",
+        "agentId": "community-garyvee",
+        "name": "Community Garyvee",
+        "department": "CUSTOMER",
+        "color": "#34d399",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Attention Arbitrage & Community Cult Leader deploys the Jab, Jab, Jab, Right Hook framework to dominate native social algorithms.",
+          "needs": "Social media scheduling tools, Video snippet clips, Audio transcripts.",
+          "coversOnMap": "CUSTOMER -> Attention Arbitrage & Community",
+          "whatItDoes": "Converts long-form content into native short-form assets, analyzes platform attention arbitrage, and manages community engagement strategies.",
+          "apiKeys": [
+            {
+              "key": "SOCIAL_API_KEY",
+              "where": "Social platform publishing API",
+              "env": "SOCIAL_PUBLISH_KEY"
+            }
+          ],
+          "configuration": "Looks for knowledge/social_voice.md and content_calendar.md.",
+          "howToRun": "Tell Claude: 'Run community-garyvee to build a micro-content repurposing plan for [Content Pillar].'",
+          "kpis": [
+            {
+              "metric": "Organic Engagement Rate",
+              "target": ">= 6%",
+              "description": "Average engagement across native micro-content pieces"
+            },
+            {
+              "metric": "Content Repurposing Multiplier",
+              "target": ">= 15 assets",
+              "description": "Micro-assets generated from every pillar video/article"
+            },
+            {
+              "metric": "Daily Community Interactions",
+              "target": ">= 30 replies",
+              "description": "Direct 1-on-1 human responses to audience comments"
+            },
+            {
+              "metric": "Attention Arbitrage ROI",
+              "target": "Top Quartile",
+              "description": "Maximizing organic reach on emerging, underpriced platform algorithms"
+            }
+          ],
+          "successIndicators": [
+            "**Strict adherence to 'Jab, Jab, Jab, Right Hook' (Providing value 3 times before asking for a sale).**: Strict adherence to 'Jab, Jab, Jab, Right Hook' (Providing value 3 times before asking for a sale).",
+            "**Implementation of 'Document, Don't Create' capturing real behind-the-scenes progress.**: Implementation of 'Document, Don't Create' capturing real behind-the-scenes progress.",
+            "**Rapid adaptation to algorithmic shifts across TikTok, Instagram Reels, YouTube Shorts, and LinkedIn.**: Rapid adaptation to algorithmic shifts across TikTok, Instagram Reels, YouTube Shorts, and LinkedIn.",
+            "**Cultivating deep emotional brand affinity through authentic, unscripted engagement.**: Cultivating deep emotional brand affinity through authentic, unscripted engagement."
+          ],
+          "failureIndicators": [
+            "**Pitching products aggressively without establishing upfront community value and trust.**: Pitching products aggressively without establishing upfront community value and trust.",
+            "**Posting identical, unadapted corporate promotional graphics across distinct social platforms.**: Posting identical, unadapted corporate promotional graphics across distinct social platforms.",
+            "**Ignoring community comments and treating social platforms as one-way broadcasting megaphones.**: Ignoring community comments and treating social platforms as one-way broadcasting megaphones.",
+            "**Over-polishing content to the point of corporate sterileness and audience disconnection.**: Over-polishing content to the point of corporate sterileness and audience disconnection."
+          ]
+        }
+      },
+      {
+        "id": "hub-affordances",
+        "type": "hub",
+        "name": "Conceptual Affordances & Usability",
+        "department": "CUSTOMER",
+        "color": "#34d399",
+        "icon": "eye",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Conceptual Affordances & Usability in CUSTOMER.",
+          "whatItDoes": "Clusters specialized execution skills assigned to product-norman."
+        }
+      },
+      {
+        "id": "skill-signifiers",
+        "type": "skill",
+        "name": "Affordances & Signifiers",
+        "badge": "UX",
+        "department": "CUSTOMER",
+        "color": "#34d399",
+        "icon": "check",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Affordances & Signifiers.",
+          "coversOnMap": "CUSTOMER -> Conceptual Affordances & Usability -> Affordances & Signifiers",
+          "whatItDoes": "Executes Affordances & Signifiers with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-mistake-proofing",
+        "type": "skill",
+        "name": "Mistake-Proof Design",
+        "badge": "Ergonomics",
+        "department": "CUSTOMER",
+        "color": "#34d399",
+        "icon": "shield",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Mistake-Proof Design.",
+          "coversOnMap": "CUSTOMER -> Conceptual Affordances & Usability -> Mistake-Proof Design",
+          "whatItDoes": "Executes Mistake-Proof Design with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-negotiation",
+        "type": "hub",
+        "name": "Tactical Empathy & Negotiation",
+        "department": "CUSTOMER",
+        "color": "#34d399",
+        "icon": "mic",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Tactical Empathy & Negotiation in CUSTOMER.",
+          "whatItDoes": "Clusters specialized execution skills assigned to comm-voss."
+        }
+      },
+      {
+        "id": "skill-accusation-audit",
+        "type": "skill",
+        "name": "Accusation Audit",
+        "badge": "FBI",
+        "department": "CUSTOMER",
+        "color": "#34d399",
+        "icon": "filter",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Accusation Audit.",
+          "coversOnMap": "CUSTOMER -> Tactical Empathy & Negotiation -> Accusation Audit",
+          "whatItDoes": "Executes Accusation Audit with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-calibrated-questions",
+        "type": "skill",
+        "name": "Calibrated Questions",
+        "badge": "Tactical",
+        "department": "CUSTOMER",
+        "color": "#34d399",
+        "icon": "search",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Calibrated Questions.",
+          "coversOnMap": "CUSTOMER -> Tactical Empathy & Negotiation -> Calibrated Questions",
+          "whatItDoes": "Executes Calibrated Questions with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-attention-arbitrage",
+        "type": "hub",
+        "name": "Attention Arbitrage & Micro-Content",
+        "department": "CUSTOMER",
+        "color": "#34d399",
+        "icon": "video",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Attention Arbitrage & Micro-Content in CUSTOMER.",
+          "whatItDoes": "Clusters specialized execution skills assigned to community-garyvee."
+        }
+      },
+      {
+        "id": "skill-content-cascade",
+        "type": "skill",
+        "name": "Micro-Content Cascade",
+        "badge": "Reels/Shorts",
+        "department": "CUSTOMER",
+        "color": "#34d399",
+        "icon": "layers",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Micro-Content Cascade.",
+          "coversOnMap": "CUSTOMER -> Attention Arbitrage & Micro-Content -> Micro-Content Cascade",
+          "whatItDoes": "Executes Micro-Content Cascade with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-jab-jab-hook",
+        "type": "skill",
+        "name": "Jab, Jab, Jab, Right Hook",
+        "badge": "Social",
+        "department": "CUSTOMER",
+        "color": "#34d399",
+        "icon": "target",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Jab, Jab, Jab, Right Hook.",
+          "coversOnMap": "CUSTOMER -> Attention Arbitrage & Micro-Content -> Jab, Jab, Jab, Right Hook",
+          "whatItDoes": "Executes Jab, Jab, Jab, Right Hook with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "dept-back-office",
+        "type": "department",
+        "name": "BACK OFFICE",
+        "title": "Back Office & Governance",
+        "color": "#f472b6",
+        "icon": "\ud83d\udee1\ufe0f",
+        "angle": 315,
+        "distance": 320,
+        "size": 32,
+        "description": "Unit economics modeling, capital allocation, permissionless leverage, and adversarial exploratory QA testing.",
+        "details": {
+          "atAGlance": "BACK OFFICE Department coordinates sovereign capabilities, agents, and pipelines.",
+          "whatItDoes": "Unit economics modeling, capital allocation, permissionless leverage, and adversarial exploratory QA testing."
+        }
+      },
+      {
+        "id": "node-cfo-campbell",
+        "type": "agent",
+        "agentId": "cfo-campbell",
+        "name": "Cfo Campbell",
+        "department": "BACK OFFICE",
+        "color": "#f472b6",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Executive Coach & Resource Allocator engineers sustainable financial models, unit economics, and value-based pricing tiers.",
+          "needs": "Stripe/Payment gateway data, Infrastructure billing reports, Accounting spreadsheets.",
+          "coversOnMap": "BACK OFFICE -> Financial Models & Unit Economics",
+          "whatItDoes": "Builds financial projections, calculates CAC/LTV and payback periods, audits cloud expenditure, and optimizes product pricing power.",
+          "apiKeys": [
+            {
+              "key": "STRIPE_API_KEY",
+              "where": "https://dashboard.stripe.com/apikeys",
+              "env": "STRIPE_RESTRICTED_KEY"
+            }
+          ],
+          "configuration": "Looks for knowledge/financials.md and pricing_tiers.md.",
+          "howToRun": "Tell Claude: 'Run cfo-campbell to audit unit economics and calculate CAC payback for [Product].'",
+          "kpis": [
+            {
+              "metric": "LTV to CAC Ratio",
+              "target": ">= 3.5x",
+              "description": "Ratio of Customer Lifetime Value to Acquisition Cost"
+            },
+            {
+              "metric": "CAC Payback Period",
+              "target": "< 6 months",
+              "description": "Months of gross margin required to recover customer acquisition cost"
+            },
+            {
+              "metric": "Gross Margin Target",
+              "target": ">= 80%",
+              "description": "Gross margin maintained across core digital and software products"
+            },
+            {
+              "metric": "Runway Visibility",
+              "target": ">= 12 months",
+              "description": "Cash runway maintained under conservative baseline growth projections"
+            }
+          ],
+          "successIndicators": [
+            "**Rock-solid financial unit economics validated before any marketing budget expansion.**: Rock-solid financial unit economics validated before any marketing budget expansion.",
+            "**Precise pricing tier architecture based on value metrics that scale with customer usage.**: Precise pricing tier architecture based on value metrics that scale with customer usage.",
+            "**Transparent cash flow forecasting with automated alerts for anomalous expenditure.**: Transparent cash flow forecasting with automated alerts for anomalous expenditure.",
+            "**Executive coaching aligning leadership on financial discipline and disciplined capital allocation.**: Executive coaching aligning leadership on financial discipline and disciplined capital allocation."
+          ],
+          "failureIndicators": [
+            "**LTV/CAC ratio falling below 1.5x, signaling unprofitable growth.**: LTV/CAC ratio falling below 1.5x, signaling unprofitable growth.",
+            "**CAC payback period stretching beyond 12 months without enterprise contract guarantees.**: CAC payback period stretching beyond 12 months without enterprise contract guarantees.",
+            "**Unbudgeted server or API inference costs eroding gross margins below 65%.**: Unbudgeted server or API inference costs eroding gross margins below 65%.",
+            "**Premature capital deployment on unvalidated marketing channels.**: Premature capital deployment on unvalidated marketing channels."
+          ]
+        }
+      },
+      {
+        "id": "node-mindset-naval",
+        "type": "agent",
+        "agentId": "mindset-naval",
+        "name": "Mindset Naval",
+        "department": "BACK OFFICE",
+        "color": "#f472b6",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Permissionless Leverage & Sovereign Judgment Philosopher guides capital, code, and media leverage while maximizing decision clarity.",
+          "needs": "Strategic roadmaps, System architecture diagrams, Time allocation audits.",
+          "coversOnMap": "BACK OFFICE -> Permissionless Leverage & Judgment",
+          "whatItDoes": "Identifies asymmetric upside opportunities, audits leverage vectors (code/media/capital), and filters decisions through first-principles judgment.",
+          "apiKeys": [],
+          "configuration": "Looks for knowledge/sovereign_mindset.md.",
+          "howToRun": "Tell Claude: 'Run mindset-naval to audit the permissionless leverage and long-term moat of [Strategy].'",
+          "kpis": [
+            {
+              "metric": "Permissionless Leverage Index",
+              "target": ">= 10x",
+              "description": "Ratio of automated output generated via code and media vs manual labor hours"
+            },
+            {
+              "metric": "Specific Knowledge Moat",
+              "target": "Uncopyable",
+              "description": "Depth of unique insight that cannot be outsourced or automated away"
+            },
+            {
+              "metric": "Decision Quality Horizon",
+              "target": "Long-Term Compound",
+              "description": "Decisions evaluated on 5-10 year multi-order consequences"
+            },
+            {
+              "metric": "Extreme Accountability",
+              "target": "100%",
+              "description": "Taking personal ownership of outcomes with real upside and reputation on the line"
+            }
+          ],
+          "successIndicators": [
+            "**Building assets that earn with judgment, code, and media while the team sleeps.**: Building assets that earn with judgment, code, and media while the team sleeps.",
+            "**First-principles decision making stripping away societal dogma and vanity status games.**: First-principles decision making stripping away societal dogma and vanity status games.",
+            "**Relentless automation of repetitive low-judgment operational chores.**: Relentless automation of repetitive low-judgment operational chores.",
+            "**Preserving extreme mental clarity, calm, and sovereign independence.**: Preserving extreme mental clarity, calm, and sovereign independence."
+          ],
+          "failureIndicators": [
+            "**Trading linear time directly for hourly revenue without compounding asset ownership.**: Trading linear time directly for hourly revenue without compounding asset ownership.",
+            "**Engaging in zero-sum status games and office politics that drain creative focus.**: Engaging in zero-sum status games and office politics that drain creative focus.",
+            "**Building products in areas without specific knowledge, easily cloned by incumbents.**: Building products in areas without specific knowledge, easily cloned by incumbents.",
+            "**Sacrificing health, peace of mind, or ethical principles for short-term vanity metrics.**: Sacrificing health, peace of mind, or ethical principles for short-term vanity metrics."
+          ]
+        }
+      },
+      {
+        "id": "node-qa-bach",
+        "type": "agent",
+        "agentId": "qa-bach",
+        "name": "Qa Bach",
+        "department": "BACK OFFICE",
+        "color": "#f472b6",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Exploratory QA & Testing Strategist investigates boundary conditions, falsifies happy-path assumptions, and guarantees release robustness.",
+          "needs": "Playwright, Vitest, Pytest, Network throttling tools.",
+          "coversOnMap": "BACK OFFICE -> Exploratory QA & Integrity",
+          "whatItDoes": "Conducts exploratory testing sessions, designs boundary-case test fixtures, isolates subtle concurrency bugs, and enforces release quality gates.",
+          "apiKeys": [],
+          "configuration": "Looks for knowledge/qa_checklists.md and bug_reports.md.",
+          "howToRun": "Tell Claude: 'Run qa-bach to perform an adversarial exploratory audit on [Feature / Release].'",
+          "kpis": [
+            {
+              "metric": "Critical Defect Escape Rate",
+              "target": "0%",
+              "description": "Zero critical vulnerabilities or data corruptions reaching production"
+            },
+            {
+              "metric": "Boundary Condition Coverage",
+              "target": "100%",
+              "description": "Every extreme input, network timeout, and edge case explored"
+            },
+            {
+              "metric": "Automated Regression Suite Pass Rate",
+              "target": "100%",
+              "description": "Continuous integration passing with zero flaky test tolerance"
+            },
+            {
+              "metric": "Exploratory Bug Discovery Yield",
+              "target": "High impact",
+              "description": "Uncovering non-obvious cognitive, UI, and protocol defects before release"
+            }
+          ],
+          "successIndicators": [
+            "**Rigorously testing to falsify assumptions rather than merely confirming that happy paths function.**: Rigorously testing to falsify assumptions rather than merely confirming that happy paths function.",
+            "**Simulating hostile inputs, slow networks, concurrent edits, and boundary limits.**: Simulating hostile inputs, slow networks, concurrent edits, and boundary limits.",
+            "**Creating reproducible, isolated regression test fixtures for every reported defect.**: Creating reproducible, isolated regression test fixtures for every reported defect.",
+            "**Maintaining an adversarial quality posture that protects system stability under stress.**: Maintaining an adversarial quality posture that protects system stability under stress."
+          ],
+          "failureIndicators": [
+            "**Allowing a known blocker or data-loss bug to be deployed to production.**: Allowing a known blocker or data-loss bug to be deployed to production.",
+            "**Relying solely on green happy-path unit tests without exploratory edge-case probing.**: Relying solely on green happy-path unit tests without exploratory edge-case probing.",
+            "**Tolerating flaky tests in the CI/CD pipeline that desensitize the team to genuine failures.**: Tolerating flaky tests in the CI/CD pipeline that desensitize the team to genuine failures.",
+            "**Treating testing as a passive confirmation step rather than active investigation.**: Treating testing as a passive confirmation step rather than active investigation."
+          ]
+        }
+      },
+      {
+        "id": "hub-unit-economics",
+        "type": "hub",
+        "name": "Unit Economics & Capital",
+        "department": "BACK OFFICE",
+        "color": "#f472b6",
+        "icon": "dollar",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Unit Economics & Capital in BACK OFFICE.",
+          "whatItDoes": "Clusters specialized execution skills assigned to cfo-campbell."
+        }
+      },
+      {
+        "id": "skill-ltv-cac",
+        "type": "skill",
+        "name": "LTV/CAC >= 3.5x Model",
+        "badge": "Finance",
+        "department": "BACK OFFICE",
+        "color": "#f472b6",
+        "icon": "check",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: LTV/CAC >= 3.5x Model.",
+          "coversOnMap": "BACK OFFICE -> Unit Economics & Capital -> LTV/CAC >= 3.5x Model",
+          "whatItDoes": "Executes LTV/CAC >= 3.5x Model with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-payback-audit",
+        "type": "skill",
+        "name": "Payback < 6mo Audit",
+        "badge": "Capital",
+        "department": "BACK OFFICE",
+        "color": "#f472b6",
+        "icon": "database",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Payback < 6mo Audit.",
+          "coversOnMap": "BACK OFFICE -> Unit Economics & Capital -> Payback < 6mo Audit",
+          "whatItDoes": "Executes Payback < 6mo Audit with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-asymmetric-leverage",
+        "type": "hub",
+        "name": "Permissionless Leverage",
+        "department": "BACK OFFICE",
+        "color": "#f472b6",
+        "icon": "zap",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Permissionless Leverage in BACK OFFICE.",
+          "whatItDoes": "Clusters specialized execution skills assigned to mindset-naval."
+        }
+      },
+      {
+        "id": "skill-code-media-leverage",
+        "type": "skill",
+        "name": "Code & Media Leverage",
+        "badge": "Asymmetric",
+        "department": "BACK OFFICE",
+        "color": "#f472b6",
+        "icon": "layers",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Code & Media Leverage.",
+          "coversOnMap": "BACK OFFICE -> Permissionless Leverage -> Code & Media Leverage",
+          "whatItDoes": "Executes Code & Media Leverage with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-specific-knowledge",
+        "type": "skill",
+        "name": "Specific Knowledge Moat",
+        "badge": "Sovereign",
+        "department": "BACK OFFICE",
+        "color": "#f472b6",
+        "icon": "shield",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Specific Knowledge Moat.",
+          "coversOnMap": "BACK OFFICE -> Permissionless Leverage -> Specific Knowledge Moat",
+          "whatItDoes": "Executes Specific Knowledge Moat with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-exploratory-qa",
+        "type": "hub",
+        "name": "Exploratory QA & Falsification",
+        "department": "BACK OFFICE",
+        "color": "#f472b6",
+        "icon": "beaker",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Exploratory QA & Falsification in BACK OFFICE.",
+          "whatItDoes": "Clusters specialized execution skills assigned to qa-bach."
+        }
+      },
+      {
+        "id": "skill-boundary-falsify",
+        "type": "skill",
+        "name": "Boundary Falsification",
+        "badge": "QA",
+        "department": "BACK OFFICE",
+        "color": "#f472b6",
+        "icon": "search",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Boundary Falsification.",
+          "coversOnMap": "BACK OFFICE -> Exploratory QA & Falsification -> Boundary Falsification",
+          "whatItDoes": "Executes Boundary Falsification with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-zero-escape",
+        "type": "skill",
+        "name": "Zero Escape Regression",
+        "badge": "Testing",
+        "department": "BACK OFFICE",
+        "color": "#f472b6",
+        "icon": "check",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Zero Escape Regression.",
+          "coversOnMap": "BACK OFFICE -> Exploratory QA & Falsification -> Zero Escape Regression",
+          "whatItDoes": "Executes Zero Escape Regression with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "dept-sales",
+        "type": "department",
+        "name": "SALES",
+        "title": "Sales & Direct Outreach",
+        "color": "#fbbf24",
+        "icon": "\ud83d\udcc8",
+        "angle": 270,
+        "distance": 320,
+        "size": 32,
+        "description": "Predictable revenue pipelines, $100M Grand Slam Offers, and behavioral pre-suasion influence framing.",
+        "details": {
+          "atAGlance": "SALES Department coordinates sovereign capabilities, agents, and pipelines.",
+          "whatItDoes": "Predictable revenue pipelines, $100M Grand Slam Offers, and behavioral pre-suasion influence framing."
+        }
+      },
+      {
+        "id": "node-sales-ross",
+        "type": "agent",
+        "agentId": "sales-ross",
+        "name": "Sales Ross",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Predictable Revenue & Pipeline Architect engineers automated, multi-channel outbound systems and structured CRM funnels.",
+          "needs": "CRM platform, Cold email deliverability infrastructure, LinkedIn automation API.",
+          "coversOnMap": "SALES -> Predictable Outbound & Pipeline",
+          "whatItDoes": "Builds targeted prospect lists, scripts multi-step outbound sequences, sets up qualification criteria, and optimizes pipeline conversion velocity.",
+          "apiKeys": [
+            {
+              "key": "HEYREACH_API_KEY",
+              "where": "https://app.heyreach.io/settings",
+              "env": "HEYREACH_API_KEY"
+            },
+            {
+              "key": "RESEND_API_KEY",
+              "where": "https://resend.com/api-keys",
+              "env": "RESEND_API_KEY"
+            }
+          ],
+          "configuration": "Looks for knowledge/icp_definition.md and email_sequences.md.",
+          "howToRun": "Tell Claude: 'Run sales-ross to construct an outbound campaign targeting [Industry Segment].'",
+          "kpis": [
+            {
+              "metric": "Cold Outbound Response Rate",
+              "target": ">= 12%",
+              "description": "Positive replies from targeted Ideal Customer Profile (ICP) prospects"
+            },
+            {
+              "metric": "Pipeline Velocity (MQL to SQL)",
+              "target": ">= 25%",
+              "description": "Conversion rate from qualified lead to committed sales meeting"
+            },
+            {
+              "metric": "Sales Cycle Duration",
+              "target": "< 14 days",
+              "description": "Average days from first touchpoint to closed contract"
+            },
+            {
+              "metric": "CRM Pipeline Cleanliness",
+              "target": "100% updated",
+              "description": "Every deal stage, next action, and contact detail maintained in real time"
+            }
+          ],
+          "successIndicators": [
+            "**Specialized sales roles separating prospecting, closing, and customer success (Predictable Revenue model).**: Specialized sales roles separating prospecting, closing, and customer success (Predictable Revenue model).",
+            "**Personalized, highly relevant outbound sequences tailored to specific industry pain points.**: Personalized, highly relevant outbound sequences tailored to specific industry pain points.",
+            "**Multi-channel touchpoints combining targeted email, LinkedIn messaging, and strategic follow-ups.**: Multi-channel touchpoints combining targeted email, LinkedIn messaging, and strategic follow-ups.",
+            "**Consistent, predictable inflow of qualified meetings generated weekly.**: Consistent, predictable inflow of qualified meetings generated weekly."
+          ],
+          "failureIndicators": [
+            "**Blasting generic, untargeted spam templates to purchased email lists (< 1% response rate).**: Blasting generic, untargeted spam templates to purchased email lists (< 1% response rate).",
+            "**Allowing sales leads to sit in CRM pipeline without follow-up for more than 48 hours.**: Allowing sales leads to sit in CRM pipeline without follow-up for more than 48 hours.",
+            "**Combining lead generation and account closing into a single overwhelmed role.**: Combining lead generation and account closing into a single overwhelmed role.",
+            "**Inaccurate revenue forecasting based on wishful thinking rather than pipeline mathematics.**: Inaccurate revenue forecasting based on wishful thinking rather than pipeline mathematics."
+          ]
+        }
+      },
+      {
+        "id": "node-sales-hormozi",
+        "type": "agent",
+        "agentId": "sales-hormozi",
+        "name": "Sales Hormozi",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Grand Slam Offer & Value Equation Architect engineers unrefusable offers with massive perceived value and complete risk reversal.",
+          "needs": "Landing page builder, Stripe checkout, Offer breakdown documents.",
+          "coversOnMap": "SALES -> Grand Slam Offers & Conversion",
+          "whatItDoes": "Solves customer pain points via the Value Equation, packages bonuses and guarantees, stacks pricing power, and scales direct lead engines.",
+          "apiKeys": [
+            {
+              "key": "STRIPE_SECRET_KEY",
+              "where": "https://dashboard.stripe.com/apikeys",
+              "env": "STRIPE_SECRET_KEY"
+            }
+          ],
+          "configuration": "Looks for knowledge/offer.md and target_customer_pains.md.",
+          "howToRun": "Tell Claude: 'Run sales-hormozi to engineer a $100M Grand Slam Offer for [Product/Service].'",
+          "kpis": [
+            {
+              "metric": "Offer Conversion Rate",
+              "target": ">= 15%",
+              "description": "Qualified visitors converting on the Grand Slam Offer"
+            },
+            {
+              "metric": "Price-to-Value Ratio",
+              "target": ">= 10x",
+              "description": "Perceived value delivered relative to the asking price"
+            },
+            {
+              "metric": "The Rule of 100 Adherence",
+              "target": "100 actions/day",
+              "description": "Consistent execution of 100 primary lead generation actions daily"
+            },
+            {
+              "metric": "Refund / Cancellation Rate",
+              "target": "< 3%",
+              "description": "Extremely low churn driven by overwhelming customer satisfaction"
+            }
+          ],
+          "successIndicators": [
+            "**Crafting a Grand Slam Offer so compelling that prospects feel stupid saying no.**: Crafting a Grand Slam Offer so compelling that prospects feel stupid saying no.",
+            "**Maximizing Dream Outcome and Perceived Likelihood of Achievement in the Value Equation.**: Maximizing Dream Outcome and Perceived Likelihood of Achievement in the Value Equation.",
+            "**Minimizing Time Delay and Effort & Sacrifice required by the customer to achieve results.**: Minimizing Time Delay and Effort & Sacrifice required by the customer to achieve results.",
+            "**Reversing customer risk with an irresistible, conditional or unconditional guarantee.**: Reversing customer risk with an irresistible, conditional or unconditional guarantee."
+          ],
+          "failureIndicators": [
+            "**Selling commoditized products that compete on price discounts rather than differentiated value.**: Selling commoditized products that compete on price discounts rather than differentiated value.",
+            "**Vague promises that fail to define a concrete, tangible dream transformation.**: Vague promises that fail to define a concrete, tangible dream transformation.",
+            "**Expecting customers to expend massive time and effort without hands-on assistance or templates.**: Expecting customers to expend massive time and effort without hands-on assistance or templates.",
+            "**Failing to execute the Rule of 100 daily outreach and content actions.**: Failing to execute the Rule of 100 daily outreach and content actions."
+          ]
+        }
+      },
+      {
+        "id": "node-psych-cialdini",
+        "type": "agent",
+        "agentId": "psych-cialdini",
+        "name": "Psych Cialdini",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Behavioral Economics & 7 Weapons of Persuasion Specialist applies science-backed influence principles and pre-suasion framing.",
+          "needs": "Copywriting templates, Case study repositories, Landing page wireframes.",
+          "coversOnMap": "SALES -> Pre-Suasion & Behavioral Economics",
+          "whatItDoes": "Audits conversion funnels for the 7 influence weapons, drafts privileged pre-suasion framing, and eliminates psychological barriers to purchase.",
+          "apiKeys": [],
+          "configuration": "Looks for knowledge/persuasion_framework.md and customer_testimonials.md.",
+          "howToRun": "Tell Claude: 'Run psych-cialdini to optimize the Pre-Suasion framing and social proof for [Landing Page].'",
+          "kpis": [
+            {
+              "metric": "Pre-Suasion Conversion Lift",
+              "target": ">= +30%",
+              "description": "Uplift in conversion achieved via pre-framing privileged moments"
+            },
+            {
+              "metric": "Social Proof Credibility Score",
+              "target": ">= 85/100",
+              "description": "Authentic, high-impact case studies and testimonials integrated"
+            },
+            {
+              "metric": "Commitment Consistency Escalation",
+              "target": ">= 40%",
+              "description": "Micro-commitments leading smoothly to final purchase"
+            },
+            {
+              "metric": "Ethical Persuasion Audit",
+              "target": "100% compliant",
+              "description": "Zero dark patterns, false scarcity, or deceptive psychological manipulation"
+            }
+          ],
+          "successIndicators": [
+            "**Application of the 7 Principles of Influence (Reciprocity, Commitment, Social Proof, Authority, Liking, Scarcity, Unity).**: Application of the 7 Principles of Influence (Reciprocity, Commitment, Social Proof, Authority, Liking, Scarcity, Unity).",
+            "**Focusing attention in privileged moments immediately preceding the primary call to action.**: Focusing attention in privileged moments immediately preceding the primary call to action.",
+            "**Transparent and honest scarcity highlighting real physical or cohort capacity limits.**: Transparent and honest scarcity highlighting real physical or cohort capacity limits.",
+            "**Aligning the customer's self-identity with the product's mission to foster authentic loyalty.**: Aligning the customer's self-identity with the product's mission to foster authentic loyalty."
+          ],
+          "failureIndicators": [
+            "**Manufacturing fake countdown timers or fake scarcity that destroys long-term brand credibility.**: Manufacturing fake countdown timers or fake scarcity that destroys long-term brand credibility.",
+            "**Manipulative psychological dark patterns resulting in high chargebacks and customer regret.**: Manipulative psychological dark patterns resulting in high chargebacks and customer regret.",
+            "**Fabricated social proof or misleading authority credentials.**: Fabricated social proof or misleading authority credentials.",
+            "**Ignoring the critical pre-suasion framing window that sets customer expectations.**: Ignoring the critical pre-suasion framing window that sets customer expectations."
+          ]
+        }
+      },
+      {
+        "id": "hub-outbound-engine",
+        "type": "hub",
+        "name": "Predictable Outbound & Sequencing",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "send",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Predictable Outbound & Sequencing in SALES.",
+          "whatItDoes": "Clusters specialized execution skills assigned to sales-ross."
+        }
+      },
+      {
+        "id": "skill-start-here",
+        "type": "skill",
+        "name": "START HERE: Prospect Target",
+        "badge": "Start Here",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "target",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: START HERE: Prospect Target.",
+          "coversOnMap": "SALES -> Predictable Outbound & Sequencing -> START HERE: Prospect Target",
+          "whatItDoes": "Executes START HERE: Prospect Target with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-account-enrichment",
+        "type": "skill",
+        "name": "Account Enrichment",
+        "badge": "Data",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "database",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Account Enrichment.",
+          "coversOnMap": "SALES -> Predictable Outbound & Sequencing -> Account Enrichment",
+          "whatItDoes": "Executes Account Enrichment with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-email-verification",
+        "type": "skill",
+        "name": "Email Verification",
+        "badge": "Deliverability",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "check",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Email Verification.",
+          "coversOnMap": "SALES -> Predictable Outbound & Sequencing -> Email Verification",
+          "whatItDoes": "Executes Email Verification with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-contact-enrichment",
+        "type": "skill",
+        "name": "Contact Enrichment",
+        "badge": "Leads",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "layers",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Contact Enrichment.",
+          "coversOnMap": "SALES -> Predictable Outbound & Sequencing -> Contact Enrichment",
+          "whatItDoes": "Executes Contact Enrichment with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-data-enrichment-spec",
+        "type": "skill",
+        "name": "Data Enrichment Specialist",
+        "badge": "Specialist",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "search",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Data Enrichment Specialist.",
+          "coversOnMap": "SALES -> Predictable Outbound & Sequencing -> Data Enrichment Specialist",
+          "whatItDoes": "Executes Data Enrichment Specialist with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-grand-slam-offer",
+        "type": "hub",
+        "name": "Grand Slam Offer & Value",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "gift",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Grand Slam Offer & Value in SALES.",
+          "whatItDoes": "Clusters specialized execution skills assigned to sales-hormozi."
+        }
+      },
+      {
+        "id": "skill-value-equation",
+        "type": "skill",
+        "name": "The Value Equation",
+        "badge": "$100M",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "zap",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: The Value Equation.",
+          "coversOnMap": "SALES -> Grand Slam Offer & Value -> The Value Equation",
+          "whatItDoes": "Executes The Value Equation with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-risk-reversal",
+        "type": "skill",
+        "name": "Risk Reversal Guarantee",
+        "badge": "Offer",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "shield",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Risk Reversal Guarantee.",
+          "coversOnMap": "SALES -> Grand Slam Offer & Value -> Risk Reversal Guarantee",
+          "whatItDoes": "Executes Risk Reversal Guarantee with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-rule-of-100",
+        "type": "skill",
+        "name": "The Rule of 100 Lead Engine",
+        "badge": "Velocity",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "target",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: The Rule of 100 Lead Engine.",
+          "coversOnMap": "SALES -> Grand Slam Offer & Value -> The Rule of 100 Lead Engine",
+          "whatItDoes": "Executes The Rule of 100 Lead Engine with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-pre-suasion",
+        "type": "hub",
+        "name": "Pre-Suasion & Behavioral Economics",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "sparkles",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Pre-Suasion & Behavioral Economics in SALES.",
+          "whatItDoes": "Clusters specialized execution skills assigned to psych-cialdini."
+        }
+      },
+      {
+        "id": "skill-privileged-moments",
+        "type": "skill",
+        "name": "Privileged Moments",
+        "badge": "Influence",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "search",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Privileged Moments.",
+          "coversOnMap": "SALES -> Pre-Suasion & Behavioral Economics -> Privileged Moments",
+          "whatItDoes": "Executes Privileged Moments with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-social-proof",
+        "type": "skill",
+        "name": "7 Weapons of Persuasion",
+        "badge": "Cialdini",
+        "department": "SALES",
+        "color": "#fbbf24",
+        "icon": "check",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: 7 Weapons of Persuasion.",
+          "coversOnMap": "SALES -> Pre-Suasion & Behavioral Economics -> 7 Weapons of Persuasion",
+          "whatItDoes": "Executes 7 Weapons of Persuasion with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "dept-deals",
+        "type": "department",
+        "name": "DEALS",
+        "title": "Deals & Commerce",
+        "color": "#fb7185",
+        "icon": "\ud83e\udd1d",
+        "angle": 225,
+        "distance": 330,
+        "size": 32,
+        "description": "Day 1 executive velocity, frictionless D2C commerce, and high-tempo North Star Metric growth testing.",
+        "details": {
+          "atAGlance": "DEALS Department coordinates sovereign capabilities, agents, and pipelines.",
+          "whatItDoes": "Day 1 executive velocity, frictionless D2C commerce, and high-tempo North Star Metric growth testing."
+        }
+      },
+      {
+        "id": "node-ceo-bezos",
+        "type": "agent",
+        "agentId": "ceo-bezos",
+        "name": "Ceo Bezos",
+        "department": "DEALS",
+        "color": "#fb7185",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Executive Strategist & Customer Advocate drives multi-decade vision, Working Backwards PR/FAQs, and high-velocity decision-making.",
+          "needs": "Corporate governance documents, PR/FAQ repository, Strategic planning briefs.",
+          "coversOnMap": "DEALS -> Executive Strategy & Governance",
+          "whatItDoes": "Classifies Type 1/Type 2 decisions, authors Working Backwards PR/FAQ documents, enforces customer invariants, and sets company priorities.",
+          "apiKeys": [],
+          "configuration": "Looks for knowledge/company.md and pr_faq_templates.md.",
+          "howToRun": "Tell Claude: 'Run ceo-bezos to draft a Working Backwards PR/FAQ for [New Product Vision].'",
+          "kpis": [
+            {
+              "metric": "Two-Way Door Decision Velocity",
+              "target": "< 24 hours",
+              "description": "Type 2 decisions executed with 70% information"
+            },
+            {
+              "metric": "Customer Invariant Alignment",
+              "target": "100%",
+              "description": "Initiatives directly reinforcing speed, cost efficiency, or quality"
+            },
+            {
+              "metric": "Working Backwards PR/FAQ Quality",
+              "target": ">= 95/100",
+              "description": "Clear, inspiring customer press release written prior to development"
+            },
+            {
+              "metric": "Day 1 Agility Rating",
+              "target": "High",
+              "description": "Active rejection of proxy metrics, bureaucratic delay, and Day 2 stasis"
+            }
+          ],
+          "successIndicators": [
+            "**Customer obsession prioritized uncompromisingly over competitor obsession.**: Customer obsession prioritized uncompromisingly over competitor obsession.",
+            "**Rigorous distinction between irreversible Type 1 doors and agile Type 2 reversible decisions.**: Rigorous distinction between irreversible Type 1 doors and agile Type 2 reversible decisions.",
+            "**6-page narrative memos enforcing deep, structured strategic thinking before action.**: 6-page narrative memos enforcing deep, structured strategic thinking before action.",
+            "**Total team commitment under the 'Disagree and Commit' doctrine.**: Total team commitment under the 'Disagree and Commit' doctrine."
+          ],
+          "failureIndicators": [
+            "**Treating reversible Type 2 decisions as bureaucratic Type 1 doors, delaying action past 48 hours.**: Treating reversible Type 2 decisions as bureaucratic Type 1 doors, delaying action past 48 hours.",
+            "**Building software features without a completed, customer-validated PR/FAQ announcement.**: Building software features without a completed, customer-validated PR/FAQ announcement.",
+            "**Allowing process to become the proxy for customer outcomes (Day 2 sclerosis).**: Allowing process to become the proxy for customer outcomes (Day 2 sclerosis).",
+            "**Sacrificing long-term customer trust for short-term quarterly revenue spikes.**: Sacrificing long-term customer trust for short-term quarterly revenue spikes."
+          ]
+        }
+      },
+      {
+        "id": "node-ecommerce-lutke",
+        "type": "agent",
+        "agentId": "ecommerce-lutke",
+        "name": "Ecommerce Lutke",
+        "department": "DEALS",
+        "color": "#fb7185",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Decentralized E-commerce & Merchant Sovereign Architect builds frictionless D2C checkout systems and sovereign merchant infrastructure.",
+          "needs": "Shopify / D2C headless APIs, Stripe, Webhook event processors.",
+          "coversOnMap": "DEALS -> Frictionless E-commerce & Checkout",
+          "whatItDoes": "Architects zero-friction checkout funnels, configures D2C storefront pipelines, automates fulfillment logistics, and preserves merchant data sovereignty.",
+          "apiKeys": [
+            {
+              "key": "SHOPIFY_API_KEY",
+              "where": "https://admin.shopify.com/api",
+              "env": "SHOPIFY_ADMIN_TOKEN"
+            },
+            {
+              "key": "STRIPE_SECRET_KEY",
+              "where": "https://dashboard.stripe.com/apikeys",
+              "env": "STRIPE_SECRET_KEY"
+            }
+          ],
+          "configuration": "Looks for knowledge/ecommerce_catalog.md and checkout_rules.md.",
+          "howToRun": "Tell Claude: 'Run ecommerce-lutke to optimize checkout conversion and eliminate friction in [Store/Cart].'",
+          "kpis": [
+            {
+              "metric": "Checkout Abandonment Rate",
+              "target": "< 45%",
+              "description": "Minimizing drop-off during customer payment processing"
+            },
+            {
+              "metric": "Page Load to Checkout Latency",
+              "target": "< 1.2 seconds",
+              "description": "Instant loading times across mobile and desktop stores"
+            },
+            {
+              "metric": "Repeat Purchase Rate",
+              "target": ">= 30%",
+              "description": "Percentage of customers returning for second transactions"
+            },
+            {
+              "metric": "Fulfillment Velocity",
+              "target": "< 24 hours",
+              "description": "Time from payment confirmation to digital access or order dispatch"
+            }
+          ],
+          "successIndicators": [
+            "**Frictionless checkout experiences with one-click payment options (Shop Pay / Apple Pay).**: Frictionless checkout experiences with one-click payment options (Shop Pay / Apple Pay).",
+            "**Decentralized brand sovereignty**: merchants retaining 100% direct ownership of their customer base.",
+            "**Systems thinking applied to inventory, catalog dynamics, and high-velocity logistics.**: Systems thinking applied to inventory, catalog dynamics, and high-velocity logistics.",
+            "**Infinite game mindset**: building sustainable commercial engines that compound over decades."
+          ],
+          "failureIndicators": [
+            "**Multi-page, confusing checkout flows that introduce hidden fees and friction.**: Multi-page, confusing checkout flows that introduce hidden fees and friction.",
+            "**Sluggish mobile shopping experiences with render times exceeding 2.5 seconds.**: Sluggish mobile shopping experiences with render times exceeding 2.5 seconds.",
+            "**Surrendering customer data and relationships to centralized marketplace monopolies.**: Surrendering customer data and relationships to centralized marketplace monopolies.",
+            "**Unsynchronized catalog inventory leading to overselling and broken fulfillment promises.**: Unsynchronized catalog inventory leading to overselling and broken fulfillment promises."
+          ]
+        }
+      },
+      {
+        "id": "node-growth-ellis",
+        "type": "agent",
+        "agentId": "growth-ellis",
+        "name": "Growth Ellis",
+        "department": "DEALS",
+        "color": "#fb7185",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The North Star Metric & High-Tempo Testing Pioneer establishes the growth engine, ICE prioritization, and full-funnel AARRR testing.",
+          "needs": "Analytics tools (PostHog / Mixpanel), A/B testing infrastructure, Growth backlog sheets.",
+          "coversOnMap": "DEALS -> High-Tempo Growth Sprints & NSM",
+          "whatItDoes": "Identifies the North Star Metric, prioritizes experiments with ICE scores, runs weekly growth sprints, and scales viral referral flywheels.",
+          "apiKeys": [
+            {
+              "key": "ANALYTICS_WRITE_KEY",
+              "where": "Analytics tracking key",
+              "env": "ANALYTICS_API_KEY"
+            }
+          ],
+          "configuration": "Looks for knowledge/growth_backlog.md and north_star_metric.md.",
+          "howToRun": "Tell Claude: 'Run growth-ellis to evaluate the growth backlog and launch 3 ICE-prioritized experiments.'",
+          "kpis": [
+            {
+              "metric": "Weekly Growth Sprints",
+              "target": ">= 3 experiments",
+              "description": "Systematic weekly testing of acquisition and retention hypotheses"
+            },
+            {
+              "metric": "Experiment Win Rate",
+              "target": ">= 30%",
+              "description": "Percentage of growth tests resulting in statistically significant positive impact"
+            },
+            {
+              "metric": "North Star Metric (NSM) Lift",
+              "target": "+5-8% MoM",
+              "description": "Continuous upward compounding of the core company North Star Metric"
+            },
+            {
+              "metric": "ICE Prioritization Rigor",
+              "target": "100%",
+              "description": "Every proposed test scored on Impact, Confidence, and Ease before execution"
+            }
+          ],
+          "successIndicators": [
+            "**Unambiguous definition and company-wide tracking of the single North Star Metric.**: Unambiguous definition and company-wide tracking of the single North Star Metric.",
+            "**High-tempo growth testing cadence maintained without interruption every single week.**: High-tempo growth testing cadence maintained without interruption every single week.",
+            "**Optimizing full Pirate Metrics funnel**: Acquisition, Activation, Retention, Referral, Revenue (AARRR).",
+            "**Building self-reinforcing viral loops that lower blended customer acquisition costs.**: Building self-reinforcing viral loops that lower blended customer acquisition costs."
+          ],
+          "failureIndicators": [
+            "**Running random, unprioritized marketing gimmicks without an ICE scoring hypothesis.**: Running random, unprioritized marketing gimmicks without an ICE scoring hypothesis.",
+            "**Failing to execute growth test sprints for two consecutive weeks (Stagnation Alert).**: Failing to execute growth test sprints for two consecutive weeks (Stagnation Alert).",
+            "**Focusing on top-of-funnel acquisition while leaking users through an unactivated leaky bucket.**: Focusing on top-of-funnel acquisition while leaking users through an unactivated leaky bucket.",
+            "**Declaring test winners without statistical significance or adequate sample sizes.**: Declaring test winners without statistical significance or adequate sample sizes."
+          ]
+        }
+      },
+      {
+        "id": "hub-executive-deals",
+        "type": "hub",
+        "name": "Executive Strategy & Two-Way Doors",
+        "department": "DEALS",
+        "color": "#fb7185",
+        "icon": "briefcase",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Executive Strategy & Two-Way Doors in DEALS.",
+          "whatItDoes": "Clusters specialized execution skills assigned to ceo-bezos."
+        }
+      },
+      {
+        "id": "skill-working-backwards",
+        "type": "skill",
+        "name": "Working Backwards PR/FAQ",
+        "badge": "Amazon",
+        "department": "DEALS",
+        "color": "#fb7185",
+        "icon": "layers",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Working Backwards PR/FAQ.",
+          "coversOnMap": "DEALS -> Executive Strategy & Two-Way Doors -> Working Backwards PR/FAQ",
+          "whatItDoes": "Executes Working Backwards PR/FAQ with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-two-way-doors",
+        "type": "skill",
+        "name": "Type 1 / Type 2 Velocity",
+        "badge": "Velocity",
+        "department": "DEALS",
+        "color": "#fb7185",
+        "icon": "zap",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Type 1 / Type 2 Velocity.",
+          "coversOnMap": "DEALS -> Executive Strategy & Two-Way Doors -> Type 1 / Type 2 Velocity",
+          "whatItDoes": "Executes Type 1 / Type 2 Velocity with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-frictionless-checkout",
+        "type": "hub",
+        "name": "Frictionless D2C Commerce",
+        "department": "DEALS",
+        "color": "#fb7185",
+        "icon": "shopping-cart",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Frictionless D2C Commerce in DEALS.",
+          "whatItDoes": "Clusters specialized execution skills assigned to ecommerce-lutke."
+        }
+      },
+      {
+        "id": "skill-one-click-checkout",
+        "type": "skill",
+        "name": "Instant One-Click Checkout",
+        "badge": "Shop Pay",
+        "department": "DEALS",
+        "color": "#fb7185",
+        "icon": "check",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Instant One-Click Checkout.",
+          "coversOnMap": "DEALS -> Frictionless D2C Commerce -> Instant One-Click Checkout",
+          "whatItDoes": "Executes Instant One-Click Checkout with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-merchant-sovereignty",
+        "type": "skill",
+        "name": "Merchant Sovereignty",
+        "badge": "D2C",
+        "department": "DEALS",
+        "color": "#fb7185",
+        "icon": "shield",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Merchant Sovereignty.",
+          "coversOnMap": "DEALS -> Frictionless D2C Commerce -> Merchant Sovereignty",
+          "whatItDoes": "Executes Merchant Sovereignty with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-growth-engine",
+        "type": "hub",
+        "name": "High-Tempo Testing & North Star",
+        "department": "DEALS",
+        "color": "#fb7185",
+        "icon": "trending-up",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for High-Tempo Testing & North Star in DEALS.",
+          "whatItDoes": "Clusters specialized execution skills assigned to growth-ellis."
+        }
+      },
+      {
+        "id": "skill-ice-scoring",
+        "type": "skill",
+        "name": "ICE Prioritization Scoring",
+        "badge": "Growth",
+        "department": "DEALS",
+        "color": "#fb7185",
+        "icon": "filter",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: ICE Prioritization Scoring.",
+          "coversOnMap": "DEALS -> High-Tempo Testing & North Star -> ICE Prioritization Scoring",
+          "whatItDoes": "Executes ICE Prioritization Scoring with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-north-star-metric",
+        "type": "skill",
+        "name": "North Star Metric Engine",
+        "badge": "NSM",
+        "department": "DEALS",
+        "color": "#fb7185",
+        "icon": "target",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: North Star Metric Engine.",
+          "coversOnMap": "DEALS -> High-Tempo Testing & North Star -> North Star Metric Engine",
+          "whatItDoes": "Executes North Star Metric Engine with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "dept-marketing",
+        "type": "department",
+        "name": "MARKETING",
+        "title": "Marketing & Brand Scale",
+        "color": "#a78bfa",
+        "icon": "\ud83d\ude80",
+        "angle": 135,
+        "distance": 330,
+        "size": 32,
+        "description": "Purple Cow positioning, viral network flywheels (Metcalfe), radical Zag differentiation, and visual design tokens.",
+        "details": {
+          "atAGlance": "MARKETING Department coordinates sovereign capabilities, agents, and pipelines.",
+          "whatItDoes": "Purple Cow positioning, viral network flywheels (Metcalfe), radical Zag differentiation, and visual design tokens."
+        }
+      },
+      {
+        "id": "node-marketing-godin",
+        "type": "agent",
+        "agentId": "marketing-godin",
+        "name": "Marketing Godin",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Remarkable Marketing & Brand Strategist creates Purple Cow positioning, tribal storytelling, and permission-based growth.",
+          "needs": "Creative copy editors, Email delivery platform, Audience analytics.",
+          "coversOnMap": "MARKETING -> Remarkable Marketing & Positioning",
+          "whatItDoes": "Identifies the Smallest Viable Market, crafts unignorable Purple Cow hooks, develops permission marketing sequences, and builds tribal narratives.",
+          "apiKeys": [
+            {
+              "key": "RESEND_API_KEY",
+              "where": "https://resend.com/api-keys",
+              "env": "RESEND_API_KEY"
+            }
+          ],
+          "configuration": "Looks for knowledge/brand_story.md and permission_strategy.md.",
+          "howToRun": "Tell Claude: 'Run marketing-godin to craft a Purple Cow positioning hook for [Product].'",
+          "kpis": [
+            {
+              "metric": "Organic Referral K-Factor",
+              "target": ">= 0.8",
+              "description": "Word-of-mouth coefficient driven by product remarkability"
+            },
+            {
+              "metric": "Hook Attention Retention",
+              "target": ">= 45%",
+              "description": "Audience holding past the critical 3-second hook threshold"
+            },
+            {
+              "metric": "Permission Audience Growth",
+              "target": "+10% MoM",
+              "description": "Direct opt-in subscribers (email/SMS) granting permission to communicate"
+            },
+            {
+              "metric": "Differentiation Index",
+              "target": "Purple Cow",
+              "description": "Zero confusion between the product and generic market alternatives"
+            }
+          ],
+          "successIndicators": [
+            "**Developing a 'Purple Cow' offering so remarkable that customers proactively recommend it.**: Developing a 'Purple Cow' offering so remarkable that customers proactively recommend it.",
+            "**Permission marketing practiced faithfully**: honoring customer attention and never spamming.",
+            "**Storytelling that resonates deeply with a specific, passionate tribe rather than the generic mass.**: Storytelling that resonates deeply with a specific, passionate tribe rather than the generic mass.",
+            "**Focusing on the Smallest Viable Market and delighting them completely.**: Focusing on the Smallest Viable Market and delighting them completely."
+          ],
+          "failureIndicators": [
+            "**Creating bland, invisible marketing campaigns that blend into competitor noise.**: Creating bland, invisible marketing campaigns that blend into competitor noise.",
+            "**Purchasing cold lists and blasting unsolicited promotional emails without permission.**: Purchasing cold lists and blasting unsolicited promotional emails without permission.",
+            "**Trying to please everyone and ending up meaningful to no one.**: Trying to please everyone and ending up meaningful to no one.",
+            "**Treating marketing as an afterthought added on top of a mediocre product.**: Treating marketing as an afterthought added on top of a mediocre product."
+          ]
+        }
+      },
+      {
+        "id": "node-social-zuckerberg",
+        "type": "agent",
+        "agentId": "social-zuckerberg",
+        "name": "Social Zuckerberg",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Social Graph Architect & Network Scale Pioneer leverages Metcalfe's Law, viral loops, and algorithmic feeds to achieve exponential scale.",
+          "needs": "Graph database / Redis, High-throughput API gateway, Meta Graph APIs.",
+          "coversOnMap": "MARKETING -> Social Graph & Network Flywheel",
+          "whatItDoes": "Architects social graph relationships, designs viral invitation loops, optimizes feed ranking mechanics, and executes high-speed deployment sprints.",
+          "apiKeys": [
+            {
+              "key": "META_APP_SECRET",
+              "where": "https://developers.facebook.com",
+              "env": "META_APP_SECRET"
+            }
+          ],
+          "configuration": "Looks for knowledge/social_graph.md and viral_mechanics.md.",
+          "howToRun": "Tell Claude: 'Run social-zuckerberg to engineer a viral network loop for [Platform Feature].'",
+          "kpis": [
+            {
+              "metric": "Network Effect Virality Coefficient",
+              "target": "K > 1.0",
+              "description": "Each active user bringing in more than one additional user organically"
+            },
+            {
+              "metric": "30-Day Retention (D30)",
+              "target": ">= 25%",
+              "description": "High stickiness driven by social graph density"
+            },
+            {
+              "metric": "Feed Content Consumption Rate",
+              "target": ">= 10 items/session",
+              "description": "User engagement depth on dynamic algorithmic media feeds"
+            },
+            {
+              "metric": "Release Velocity ('Move Fast')",
+              "target": "< 24h deploy",
+              "description": "Rapid code deployment backed by resilient testing infrastructure"
+            }
+          ],
+          "successIndicators": [
+            "**Building self-reinforcing network effects governed by Metcalfe's Law (Value proportional to N^2).**: Building self-reinforcing network effects governed by Metcalfe's Law (Value proportional to N^2).",
+            "**Executing the Hacker Way**: 'Move fast with stable infrastructure' where code wins arguments.",
+            "**Deploying algorithmic retention hooks (dynamic feeds, notifications, viral social loops).**: Deploying algorithmic retention hooks (dynamic feeds, notifications, viral social loops).",
+            "**Leveraging open-source AI infrastructure (Llama ecosystem) to accelerate development.**: Leveraging open-source AI infrastructure (Llama ecosystem) to accelerate development."
+          ],
+          "failureIndicators": [
+            "**Building isolated single-player tools that lack network effects or sharing mechanics.**: Building isolated single-player tools that lack network effects or sharing mechanics.",
+            "**Allowing platform performance to degrade under viral spikes (unstable infrastructure).**: Allowing platform performance to degrade under viral spikes (unstable infrastructure).",
+            "**Excessive debate without deploying concrete code to test live user behavior.**: Excessive debate without deploying concrete code to test live user behavior.",
+            "**Ignoring platform retention flywheels, resulting in high churn after initial sign-up.**: Ignoring platform retention flywheels, resulting in high churn after initial sign-up."
+          ]
+        }
+      },
+      {
+        "id": "node-branding-neumeier",
+        "type": "agent",
+        "agentId": "branding-neumeier",
+        "name": "Branding Neumeier",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Radical Differentiation & Brand Gap Strategist establishes an uncontested 'Category of One' using The Zag Principle and The Onlyness Statement.",
+          "needs": "Brand identity guidelines, Competitor messaging matrix, Typography tokens.",
+          "coversOnMap": "MARKETING -> Radical Differentiation & Brand Gap",
+          "whatItDoes": "Authors The Onlyness Statement, audits the Brand Gap across customer touchpoints, architects the Zag positioning, and aligns visual/verbal identity.",
+          "apiKeys": [],
+          "configuration": "Looks for knowledge/brand_identity.md and zag_matrix.md.",
+          "howToRun": "Tell Claude: 'Run branding-neumeier to craft The Onlyness Statement and Zag strategy for [Brand].'",
+          "kpis": [
+            {
+              "metric": "The Onlyness Statement Closeness",
+              "target": "100% Unique",
+              "description": "Clear, indisputable category of one: 'The only [category] that [benefit]'"
+            },
+            {
+              "metric": "Brand Recall Index",
+              "target": ">= 70%",
+              "description": "Spontaneous unassisted brand association within target customer niche"
+            },
+            {
+              "metric": "Brand Gap Cohesion Score",
+              "target": ">= 90/100",
+              "description": "Zero contradiction between corporate promise and customer experience"
+            },
+            {
+              "metric": "Visual & Verbal Zagging Impact",
+              "target": "Distinct",
+              "description": "Radical differentiation from all competitor aesthetics and messaging"
+            }
+          ],
+          "successIndicators": [
+            "**When everybody zigs, we zag**: radical, bold, defensible market differentiation.",
+            "**Airtight 'The Onlyness Statement' defining what we do, for whom, where, and why it matters.**: Airtight 'The Onlyness Statement' defining what we do, for whom, where, and why it matters.",
+            "**Bridging the Brand Gap**: ensuring the brand is defined by what customers feel, not corporate slogans.",
+            "**Facilitating the 'Brand Flip' where customers proudly make the brand part of their personal identity.**: Facilitating the 'Brand Flip' where customers proudly make the brand part of their personal identity."
+          ],
+          "failureIndicators": [
+            "**Copycat branding that looks and sounds identical to legacy industry competitors.**: Copycat branding that looks and sounds identical to legacy industry competitors.",
+            "**Flabby positioning statements filled with meaningless corporate buzzwords ('synergistic solutions').**: Flabby positioning statements filled with meaningless corporate buzzwords ('synergistic solutions').",
+            "**Over-promising in marketing copy while delivering an underwhelming product experience.**: Over-promising in marketing copy while delivering an underwhelming product experience.",
+            "**Diluting brand focus by trying to appeal to conflicting demographic segments.**: Diluting brand focus by trying to appeal to conflicting demographic segments."
+          ]
+        }
+      },
+      {
+        "id": "node-ui-duarte",
+        "type": "agent",
+        "agentId": "ui-duarte",
+        "name": "Ui Duarte",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "\ud83e\udd16",
+        "size": 22,
+        "details": {
+          "atAGlance": "The Visual Design & Aesthetic Director establishes world-class design systems, typography hierarchy, sensory motion, and visual wow-factor.",
+          "needs": "Design tokens (index.css), Modern typography (Google Fonts), SVG asset libraries.",
+          "coversOnMap": "MARKETING -> Visual Hierarchy & Design System",
+          "whatItDoes": "Defines CSS design tokens, creates responsive layout hierarchies, crafts micro-animations, and audits interfaces for aesthetic excellence.",
+          "apiKeys": [],
+          "configuration": "Looks for knowledge/design_tokens.json and visual_guidelines.md.",
+          "howToRun": "Tell Claude: 'Run ui-duarte to design the visual hierarchy and CSS token system for [Interface].'",
+          "kpis": [
+            {
+              "metric": "Design Token Strictness",
+              "target": "100%",
+              "description": "Zero hardcoded ad-hoc hex colors or arbitrary pixel spacings"
+            },
+            {
+              "metric": "Visual Contrast & Accessibility",
+              "target": "WCAG AAA",
+              "description": "Flawless legibility and contrast ratios across all viewports"
+            },
+            {
+              "metric": "Layout Stability (CLS)",
+              "target": "< 0.05",
+              "description": "Zero disruptive layout shifts during interface hydration and rendering"
+            },
+            {
+              "metric": "Aesthetic First Impression Rating",
+              "target": ">= 95/100",
+              "description": "Instant visual wow-factor, premium typography, and harmonious palettes"
+            }
+          ],
+          "successIndicators": [
+            "**Visual hierarchy so clear that users instantly understand priority and navigation flow.**: Visual hierarchy so clear that users instantly understand priority and navigation flow.",
+            "**Harmonious color systems tailored to emotional resonance and functional clarity.**: Harmonious color systems tailored to emotional resonance and functional clarity.",
+            "**Subtle, purposeful micro-interactions and transitions that make software feel alive.**: Subtle, purposeful micro-interactions and transitions that make software feel alive.",
+            "**Consistent application of design system tokens across web, dashboard, and marketing surfaces.**: Consistent application of design system tokens across web, dashboard, and marketing surfaces."
+          ],
+          "failureIndicators": [
+            "**Cluttered, chaotic visual layouts that strain user eye movement and create fatigue.**: Cluttered, chaotic visual layouts that strain user eye movement and create fatigue.",
+            "**Hardcoded styling outside the design token layer violating brand harmony.**: Hardcoded styling outside the design token layer violating brand harmony.",
+            "**Low-contrast text combinations that compromise readability on mobile devices.**: Low-contrast text combinations that compromise readability on mobile devices.",
+            "**Generic, default MVP styling that signals amateur execution and diminishes trust.**: Generic, default MVP styling that signals amateur execution and diminishes trust."
+          ]
+        }
+      },
+      {
+        "id": "hub-purple-cow",
+        "type": "hub",
+        "name": "Remarkable Positioning & Purple Cow",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "award",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Remarkable Positioning & Purple Cow in MARKETING.",
+          "whatItDoes": "Clusters specialized execution skills assigned to marketing-godin."
+        }
+      },
+      {
+        "id": "skill-purple-cow-hook",
+        "type": "skill",
+        "name": "Purple Cow Hook Engine",
+        "badge": "Viral",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "sparkles",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Purple Cow Hook Engine.",
+          "coversOnMap": "MARKETING -> Remarkable Positioning & Purple Cow -> Purple Cow Hook Engine",
+          "whatItDoes": "Executes Purple Cow Hook Engine with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-permission-marketing",
+        "type": "skill",
+        "name": "Permission Marketing",
+        "badge": "Tribe",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "check",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Permission Marketing.",
+          "coversOnMap": "MARKETING -> Remarkable Positioning & Purple Cow -> Permission Marketing",
+          "whatItDoes": "Executes Permission Marketing with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-social-graph",
+        "type": "hub",
+        "name": "Social Graph & Network Scale",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "share-2",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Social Graph & Network Scale in MARKETING.",
+          "whatItDoes": "Clusters specialized execution skills assigned to social-zuckerberg."
+        }
+      },
+      {
+        "id": "skill-metcalfe-flywheel",
+        "type": "skill",
+        "name": "Metcalfe Network Flywheel",
+        "badge": "Scale",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "network",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Metcalfe Network Flywheel.",
+          "coversOnMap": "MARKETING -> Social Graph & Network Scale -> Metcalfe Network Flywheel",
+          "whatItDoes": "Executes Metcalfe Network Flywheel with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-algorithmic-feeds",
+        "type": "skill",
+        "name": "Algorithmic Feed Retention",
+        "badge": "Llama",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "layers",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Algorithmic Feed Retention.",
+          "coversOnMap": "MARKETING -> Social Graph & Network Scale -> Algorithmic Feed Retention",
+          "whatItDoes": "Executes Algorithmic Feed Retention with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-the-zag",
+        "type": "hub",
+        "name": "Radical Differentiation & Zag",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "compass",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Radical Differentiation & Zag in MARKETING.",
+          "whatItDoes": "Clusters specialized execution skills assigned to branding-neumeier."
+        }
+      },
+      {
+        "id": "skill-onlyness-statement",
+        "type": "skill",
+        "name": "The Onlyness Statement",
+        "badge": "Zag",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "check",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: The Onlyness Statement.",
+          "coversOnMap": "MARKETING -> Radical Differentiation & Zag -> The Onlyness Statement",
+          "whatItDoes": "Executes The Onlyness Statement with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-brand-gap",
+        "type": "skill",
+        "name": "Bridging The Brand Gap",
+        "badge": "Brand",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "shield",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Bridging The Brand Gap.",
+          "coversOnMap": "MARKETING -> Radical Differentiation & Zag -> Bridging The Brand Gap",
+          "whatItDoes": "Executes Bridging The Brand Gap with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "hub-design-tokens",
+        "type": "hub",
+        "name": "Visual Hierarchy & Design Tokens",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "palette",
+        "size": 18,
+        "details": {
+          "atAGlance": "Operational sub-hub for Visual Hierarchy & Design Tokens in MARKETING.",
+          "whatItDoes": "Clusters specialized execution skills assigned to ui-duarte."
+        }
+      },
+      {
+        "id": "skill-css-tokens",
+        "type": "skill",
+        "name": "Strict Design Tokens",
+        "badge": "UI",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "layers",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Strict Design Tokens.",
+          "coversOnMap": "MARKETING -> Visual Hierarchy & Design Tokens -> Strict Design Tokens",
+          "whatItDoes": "Executes Strict Design Tokens with deterministic acceptance criteria and KPI tracking."
+        }
+      },
+      {
+        "id": "skill-sensory-motion",
+        "type": "skill",
+        "name": "Sensory Micro-Motion",
+        "badge": "Aesthetics",
+        "department": "MARKETING",
+        "color": "#a78bfa",
+        "icon": "sparkles",
+        "size": 14,
+        "details": {
+          "atAGlance": "Specialized operational capability: Sensory Micro-Motion.",
+          "coversOnMap": "MARKETING -> Visual Hierarchy & Design Tokens -> Sensory Micro-Motion",
+          "whatItDoes": "Executes Sensory Micro-Motion with deterministic acceptance criteria and KPI tracking."
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-core-dept-operations",
+        "source": "core-council",
+        "target": "dept-operations",
+        "color": "#38bdf8",
+        "style": "solid",
+        "animated": true
+      },
+      {
+        "id": "edge-dept-operations-node-devops-hightower",
+        "source": "dept-operations",
+        "target": "node-devops-hightower",
+        "color": "#38bdf8",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-operations-node-operations-pg",
+        "source": "dept-operations",
+        "target": "node-operations-pg",
+        "color": "#38bdf8",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-operations-node-fullstack-dhh",
+        "source": "dept-operations",
+        "target": "node-fullstack-dhh",
+        "color": "#38bdf8",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-operations-node-cto-vogels",
+        "source": "dept-operations",
+        "target": "node-cto-vogels",
+        "color": "#38bdf8",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-node-devops-hightower-hub-ci-cd",
+        "source": "node-devops-hightower",
+        "target": "hub-ci-cd",
+        "color": "#38bdf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-ci-cd-skill-wrangler-deploy",
+        "source": "hub-ci-cd",
+        "target": "skill-wrangler-deploy",
+        "color": "#38bdf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-wrangler-deploy-skill-auto-rollback",
+        "source": "skill-wrangler-deploy",
+        "target": "skill-auto-rollback",
+        "color": "#38bdf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-auto-rollback-skill-secret-audit",
+        "source": "skill-auto-rollback",
+        "target": "skill-secret-audit",
+        "color": "#38bdf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-fullstack-dhh-hub-monolith-runtime",
+        "source": "node-fullstack-dhh",
+        "target": "hub-monolith-runtime",
+        "color": "#38bdf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-monolith-runtime-skill-clean-monolith",
+        "source": "hub-monolith-runtime",
+        "target": "skill-clean-monolith",
+        "color": "#38bdf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-clean-monolith-skill-convention-config",
+        "source": "skill-clean-monolith",
+        "target": "skill-convention-config",
+        "color": "#38bdf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-cto-vogels-hub-resilience-queues",
+        "source": "node-cto-vogels",
+        "target": "hub-resilience-queues",
+        "color": "#38bdf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-resilience-queues-skill-circuit-breaker",
+        "source": "hub-resilience-queues",
+        "target": "skill-circuit-breaker",
+        "color": "#38bdf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-circuit-breaker-skill-async-queues",
+        "source": "skill-circuit-breaker",
+        "target": "skill-async-queues",
+        "color": "#38bdf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-core-dept-intelligence",
+        "source": "core-council",
+        "target": "dept-intelligence",
+        "color": "#818cf8",
+        "style": "solid",
+        "animated": true
+      },
+      {
+        "id": "edge-dept-intelligence-node-research-thompson",
+        "source": "dept-intelligence",
+        "target": "node-research-thompson",
+        "color": "#818cf8",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-intelligence-node-ai-karpathy",
+        "source": "dept-intelligence",
+        "target": "node-ai-karpathy",
+        "color": "#818cf8",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-intelligence-node-consulting-bower",
+        "source": "dept-intelligence",
+        "target": "node-consulting-bower",
+        "color": "#818cf8",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-intelligence-node-critic-munger",
+        "source": "dept-intelligence",
+        "target": "node-critic-munger",
+        "color": "#818cf8",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-node-ai-karpathy-hub-software-3",
+        "source": "node-ai-karpathy",
+        "target": "hub-software-3",
+        "color": "#818cf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-software-3-skill-tokenomics",
+        "source": "hub-software-3",
+        "target": "skill-tokenomics",
+        "color": "#818cf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-tokenomics-skill-pydantic-schema",
+        "source": "skill-tokenomics",
+        "target": "skill-pydantic-schema",
+        "color": "#818cf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-pydantic-schema-skill-hallucination-gate",
+        "source": "skill-pydantic-schema",
+        "target": "skill-hallucination-gate",
+        "color": "#818cf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-critic-munger-hub-munger-gate",
+        "source": "node-critic-munger",
+        "target": "hub-munger-gate",
+        "color": "#818cf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-munger-gate-skill-pre-mortem",
+        "source": "hub-munger-gate",
+        "target": "skill-pre-mortem",
+        "color": "#818cf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-pre-mortem-skill-cognitive-bias",
+        "source": "skill-pre-mortem",
+        "target": "skill-cognitive-bias",
+        "color": "#818cf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-consulting-bower-hub-mece-strategy",
+        "source": "node-consulting-bower",
+        "target": "hub-mece-strategy",
+        "color": "#818cf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-mece-strategy-skill-issue-trees",
+        "source": "hub-mece-strategy",
+        "target": "skill-issue-trees",
+        "color": "#818cf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-issue-trees-skill-fact-governance",
+        "source": "skill-issue-trees",
+        "target": "skill-fact-governance",
+        "color": "#818cf8",
+        "style": "solid"
+      },
+      {
+        "id": "edge-core-dept-customer",
+        "source": "core-council",
+        "target": "dept-customer",
+        "color": "#34d399",
+        "style": "solid",
+        "animated": true
+      },
+      {
+        "id": "edge-dept-customer-node-product-norman",
+        "source": "dept-customer",
+        "target": "node-product-norman",
+        "color": "#34d399",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-customer-node-interaction-cooper",
+        "source": "dept-customer",
+        "target": "node-interaction-cooper",
+        "color": "#34d399",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-customer-node-comm-voss",
+        "source": "dept-customer",
+        "target": "node-comm-voss",
+        "color": "#34d399",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-customer-node-community-garyvee",
+        "source": "dept-customer",
+        "target": "node-community-garyvee",
+        "color": "#34d399",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-node-product-norman-hub-affordances",
+        "source": "node-product-norman",
+        "target": "hub-affordances",
+        "color": "#34d399",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-affordances-skill-signifiers",
+        "source": "hub-affordances",
+        "target": "skill-signifiers",
+        "color": "#34d399",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-signifiers-skill-mistake-proofing",
+        "source": "skill-signifiers",
+        "target": "skill-mistake-proofing",
+        "color": "#34d399",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-comm-voss-hub-negotiation",
+        "source": "node-comm-voss",
+        "target": "hub-negotiation",
+        "color": "#34d399",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-negotiation-skill-accusation-audit",
+        "source": "hub-negotiation",
+        "target": "skill-accusation-audit",
+        "color": "#34d399",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-accusation-audit-skill-calibrated-questions",
+        "source": "skill-accusation-audit",
+        "target": "skill-calibrated-questions",
+        "color": "#34d399",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-community-garyvee-hub-attention-arbitrage",
+        "source": "node-community-garyvee",
+        "target": "hub-attention-arbitrage",
+        "color": "#34d399",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-attention-arbitrage-skill-content-cascade",
+        "source": "hub-attention-arbitrage",
+        "target": "skill-content-cascade",
+        "color": "#34d399",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-content-cascade-skill-jab-jab-hook",
+        "source": "skill-content-cascade",
+        "target": "skill-jab-jab-hook",
+        "color": "#34d399",
+        "style": "solid"
+      },
+      {
+        "id": "edge-core-dept-back-office",
+        "source": "core-council",
+        "target": "dept-back-office",
+        "color": "#f472b6",
+        "style": "solid",
+        "animated": true
+      },
+      {
+        "id": "edge-dept-back-office-node-cfo-campbell",
+        "source": "dept-back-office",
+        "target": "node-cfo-campbell",
+        "color": "#f472b6",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-back-office-node-mindset-naval",
+        "source": "dept-back-office",
+        "target": "node-mindset-naval",
+        "color": "#f472b6",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-back-office-node-qa-bach",
+        "source": "dept-back-office",
+        "target": "node-qa-bach",
+        "color": "#f472b6",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-node-cfo-campbell-hub-unit-economics",
+        "source": "node-cfo-campbell",
+        "target": "hub-unit-economics",
+        "color": "#f472b6",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-unit-economics-skill-ltv-cac",
+        "source": "hub-unit-economics",
+        "target": "skill-ltv-cac",
+        "color": "#f472b6",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-ltv-cac-skill-payback-audit",
+        "source": "skill-ltv-cac",
+        "target": "skill-payback-audit",
+        "color": "#f472b6",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-mindset-naval-hub-asymmetric-leverage",
+        "source": "node-mindset-naval",
+        "target": "hub-asymmetric-leverage",
+        "color": "#f472b6",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-asymmetric-leverage-skill-code-media-leverage",
+        "source": "hub-asymmetric-leverage",
+        "target": "skill-code-media-leverage",
+        "color": "#f472b6",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-code-media-leverage-skill-specific-knowledge",
+        "source": "skill-code-media-leverage",
+        "target": "skill-specific-knowledge",
+        "color": "#f472b6",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-qa-bach-hub-exploratory-qa",
+        "source": "node-qa-bach",
+        "target": "hub-exploratory-qa",
+        "color": "#f472b6",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-exploratory-qa-skill-boundary-falsify",
+        "source": "hub-exploratory-qa",
+        "target": "skill-boundary-falsify",
+        "color": "#f472b6",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-boundary-falsify-skill-zero-escape",
+        "source": "skill-boundary-falsify",
+        "target": "skill-zero-escape",
+        "color": "#f472b6",
+        "style": "solid"
+      },
+      {
+        "id": "edge-core-dept-sales",
+        "source": "core-council",
+        "target": "dept-sales",
+        "color": "#fbbf24",
+        "style": "solid",
+        "animated": true
+      },
+      {
+        "id": "edge-dept-sales-node-sales-ross",
+        "source": "dept-sales",
+        "target": "node-sales-ross",
+        "color": "#fbbf24",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-sales-node-sales-hormozi",
+        "source": "dept-sales",
+        "target": "node-sales-hormozi",
+        "color": "#fbbf24",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-sales-node-psych-cialdini",
+        "source": "dept-sales",
+        "target": "node-psych-cialdini",
+        "color": "#fbbf24",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-node-sales-ross-hub-outbound-engine",
+        "source": "node-sales-ross",
+        "target": "hub-outbound-engine",
+        "color": "#fbbf24",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-outbound-engine-skill-start-here",
+        "source": "hub-outbound-engine",
+        "target": "skill-start-here",
+        "color": "#fbbf24",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-start-here-skill-account-enrichment",
+        "source": "skill-start-here",
+        "target": "skill-account-enrichment",
+        "color": "#fbbf24",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-account-enrichment-skill-email-verification",
+        "source": "skill-account-enrichment",
+        "target": "skill-email-verification",
+        "color": "#fbbf24",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-email-verification-skill-contact-enrichment",
+        "source": "skill-email-verification",
+        "target": "skill-contact-enrichment",
+        "color": "#fbbf24",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-contact-enrichment-skill-data-enrichment-spec",
+        "source": "skill-contact-enrichment",
+        "target": "skill-data-enrichment-spec",
+        "color": "#fbbf24",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-sales-hormozi-hub-grand-slam-offer",
+        "source": "node-sales-hormozi",
+        "target": "hub-grand-slam-offer",
+        "color": "#fbbf24",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-grand-slam-offer-skill-value-equation",
+        "source": "hub-grand-slam-offer",
+        "target": "skill-value-equation",
+        "color": "#fbbf24",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-value-equation-skill-risk-reversal",
+        "source": "skill-value-equation",
+        "target": "skill-risk-reversal",
+        "color": "#fbbf24",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-risk-reversal-skill-rule-of-100",
+        "source": "skill-risk-reversal",
+        "target": "skill-rule-of-100",
+        "color": "#fbbf24",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-psych-cialdini-hub-pre-suasion",
+        "source": "node-psych-cialdini",
+        "target": "hub-pre-suasion",
+        "color": "#fbbf24",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-pre-suasion-skill-privileged-moments",
+        "source": "hub-pre-suasion",
+        "target": "skill-privileged-moments",
+        "color": "#fbbf24",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-privileged-moments-skill-social-proof",
+        "source": "skill-privileged-moments",
+        "target": "skill-social-proof",
+        "color": "#fbbf24",
+        "style": "solid"
+      },
+      {
+        "id": "edge-core-dept-deals",
+        "source": "core-council",
+        "target": "dept-deals",
+        "color": "#fb7185",
+        "style": "solid",
+        "animated": true
+      },
+      {
+        "id": "edge-dept-deals-node-ceo-bezos",
+        "source": "dept-deals",
+        "target": "node-ceo-bezos",
+        "color": "#fb7185",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-deals-node-ecommerce-lutke",
+        "source": "dept-deals",
+        "target": "node-ecommerce-lutke",
+        "color": "#fb7185",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-deals-node-growth-ellis",
+        "source": "dept-deals",
+        "target": "node-growth-ellis",
+        "color": "#fb7185",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-node-ceo-bezos-hub-executive-deals",
+        "source": "node-ceo-bezos",
+        "target": "hub-executive-deals",
+        "color": "#fb7185",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-executive-deals-skill-working-backwards",
+        "source": "hub-executive-deals",
+        "target": "skill-working-backwards",
+        "color": "#fb7185",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-working-backwards-skill-two-way-doors",
+        "source": "skill-working-backwards",
+        "target": "skill-two-way-doors",
+        "color": "#fb7185",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-ecommerce-lutke-hub-frictionless-checkout",
+        "source": "node-ecommerce-lutke",
+        "target": "hub-frictionless-checkout",
+        "color": "#fb7185",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-frictionless-checkout-skill-one-click-checkout",
+        "source": "hub-frictionless-checkout",
+        "target": "skill-one-click-checkout",
+        "color": "#fb7185",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-one-click-checkout-skill-merchant-sovereignty",
+        "source": "skill-one-click-checkout",
+        "target": "skill-merchant-sovereignty",
+        "color": "#fb7185",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-growth-ellis-hub-growth-engine",
+        "source": "node-growth-ellis",
+        "target": "hub-growth-engine",
+        "color": "#fb7185",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-growth-engine-skill-ice-scoring",
+        "source": "hub-growth-engine",
+        "target": "skill-ice-scoring",
+        "color": "#fb7185",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-ice-scoring-skill-north-star-metric",
+        "source": "skill-ice-scoring",
+        "target": "skill-north-star-metric",
+        "color": "#fb7185",
+        "style": "solid"
+      },
+      {
+        "id": "edge-core-dept-marketing",
+        "source": "core-council",
+        "target": "dept-marketing",
+        "color": "#a78bfa",
+        "style": "solid",
+        "animated": true
+      },
+      {
+        "id": "edge-dept-marketing-node-marketing-godin",
+        "source": "dept-marketing",
+        "target": "node-marketing-godin",
+        "color": "#a78bfa",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-marketing-node-social-zuckerberg",
+        "source": "dept-marketing",
+        "target": "node-social-zuckerberg",
+        "color": "#a78bfa",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-marketing-node-branding-neumeier",
+        "source": "dept-marketing",
+        "target": "node-branding-neumeier",
+        "color": "#a78bfa",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-dept-marketing-node-ui-duarte",
+        "source": "dept-marketing",
+        "target": "node-ui-duarte",
+        "color": "#a78bfa",
+        "style": "dashed"
+      },
+      {
+        "id": "edge-node-marketing-godin-hub-purple-cow",
+        "source": "node-marketing-godin",
+        "target": "hub-purple-cow",
+        "color": "#a78bfa",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-purple-cow-skill-purple-cow-hook",
+        "source": "hub-purple-cow",
+        "target": "skill-purple-cow-hook",
+        "color": "#a78bfa",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-purple-cow-hook-skill-permission-marketing",
+        "source": "skill-purple-cow-hook",
+        "target": "skill-permission-marketing",
+        "color": "#a78bfa",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-social-zuckerberg-hub-social-graph",
+        "source": "node-social-zuckerberg",
+        "target": "hub-social-graph",
+        "color": "#a78bfa",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-social-graph-skill-metcalfe-flywheel",
+        "source": "hub-social-graph",
+        "target": "skill-metcalfe-flywheel",
+        "color": "#a78bfa",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-metcalfe-flywheel-skill-algorithmic-feeds",
+        "source": "skill-metcalfe-flywheel",
+        "target": "skill-algorithmic-feeds",
+        "color": "#a78bfa",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-branding-neumeier-hub-the-zag",
+        "source": "node-branding-neumeier",
+        "target": "hub-the-zag",
+        "color": "#a78bfa",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-the-zag-skill-onlyness-statement",
+        "source": "hub-the-zag",
+        "target": "skill-onlyness-statement",
+        "color": "#a78bfa",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-onlyness-statement-skill-brand-gap",
+        "source": "skill-onlyness-statement",
+        "target": "skill-brand-gap",
+        "color": "#a78bfa",
+        "style": "solid"
+      },
+      {
+        "id": "edge-node-ui-duarte-hub-design-tokens",
+        "source": "node-ui-duarte",
+        "target": "hub-design-tokens",
+        "color": "#a78bfa",
+        "style": "solid"
+      },
+      {
+        "id": "edge-hub-design-tokens-skill-css-tokens",
+        "source": "hub-design-tokens",
+        "target": "skill-css-tokens",
+        "color": "#a78bfa",
+        "style": "solid"
+      },
+      {
+        "id": "edge-skill-css-tokens-skill-sensory-motion",
+        "source": "skill-css-tokens",
+        "target": "skill-sensory-motion",
+        "color": "#a78bfa",
+        "style": "solid"
+      }
+    ]
+  }
+}

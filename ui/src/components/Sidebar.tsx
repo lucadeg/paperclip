@@ -21,6 +21,8 @@ import {
   GanttChartSquare,
   LayoutGrid,
   Users,
+  Briefcase,
+  Film,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -56,6 +58,7 @@ export function Sidebar({ children }: { children?: ReactNode }) {
   // Every labeled section is collapsible (session-scoped, default open) —
   // one policy across static nav groups and the data-driven sections.
   const [workOpen, setWorkOpen] = useState(true);
+  const [sovereignOpen, setSovereignOpen] = useState(true);
   const [organizationOpen, setOrganizationOpen] = useState(true);
   const { selectedCompanyId, selectedCompany } = useCompany();
   const { collapsed, peeking } = useSidebar();
@@ -235,13 +238,23 @@ export function Sidebar({ children }: { children?: ReactNode }) {
           />
         </SidebarSection>
 
+        <SidebarSection
+          label="Sovereign Engine"
+          collapsible={{ open: sovereignOpen, onOpenChange: setSovereignOpen }}
+        >
+          <SidebarNavItem to="/content-planner" label="Content Planner" icon={GanttChartSquare} textBadge="MVX" />
+          <SidebarNavItem to="/council" label="Sovereign Council" icon={Users} textBadge="27" />
+          <SidebarNavItem to="/skill-tree" label="Skill Tree Galattico" icon={Network} textBadge="5,125" />
+          <SidebarNavItem to="/crm-contacts" label="CRM & Lead B2B" icon={Briefcase} textBadge="159" />
+        </SidebarSection>
+
         {streamlinedUiEnabled ? (
           <SidebarSection
             label="Org"
             collapsible={{ open: organizationOpen, onOpenChange: setOrganizationOpen }}
           >
-            <SidebarNavItem to="/agents" label="Agents" icon={Users} />
-            <SidebarNavItem to="/skills" label="Skills" icon={Boxes} />
+            <SidebarNavItem to="/agents" label="Agents" icon={Users} textBadge="226" />
+            <SidebarNavItem to="/skills" label="Skills" icon={Boxes} textBadge="5,125+" />
             <SidebarNavItem to="/apps" label="Connectors" icon={Unplug} />
             <SidebarNavItem to="/activity" label="Audit" icon={History} />
           </SidebarSection>

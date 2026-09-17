@@ -1,9 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 333 217">
+  <title>MVX Ads Master</title>
   <style>
-    path { stroke: #db2777; }
+    path { fill: #0284c7; }
     @media (prefers-color-scheme: dark) {
-      path { stroke: #f472b6; }
+      path { fill: #38bdf8; }
     }
   </style>
-  <path stroke-width="2" d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/>
+  <path d="M 251 118 L 217 154 L 217 157 L 229 180 L 229 182 L 238 199 L 238 201 L 245 213 L 298 213 L 277 170 L 277 168 L 271 157 L 271 155 L 269 153 L 269 151 L 261 136 L 257 125 L 253 118 Z M 203 12 L 201 15 L 201 18 L 200 19 L 200 23 L 198 27 L 198 31 L 193 36 L 189 38 L 181 40 L 180 41 L 176 41 L 174 43 L 178 45 L 181 45 L 182 46 L 190 48 L 192 49 L 196 53 L 197 57 L 198 58 L 198 61 L 200 64 L 201 71 L 203 73 L 203 71 L 205 67 L 205 64 L 206 63 L 207 58 L 209 55 L 209 53 L 213 49 L 215 48 L 217 48 L 221 46 L 224 46 L 230 43 L 230 42 L 228 41 L 225 41 L 224 40 L 216 38 L 210 34 L 210 33 L 208 31 L 208 29 L 207 28 L 207 26 L 205 22 L 205 18 L 203 15 Z M 327 4 L 249 21 L 266 40 L 153 158 L 151 147 L 224 69 L 217 59 L 202 91 L 189 64 L 150 127 L 89 29 L 16 184 L 87 113 L 93 120 L 1 213 L 55 213 L 96 129 L 149 212 L 290 65 L 311 83 Z" fill-rule="evenodd"/>
 </svg>

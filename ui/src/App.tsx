@@ -98,6 +98,10 @@ import { BoardClaimPage } from "./pages/BoardClaim";
 import { CliAuthPage } from "./pages/CliAuth";
 import { InviteLandingPage } from "./pages/InviteLanding";
 import { JoinRequestQueue } from "./pages/JoinRequestQueue";
+import { SovereignCouncil } from "./pages/SovereignCouncil";
+import { SkillTreeGalactic } from "./pages/SkillTreeGalactic";
+import { ContentPlanner } from "./pages/ContentPlanner";
+import { CrmContacts } from "./pages/CrmContacts";
 import { NotFoundPage } from "./pages/NotFound";
 import { useCompany } from "./context/CompanyContext";
 import { useDialogActions, useDialogState } from "./context/DialogContext";
@@ -149,6 +153,12 @@ function boardRoutes(streamlinedUiEnabled: boolean) {
       <Route index element={<Navigate to="dashboard" replace />} />
       <Route path="dashboard" element={<Dashboard />} />
       <Route path="dashboard/live" element={<DashboardLive />} />
+      <Route path="council" element={<SovereignCouncil />} />
+      <Route path="skill-tree" element={<SkillTreeGalactic />} />
+      <Route path="content-planner" element={<ContentPlanner />} />
+      <Route path="planner" element={<Navigate to="content-planner" replace />} />
+      <Route path="crm-contacts" element={<CrmContacts />} />
+      <Route path="crm" element={<Navigate to="crm-contacts" replace />} />
       <Route
         path="timeline"
         element={streamlinedUiEnabled ? <AuditCompatibilityRedirect to="/activity/timeline" /> : <Timeline />}
@@ -287,6 +297,7 @@ function boardRoutes(streamlinedUiEnabled: boolean) {
       <Route path="projects/:projectId/overview" element={<ProjectDetail />} />
       <Route path="projects/:projectId/issues" element={<ProjectDetail />} />
       <Route path="projects/:projectId/issues/:filter" element={<ProjectDetail />} />
+      <Route path="projects/:projectId/workflows" element={<ProjectDetail />} />
       <Route element={<IsolatedWorkspacesRouteGate />}>
         <Route path="projects/:projectId/workspaces/:workspaceId" element={<ProjectWorkspaceDetail />} />
       </Route>
@@ -298,6 +309,10 @@ function boardRoutes(streamlinedUiEnabled: boolean) {
       </Route>
       <Route path="issues" element={<Issues />} />
       <Route path="tasks" element={<Navigate to="/issues" replace />} />
+      <Route path="council" element={<SovereignCouncil />} />
+      <Route path="skill-tree" element={<SkillTreeGalactic />} />
+      <Route path="content-planner" element={<ContentPlanner />} />
+      <Route path="planner" element={<Navigate to="content-planner" replace />} />
       <Route path="search" element={<Search />} />
       <Route path="issues/all" element={<Navigate to="/issues" replace />} />
       <Route path="issues/active" element={<Navigate to="/issues" replace />} />
@@ -758,6 +773,15 @@ export function App() {
         <Route path="ux-lab/bootstrap-setup" element={<BootstrapSetupUxLab />} />
         <Route path="ux-lab/responsible-user-denial" element={<ResponsibleUserDenialUxLab />} />
         <Route path="ux-lab/cross-issue-collaboration" element={<CrossIssueCollaborationUxLab />} />
+
+        <Route element={<Layout />}>
+          <Route path="council" element={<SovereignCouncil />} />
+          <Route path="skill-tree" element={<SkillTreeGalactic />} />
+          <Route path="content-planner" element={<ContentPlanner />} />
+          <Route path="planner" element={<Navigate to="/content-planner" replace />} />
+          <Route path="crm-contacts" element={<CrmContacts />} />
+          <Route path="crm" element={<Navigate to="/crm-contacts" replace />} />
+        </Route>
 
         <Route element={streamlinedUiLoaded ? <CloudAccessGate /> : <PaperclipLoading />}>
           <Route index element={<CompanyRootRedirect />} />

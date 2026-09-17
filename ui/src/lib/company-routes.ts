@@ -35,8 +35,8 @@ const BOARD_ROUTE_ROOTS = new Set([
 
 const GLOBAL_ROUTE_ROOTS = new Set(["auth", "invite", "board-claim", "cli-auth", "docs", "instance"]);
 
-export function normalizeCompanyPrefix(prefix: string): string {
-  return prefix.trim().toUpperCase();
+export function normalizeCompanyPrefix(prefix: string | null | undefined): string {
+  return (prefix ?? "").trim().toUpperCase();
 }
 
 function splitPath(path: string): { pathname: string; search: string; hash: string } {

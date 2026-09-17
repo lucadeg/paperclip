@@ -5,7 +5,9 @@ import type { ProxyOptions } from "vite";
 // x-forwarded-host so the paperclip server's board mutation guard treats
 // the browser's Origin as trusted when the SPA is served from a different
 // port than the API (e.g. `pnpm dev:mobile` on :3101 → API on :3100).
-export function createApiProxy(target = "http://localhost:3100"): Record<string, ProxyOptions> {
+export function createApiProxy(
+  target = process.env.VITE_API_TARGET || "http://localhost:8770"
+): Record<string, ProxyOptions> {
   return {
     "/api": {
       target,
@@ -22,6 +24,17 @@ export function createApiProxy(target = "http://localhost:3100"): Record<string,
           const proto = Array.isArray(upstreamProto) ? upstreamProto[0] : upstreamProto;
           const isTls = (req.socket as { encrypted?: boolean }).encrypted === true;
           proxyReq.setHeader("x-forwarded-proto", proto ?? (isTls ? "https" : "http"));
+        });
+        proxy.on("error", (err, req, res) => {
+          // Prevent unhandled proxy error from crashing the Vite dev server when target port is unreachable
+          if (res && "writeHead" in res && !res.headersSent) {
+            try {
+              (res as any).writeHead(502, { "Content-Type": "application/json" });
+              res.end(JSON.stringify({ error: "Backend proxy unreachable", message: err.message }));
+            } catch {
+              // Ignore if write fails
+            }
+          }
         });
       },
     },

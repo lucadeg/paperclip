@@ -284,7 +284,7 @@ export function SidebarCompanyMenu({ open: controlledOpen, onOpenChange }: Sideb
   // company when self-hosted.
   const currentName = isCloud
     ? currentStack?.displayName ?? cloud?.stackDisplayName ?? cloud?.stackSlug ?? null
-    : selectedCompany?.name ?? null;
+    : selectedCompany?.name ?? "MVX Ads Master — HQ";
 
   const signOutMutation = useSignOut({ onSignedOut: closeNavigationChrome });
 
@@ -395,7 +395,7 @@ export function SidebarCompanyMenu({ open: controlledOpen, onOpenChange }: Sideb
               )}
               title={currentName ?? undefined}
             >
-              {currentName ?? (isCloud ? "Select organization" : "Select company")}
+              {currentName ?? "MVX Ads Master — HQ"}
             </span>
           </span>
           {!rail && <ChevronsUpDown className="size-3.5 shrink-0 text-muted-foreground" />}

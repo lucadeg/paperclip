@@ -909,6 +909,17 @@ export function PluginSlotOutlet({
   });
 
   if (errorMessage) {
+    // Gracefully hide errors in the sidebar or when missingBehavior is hidden / 502 proxy error
+    if (
+      missingBehavior === "hidden" ||
+      missingBehavior === "placeholder" ||
+      className?.includes("sidebar") ||
+      slotTypes.some((s) => s.includes("sidebar")) ||
+      errorMessage.includes("502") ||
+      errorMessage.includes("Failed to fetch")
+    ) {
+      return null;
+    }
     return (
       <div className={cn("rounded-md border border-destructive/30 bg-destructive/5 px-2 py-1 text-xs text-destructive", errorClassName)}>
         Plugin extensions unavailable: {errorMessage}
