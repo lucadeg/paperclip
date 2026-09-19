@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "source": "Hermes sovereign swarm atomic_goals_registry",
+  "workflow_phases": [
+    {
+      "index": 1,
+      "key": "01_requirements",
+      "name": "01. Requisiti & Analisi",
+      "lead_agent_id": "compliance-and-traceability-guard"
+    },
+    {
+      "index": 2,
+      "key": "02_threat_modeling",
+      "name": "02. Threat Modeling",
+      "lead_agent_id": "sentrux-auditor"
+    },
+    {
+      "index": 3,
+      "key": "03_architecture",
+      "name": "03. Architettura & ADR",
+      "lead_agent_id": "chief-architect"
+    },
+    {
+      "index": 4,
+      "key": "04_data_modeling",
+      "name": "04. Schema Dati & RLS",
+      "lead_agent_id": "database-administrator"
+    },
+    {
+      "index": 5,
+      "key": "05_api_contracts",
+      "name": "05. Contratti API",
+      "lead_agent_id": "pi-coding-agent"
+    },
+    {
+      "index": 6,
+      "key": "06_backend_core",
+      "name": "06. Implementazione Backend & Pipeline",
+      "lead_agent_id": "hermes-orchestrator"
+    },
+    {
+      "index": 7,
+      "key": "07_frontend_ux",
+      "name": "07. Frontend, Cupertino HIG & TUIOS",
+      "lead_agent_id": "hermes-orchestrator"
+    },
+    {
+      "index": 8,
+      "key": "08_tools_harness",
+      "name": "08. Integrazione Tool, MCP & Pi Harness",
+      "lead_agent_id": "hermes-orchestrator"
+    },
+    {
+      "index": 9,
+      "key": "09_security_audit",
+      "name": "09. Security Hardening & Secret Hunter",
+      "lead_agent_id": "hermes-orchestrator"
+    },
+    {
+      "index": 10,
+      "key": "10_testing_qa",
+      "name": "10. QA, Failure Paths & Test Coverage",
+      "lead_agent_id": "hermes-orchestrator"
+    },
+    {
+      "index": 11,
+      "key": "11_performance",
+      "name": "11. Ottimizzazione Performance & Token",
+      "lead_agent_id": "hermes-orchestrator"
+    },
+    {
+      "index": 12,
+      "key": "12_deployment",
+      "name": "12. Deployment, Porte Locali & CI/CD",
+      "lead_agent_id": "hermes-orchestrator"
+    },
+    {
+      "index": 13,
+      "key": "13_traceability",
+      "name": "13. Tracciabilità Sovrana HTP-V5 & DAG",
+      "lead_agent_id": "hermes-orchestrator"
+    },
+    {
+      "index": 14,
+      "key": "14_memory_persistence",
+      "name": "14. Persistenza Memoria, Session Sync & Knowledge Graph",
+      "lead_agent_id": "agent-bibliotecario"
+    }
+  ]
+}
