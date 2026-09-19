@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "name": "Hermes Sovereign Swarm / Paperclip Control Plane",
+  "paperclip_branch": "project/hermes-swarm-control-plane",
+  "paperclip_api_url": "http://127.0.0.1:3100",
+  "hermes_gateway_url": "http://127.0.0.1:8642",
+  "registry_paths": {
+    "atomic_goals": "C:\\Users\\Deglu\\.hermes\\tools\\swarm_goals\\atomic_goals_registry.json",
+    "swarm_jobs": "C:\\Users\\Deglu\\.hermes\\tools\\swarm_goals\\swarm_jobs_registry.json",
+    "immutable_ledger": "C:\\Users\\Deglu\\.hermes\\tools\\swarm_goals\\immutable_execution_ledger.db"
+  },
+  "sync": {
+    "mode": "explicit_apply",
+    "dry_run_default": true
+  },
+  "safety": {
+    "default_branch_mutation": false,
+    "secret_logging": false
+  }
+}
