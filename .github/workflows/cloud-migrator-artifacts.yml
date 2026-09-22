@@ -1,11 +1,11 @@
+
 name: Cloud migrator artifacts
 run-name: Cloud migrator artifacts ${{ github.sha }}
 
 on:
-  push:
-    branches: [master]
   workflow_dispatch:
 
+  # Automatic triggers removed; invoke through FounderOS/Admin Gate.
 permissions: {}
 concurrency:
   group: cloud-migrator-artifacts-${{ github.sha }}

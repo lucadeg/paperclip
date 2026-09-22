@@ -1,11 +1,11 @@
+
 name: Cloud readiness
 run-name: Cloud readiness ${{ github.sha }}
 
 on:
-  push:
-    branches: [master]
   workflow_dispatch:
 
+  # Automatic triggers removed; invoke through FounderOS/Admin Gate.
 permissions: {}
 
 # Source verification must start outside the full npm release's queue.

@@ -1,3 +1,4 @@
+
 name: Storybook Visual
 
 on:
@@ -18,15 +19,7 @@ on:
         required: false
         type: boolean
         default: false
-  pull_request:
-    branches:
-      - master
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - labeled
-
+  # Automatic triggers removed; invoke through FounderOS/Admin Gate.
 concurrency:
   group: storybook-visual-${{ inputs.deploy_preview && github.run_id || 'visual' }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true

@@ -1,22 +1,13 @@
+
 name: Docker
 
 on:
-  push:
-    branches:
-      - "master"
-    tags:
-      - "v*"
-      - "nightly/v*"
-      - "beta/v*"
-  # Release workflows push lane tags with GITHUB_TOKEN, and GitHub suppresses
-  # push-triggered runs for those, so release.yml dispatches this workflow at
-  # the new tag ref instead. The tag mapping below keys off github.ref either
-  # way.
   workflow_dispatch:
 
 # Least privilege: nothing at the workflow level; each job declares exactly
 # the token scopes it uses (checkout needs contents:read, GHCR pushes need
 # packages:write).
+  # Automatic triggers removed; invoke through FounderOS/Admin Gate.
 permissions: {}
 
 # Serialise builds per ref without killing an in-flight one: a newer push

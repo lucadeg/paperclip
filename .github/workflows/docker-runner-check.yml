@@ -1,16 +1,9 @@
+
 name: Docker Runner check
 
 on:
-  pull_request:
-    paths:
-      - .github/workflows/docker-runner-check.yml
-      - Dockerfile
-      - .dockerignore
-      - scripts/check-docker-runner-cache.sh
-      - packages/paperclip-runner/rust-toolchain.toml
-      - packages/paperclip-runner/runner/**
-      - packages/paperclip-runner/protocol/**
-
+  workflow_dispatch:
+  # Automatic triggers removed; invoke through FounderOS/Admin Gate.
 permissions: {}
 
 concurrency:

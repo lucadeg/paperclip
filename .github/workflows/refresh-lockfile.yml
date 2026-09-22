@@ -1,11 +1,10 @@
+
 name: Refresh Lockfile
 
 on:
-  push:
-    branches:
-      - master
   workflow_dispatch:
 
+  # Automatic triggers removed; invoke through FounderOS/Admin Gate.
 concurrency:
   group: refresh-lockfile-master
   cancel-in-progress: false

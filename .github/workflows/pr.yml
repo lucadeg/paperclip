@@ -1,8 +1,9 @@
+
 name: PR
 
 on:
-  pull_request:
-
+  workflow_dispatch:
+  # Automatic triggers removed; invoke through FounderOS/Admin Gate.
 permissions:
   actions: read
   contents: read

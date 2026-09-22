@@ -1,8 +1,7 @@
+
 name: Runner Direct Live Protocol Evals
 
 on:
-  schedule:
-    - cron: "23 9 * * 0"
   workflow_dispatch:
     inputs:
       target_branch:
@@ -23,6 +22,7 @@ on:
         type: number
         default: 1
 
+  # Automatic triggers removed; invoke through FounderOS/Admin Gate.
 permissions:
   contents: read
 
