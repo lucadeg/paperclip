@@ -1,7 +1,7 @@
 ---
 name: "MVX Marketing Evidence Program"
 slug: "marketing-evidence-program"
-description: "30 specialist marketing missions, cross-functional evidence gates, recurring council and verification routines."
+description: "58 specialist marketing missions, cross-functional evidence gates, recurring council and verification routines."
 owner: "ceo-bezos"
 ---
 

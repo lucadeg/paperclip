@@ -1,0 +1,113 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {fileURLToPath} from 'node:url';
+import {planClientWorkflow} from './run-client-workflow.mjs';
+import {makeBraveWebSearchAdapter,makeSeededResearchAdapter} from './search-provider.mjs';
+import {discoverCompetitors,inferCategoryNeedsFromCompetitorMessaging,normalizeObservedAds} from './competitive-intelligence.mjs';
+import {metaEuAdObservations,adLibraryProviderMatrix} from './official-ad-connectors.mjs';
+import {collectVoiceOfCustomer,critiqueFullCampaign,proposeDifferentiatedConcepts} from './redteam-needs.mjs';
+import {searchAdKitCompetitor,proposeCreativeEvidenceChecklist} from './adkit-competitor-adapter.mjs';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
+function checkLocal(file){
+ const resolved=path.resolve(file),rel=path.relative(root,resolved);
+ if(!rel||rel.startsWith('..')||path.isAbsolute(rel))throw Error('Use only existing authorized .hermes checkout');
+ return resolved;
+}
+const hash=buf=>createHash('sha256').update(buf).digest('hex');
+export async function performCompetitiveAudit(config,{acquireClient=planClientWorkflow,searchAdapter,
+  metaAdApi=metaEuAdObservations,adKitAdapter,voiceObservations=[]}={}){
+ const client=await acquireClient(config);
+ const campaign=client.campaign;
+ const researchProvider=searchAdapter||makeBraveWebSearchAdapter({apiKey:process.env.BRAVE_SEARCH_API_KEY});
+ const competitive=await discoverCompetitors({campaign,searchAdapter:researchProvider,market:config.target.market==='Italia'?'IT':config.target.market});
+ const categoryNeeds=competitive.schema==='mvx-competitive-discovery/v1'?
+   inferCategoryNeedsFromCompetitorMessaging(competitive):
+   {status:'NO_COMPETITIVE_EVIDENCE',findings:[]};
+ const adProviderStatus=[],verifiedAdObservations=[];
+ for(const competitor of (competitive.competitors||[]).slice(0,5)){
+   const response=await metaAdApi({advertiser:competitor.identity.name,country:'IT',
+     accessToken:process.env.META_AD_LIBRARY_ACCESS_TOKEN});
+   adProviderStatus.push({competitorId:competitor.id,advertiser:competitor.identity.name,
+     platform:'meta',status:response.status,count:response.observations?.length||0});
+   if(response.status==='OFFICIAL_API_OBSERVATIONS'){
+     const checked=normalizeObservedAds({competitor,records:response.observations});
+     verifiedAdObservations.push(...checked.accepted);
+   }
+ }
+ const adKitResearch=[];
+ for(const competitor of (competitive.competitors||[]).slice(0,5)) {
+   const records=await searchAdKitCompetitor({competitor,adKitAdapter});
+   adKitResearch.push({competitorId:competitor.id,...records,
+      evidenceRequests:proposeCreativeEvidenceChecklist(records)});
+ }
+ const voice=collectVoiceOfCustomer({observations:voiceObservations,target:campaign.target});
+ const redteam=critiqueFullCampaign({campaign,competitive,adObservations:verifiedAdObservations,voice});
+ const proposed=proposeDifferentiatedConcepts({campaign,redteam,observedAds:verifiedAdObservations});
+ return {schema:'mvx-competitor-critic-client-run/v1',
+   clientId:client.clientId,tenantId:client.tenantId,companyId:client.companyId,
+   timestamp:new Date().toISOString(),clientWorkflowSummary:{
+     brand:campaign.brand,products:campaign.products.map(x=>({name:x.name,sourceId:x.sourceId})),
+     posts:campaign.posts.length,sourceCount:campaign.evidence.length},
+   campaignId:campaign.id,competitive,categoryNeeds,adProviderStatus,
+   providerCapabilities:adLibraryProviderMatrix(),
+   observedAds:verifiedAdObservations,adKitResearch,voiceOfCustomer:voice,redteam,originalConcepts:proposed,
+   status:'RESEARCH_DRAFT_NOT_MARKETING_EXECUTION',
+   technicalGates:{liveCompetitorPages:Boolean(competitive.competitors?.length),
+     indexedCompetitorAds:verifiedAdObservations.length>0,measuredWinningAds:false,
+     voiceOfCustomerCollected:voice.observations.length>0,signedTier1ResearchLedger:false,
+     approvedForPublications:false}};
+}
+export async function writeAuditEvidence(report,{rootDirectory=path.join(root,'evidence','mvx-marketing-fleet','competitive')}={}){
+ checkLocal(rootDirectory);
+ if(!/^[a-z0-9_-]{3,50}$/i.test(report.clientId))throw Error('unsafe client id');
+ const date=report.timestamp.replace(/[:.]/g,'-');
+ const output=path.join(rootDirectory,report.clientId,date);checkLocal(output);
+ await fs.mkdir(output,{recursive:true});
+ const files=[
+   ['competitor-candidates.json',report.competitive],
+   ['category-needs-hypotheses.json',report.categoryNeeds],
+   ['official-ad-provider-status.json',{statuses:report.adProviderStatus,providers:report.providerCapabilities}],
+   ['observed-competitor-ads.json',report.observedAds],
+   ['adkit-verified-advertiser-matches.json',report.adKitResearch],
+   ['voice-of-customer.json',report.voiceOfCustomer],
+   ['redteam-findings.json',report.redteam],
+   ['differentiated-ad-concepts.json',report.originalConcepts],
+   ['client-audit.json',{clientId:report.clientId,campaignId:report.campaignId,
+     technicalGates:report.technicalGates,clientWorkflowSummary:report.clientWorkflowSummary}]
+ ];
+ const inventory=[];
+ for(const [name,body] of files){
+   const bytes=Buffer.from(JSON.stringify(body,null,2)+'\n');
+   await fs.writeFile(path.join(output,name),bytes);
+   inventory.push({name,bytes:bytes.length,sha256:hash(bytes)});
+ }
+ const manifest={schema:'mvx-competitor-audit-files/v1',runAt:report.timestamp,
+   clientId:report.clientId,inventory,authority:'read-only market research and draft insights'};
+ await fs.writeFile(path.join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
+ return {directory:output,files:inventory.length+1};
+}
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+ const configPath=process.argv[2];if(!configPath)throw Error('Usage: run-competitive-audit.mjs <client-config> [source-seeds]');
+ const config=JSON.parse(await fs.readFile(checkLocal(configPath),'utf8'));
+ let searchAdapter;
+ if(process.env.BRAVE_SEARCH_API_KEY) searchAdapter=makeBraveWebSearchAdapter({apiKey:process.env.BRAVE_SEARCH_API_KEY});
+ else if(process.argv[3]) {
+   const seeds=JSON.parse(await fs.readFile(checkLocal(process.argv[3]),'utf8'));
+   searchAdapter=makeSeededResearchAdapter({seeds:seeds.seeds});
+ }
+ const report=await performCompetitiveAudit(config,{searchAdapter});
+ const location=await writeAuditEvidence(report);
+ console.log(JSON.stringify({client:report.clientId,brand:report.clientWorkflowSummary.brand,
+   competitors:report.competitive.competitors?.map(c=>({
+     name:c.identity.name,domain:c.identity.domain,score:c.relevance.score,
+     related:c.relevance.classification,adObservationCount:c.observedAdCount})),
+   needsHypotheses:report.categoryNeeds.findings?.map(x=>x.needHypothesisId),
+   adLibrary:report.adProviderStatus,
+   aggregatorMatches:report.adKitResearch.map(x=>({competitorId:x.competitorId,status:x.status,selected:x.selected.length})),
+   realAdvertiserAds:report.observedAds.length,
+   voicedCustomerEvidenceCount:report.voiceOfCustomer.observations.length,
+   critique:report.redteam.scorecard,
+   creativeAlternatives:report.originalConcepts.length,
+   release:report.redteam.releaseVerdict,manifestDirectory:location.directory},null,2));
+}

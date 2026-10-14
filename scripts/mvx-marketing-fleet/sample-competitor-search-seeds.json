@@ -1,0 +1,16 @@
+{
+  "schema": "mvx-manually-curated-competitor-source-seeds/v1",
+  "notes": "Seed URLs retrieved from dated public search references; not an authenticated autonomous SERP feed. Automatic verification/ranking occurs from these sources. Official advertiser ads are NOT provided.",
+  "seeds": [
+    {
+      "title": "Barista Avena | Alpro",
+      "url": "https://www.alpro.com/it/prodotti/bevande/barista-avena",
+      "description": "Alpro Barista Avena: bevanda di avena per caffè, dichiarata schiumabile"
+    },
+    {
+      "title": "BARISTA OAT | MINOR FIGURES",
+      "url": "https://minorfigures.com/products/barista-oat",
+      "description": "Minor Figures Barista Oat: beverage for coffee, related product category"
+    }
+  ]
+}

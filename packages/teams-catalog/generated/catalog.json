@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "packageName": "@paperclipai/teams-catalog",
   "packageVersion": "0.1.0",
-  "generatedAt": "2026-10-14T10:17:58.413Z",
+  "generatedAt": "2026-10-14T11:20:36.112Z",
   "teams": [
     {
       "id": "paperclipai:bundled:company-defaults:core-exec-team",
@@ -470,7 +470,7 @@
       "category": "marketing",
       "slug": "mvx-evidence-growth-council",
       "name": "MVX Evidence-Governed Growth Council",
-      "description": "27 executive decision-lens workers plus 30 accountable marketing specialists; evidence-first tasks, safe drafts, independent challenge and consent-first provider operations.",
+      "description": "27 executive decision-lens workers plus 58 accountable marketing specialists; evidence-first tasks, safe drafts, independent challenge and consent-first provider operations.",
       "path": "catalog/optional/marketing/mvx-evidence-growth-council",
       "entrypoint": "TEAM.md",
       "schema": "agentcompanies/v1",
@@ -491,10 +491,10 @@
         "consent"
       ],
       "counts": {
-        "agents": 72,
+        "agents": 85,
         "projects": 1,
-        "tasks": 45,
-        "routines": 5,
+        "tasks": 58,
+        "routines": 8,
         "localSkills": 0,
         "catalogSkills": 2,
         "externalSkillSources": 0
@@ -503,24 +503,32 @@
         "ceo-bezos"
       ],
       "agentSlugs": [
+        "ad-library-intelligence-analyst",
         "affiliate-program-architect",
         "ai-karpathy",
+        "audience-voice-researcher",
         "brand-dna-researcher",
         "brand-identity-guardian",
         "brand-market-positioner",
+        "brand-reputation-auditor",
         "branding-neumeier",
         "ceo-bezos",
         "cfo-campbell",
         "comm-voss",
         "comment-dm-workflow-manager",
+        "communication-redteam",
         "community-garyvee",
+        "competitor-discovery-analyst",
         "consulting-bower",
         "conversion-journey-architect",
+        "conversion-redteam",
+        "creative-originality-critic",
         "creator-placement-producer",
         "critic-munger",
         "cto-vogels",
         "devops-hightower",
         "ecommerce-lutke",
+        "evidence-provenance-auditor",
         "fullstack-dhh",
         "growth-chen",
         "growth-ellis",
@@ -561,12 +569,17 @@
         "marketing-ugc-authenticity",
         "media-hastings",
         "mindset-naval",
+        "need-solution-fit-validator",
         "offer-stack-architect",
+        "offer-terms-auditor",
         "operations-pg",
         "people-mccord",
         "persona-personalization-scientist",
+        "placement-ethics-auditor",
+        "post-release-learnings-critic",
         "product-norman",
         "product-placement-strategist",
+        "product-truth-auditor",
         "psych-cialdini",
         "referral-growth-designer",
         "sales-belfort",
@@ -584,24 +597,32 @@
           "type": "catalog",
           "ref": "issue-triage",
           "agentSlugs": [
+            "ad-library-intelligence-analyst",
             "affiliate-program-architect",
             "ai-karpathy",
+            "audience-voice-researcher",
             "brand-dna-researcher",
             "brand-identity-guardian",
             "brand-market-positioner",
+            "brand-reputation-auditor",
             "branding-neumeier",
             "ceo-bezos",
             "cfo-campbell",
             "comm-voss",
             "comment-dm-workflow-manager",
+            "communication-redteam",
             "community-garyvee",
+            "competitor-discovery-analyst",
             "consulting-bower",
             "conversion-journey-architect",
+            "conversion-redteam",
+            "creative-originality-critic",
             "creator-placement-producer",
             "critic-munger",
             "cto-vogels",
             "devops-hightower",
             "ecommerce-lutke",
+            "evidence-provenance-auditor",
             "fullstack-dhh",
             "growth-chen",
             "growth-ellis",
@@ -642,12 +663,17 @@
             "marketing-ugc-authenticity",
             "media-hastings",
             "mindset-naval",
+            "need-solution-fit-validator",
             "offer-stack-architect",
+            "offer-terms-auditor",
             "operations-pg",
             "people-mccord",
             "persona-personalization-scientist",
+            "placement-ethics-auditor",
+            "post-release-learnings-critic",
             "product-norman",
             "product-placement-strategist",
+            "product-truth-auditor",
             "psych-cialdini",
             "referral-growth-designer",
             "sales-belfort",
@@ -665,24 +691,32 @@
           "type": "catalog",
           "ref": "task-planning",
           "agentSlugs": [
+            "ad-library-intelligence-analyst",
             "affiliate-program-architect",
             "ai-karpathy",
+            "audience-voice-researcher",
             "brand-dna-researcher",
             "brand-identity-guardian",
             "brand-market-positioner",
+            "brand-reputation-auditor",
             "branding-neumeier",
             "ceo-bezos",
             "cfo-campbell",
             "comm-voss",
             "comment-dm-workflow-manager",
+            "communication-redteam",
             "community-garyvee",
+            "competitor-discovery-analyst",
             "consulting-bower",
             "conversion-journey-architect",
+            "conversion-redteam",
+            "creative-originality-critic",
             "creator-placement-producer",
             "critic-munger",
             "cto-vogels",
             "devops-hightower",
             "ecommerce-lutke",
+            "evidence-provenance-auditor",
             "fullstack-dhh",
             "growth-chen",
             "growth-ellis",
@@ -723,12 +757,17 @@
             "marketing-ugc-authenticity",
             "media-hastings",
             "mindset-naval",
+            "need-solution-fit-validator",
             "offer-stack-architect",
+            "offer-terms-auditor",
             "operations-pg",
             "people-mccord",
             "persona-personalization-scientist",
+            "placement-ethics-auditor",
+            "post-release-learnings-critic",
             "product-norman",
             "product-placement-strategist",
+            "product-truth-auditor",
             "psych-cialdini",
             "referral-growth-designer",
             "sales-belfort",
@@ -749,8 +788,14 @@
         {
           "path": "TEAM.md",
           "kind": "team",
-          "sizeBytes": 5789,
-          "sha256": "bc9fc59b59ebbe369deebe102b38e2fb868d9290b9f5310d8dfc2d2df45b949e"
+          "sizeBytes": 6410,
+          "sha256": "06db2c266bc8dcc07874d60a26f79d70c855832d4a25775f55f14adb282c8315"
+        },
+        {
+          "path": "agents/ad-library-intelligence-analyst/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2500,
+          "sha256": "a77bcd9e85fa948f70c1ba2d36d65c178f4d827980e2f659df47eb5bd7a4d21c"
         },
         {
           "path": "agents/affiliate-program-architect/AGENTS.md",
@@ -763,6 +808,12 @@
           "kind": "agent",
           "sizeBytes": 1597,
           "sha256": "5487c5452d7a1f13abb5ffadde525c18ba9b01a724234a7542cd3458395917f9"
+        },
+        {
+          "path": "agents/audience-voice-researcher/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2484,
+          "sha256": "5c8825a24969c592d35f5e17aef896a7dd5b1fdaf20eddd3645e8353fe86c798"
         },
         {
           "path": "agents/brand-dna-researcher/AGENTS.md",
@@ -781,6 +832,12 @@
           "kind": "agent",
           "sizeBytes": 2489,
           "sha256": "4b76c8a48e58843b352a554b04d2a5a75ea0af4dd37d724c1ea9c052c371c682"
+        },
+        {
+          "path": "agents/brand-reputation-auditor/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2472,
+          "sha256": "9a7106251cde649a4744a0e1ae0119d57ef42d6bf268002eb46f71a30fe17339"
         },
         {
           "path": "agents/branding-neumeier/AGENTS.md",
@@ -813,10 +870,22 @@
           "sha256": "fda5f4a184fc60e5bd0eebd7fe68ae7e1ec53f9ebf895588540e2f10ead39ef4"
         },
         {
+          "path": "agents/communication-redteam/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2411,
+          "sha256": "216fe65443aff1f8c763d6737277c5a4b4a7a3a71663259ed20b96cd4455871e"
+        },
+        {
           "path": "agents/community-garyvee/AGENTS.md",
           "kind": "agent",
           "sizeBytes": 1608,
           "sha256": "1b5c873382cc65624d6acd58454e321684bcdffd272ba225d41f4ada5b3b015e"
+        },
+        {
+          "path": "agents/competitor-discovery-analyst/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2475,
+          "sha256": "19e123057e7e9c216ff5f7cd1b36a66d78663db98cba81fc66b873a19a35f13b"
         },
         {
           "path": "agents/consulting-bower/AGENTS.md",
@@ -829,6 +898,18 @@
           "kind": "agent",
           "sizeBytes": 2468,
           "sha256": "a68b93dfd2eb48b74544af9f9040f30c62f809093bcbbac6bffb7027df000eb3"
+        },
+        {
+          "path": "agents/conversion-redteam/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2449,
+          "sha256": "e3a7188d41e75855679b893bc72a2dba7b3763405f81f13014661eacb9ff6618"
+        },
+        {
+          "path": "agents/creative-originality-critic/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2521,
+          "sha256": "9425eda4cba46b3ff0632912a6be987bb8ddc58c965108471783cedb9b2015a8"
         },
         {
           "path": "agents/creator-placement-producer/AGENTS.md",
@@ -859,6 +940,12 @@
           "kind": "agent",
           "sizeBytes": 1587,
           "sha256": "164e8cea097899d80ac416bf7c5c18678151ad5a8ebacb46394fe58ad044f587"
+        },
+        {
+          "path": "agents/evidence-provenance-auditor/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2433,
+          "sha256": "d385b21bec29be3e80354d655228e6144d141dfad758b5e6d1a7ae818d2ce5d5"
         },
         {
           "path": "agents/fullstack-dhh/AGENTS.md",
@@ -1101,10 +1188,22 @@
           "sha256": "381681a6ca9b2711986f2d32b3205afc05d0286cb85b26613a0eef1941b7c0dd"
         },
         {
+          "path": "agents/need-solution-fit-validator/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2466,
+          "sha256": "1371553a8dff6162dd7a82db232cae3078741acf9ef25b2703e9b0f84ae112cc"
+        },
+        {
           "path": "agents/offer-stack-architect/AGENTS.md",
           "kind": "agent",
           "sizeBytes": 2443,
           "sha256": "40146d8f60da85332cad04db5aecee3d89c0d214b3749eb774a6f3d124da5c64"
+        },
+        {
+          "path": "agents/offer-terms-auditor/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2405,
+          "sha256": "b8981191dbcb4083798b02722335447c7e4100269de40163ced5e75c22586cd5"
         },
         {
           "path": "agents/operations-pg/AGENTS.md",
@@ -1125,6 +1224,18 @@
           "sha256": "848717e48288efed9fc83950ea5b0b17bed335316c536507aa571057650bfcd4"
         },
         {
+          "path": "agents/placement-ethics-auditor/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2457,
+          "sha256": "13d1f3d1b963b8cd20df3f0e05e926399bad398551d931fde1d0a3ccdb25ac3c"
+        },
+        {
+          "path": "agents/post-release-learnings-critic/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2462,
+          "sha256": "c6cb4f2e41705de54a4024068497e8c2f7e88dd42fb9d2a5ed7d6f164a5a78d0"
+        },
+        {
           "path": "agents/product-norman/AGENTS.md",
           "kind": "agent",
           "sizeBytes": 1586,
@@ -1135,6 +1246,12 @@
           "kind": "agent",
           "sizeBytes": 2509,
           "sha256": "596b4176750f9f2663c3edbf9bbe0eb0ba4517bc84eb20073c7acb497fc724ac"
+        },
+        {
+          "path": "agents/product-truth-auditor/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2414,
+          "sha256": "7b305c57ec209f469e351ccb09c125a63ed94d4dc20889b89326e3434a78b803"
         },
         {
           "path": "agents/psych-cialdini/AGENTS.md",
@@ -1188,7 +1305,13 @@
           "path": "projects/marketing-evidence-program/PROJECT.md",
           "kind": "project",
           "sizeBytes": 780,
-          "sha256": "961b704e64f326e2b3615d0d715f505d29836a627a8bf9bb865a11f7aaffe9f8"
+          "sha256": "73b4c096b2bcf22c8c75108da9eb6dec7f0631f4de12f1855be11d83994d5938"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/daily-creative-redteam/TASK.md",
+          "kind": "task",
+          "sizeBytes": 495,
+          "sha256": "b61ace946312e937289b2a1e9ffb87b89c231d547aa9274780fc8f9727b4ac56"
         },
         {
           "path": "projects/marketing-evidence-program/tasks/daily-marketing-facts/TASK.md",
@@ -1203,10 +1326,22 @@
           "sha256": "f471852b0bdb8385078c19da2ffd962db6e0097ef3afa93cfb2efb57fe7163ee"
         },
         {
+          "path": "projects/marketing-evidence-program/tasks/initial-ad-library-intelligence-analyst/TASK.md",
+          "kind": "task",
+          "sizeBytes": 707,
+          "sha256": "980a6162646161990c17685ed2d0366df479bf9c1e8d36d05e367391fe54bde8"
+        },
+        {
           "path": "projects/marketing-evidence-program/tasks/initial-affiliate-program-architect/TASK.md",
           "kind": "task",
           "sizeBytes": 686,
           "sha256": "d52725bebb75971d410e2ea8e151b2a5ecc19695d436334133b737ee72ff3dda"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-audience-voice-researcher/TASK.md",
+          "kind": "task",
+          "sizeBytes": 699,
+          "sha256": "e5d2b02be399a9146a479dc461599b768e9908e639cca8cd4534a49c19607a5c"
         },
         {
           "path": "projects/marketing-evidence-program/tasks/initial-brand-dna-researcher/TASK.md",
@@ -1227,10 +1362,28 @@
           "sha256": "388044656c8f11c66bfb2555129e23d0205a20b70dc48091db4bcc74ba6a4dc9"
         },
         {
+          "path": "projects/marketing-evidence-program/tasks/initial-brand-reputation-auditor/TASK.md",
+          "kind": "task",
+          "sizeBytes": 685,
+          "sha256": "bf21c56294c0f3f4cedd9587e8d46004198df498a8ccf10010657ee7b39913a9"
+        },
+        {
           "path": "projects/marketing-evidence-program/tasks/initial-comment-dm-workflow-manager/TASK.md",
           "kind": "task",
           "sizeBytes": 714,
           "sha256": "f2ed9309f1e30a0fe2e485d1fec9eb97de32b79c9ad7f0b229ac1233cacbad6c"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-communication-redteam/TASK.md",
+          "kind": "task",
+          "sizeBytes": 641,
+          "sha256": "561a311dc068496b0d9174dd63f448c37c406cd0cbe99e2f008af511829bb680"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-competitor-discovery-analyst/TASK.md",
+          "kind": "task",
+          "sizeBytes": 687,
+          "sha256": "a5a74f01b5694bd09c32b3b971980f6891b0081e2f67fb49b477776d91eb4183"
         },
         {
           "path": "projects/marketing-evidence-program/tasks/initial-conversion-journey-architect/TASK.md",
@@ -1239,10 +1392,28 @@
           "sha256": "11ab16420fdac3315f28937c0bebd779f03db4111d14a63fd3342ce9f5fc63a5"
         },
         {
+          "path": "projects/marketing-evidence-program/tasks/initial-conversion-redteam/TASK.md",
+          "kind": "task",
+          "sizeBytes": 668,
+          "sha256": "6c611d843b40cb93aa662ede5fcea9bf0aaaf882f34d0f759ac2ca4b0881d31d"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-creative-originality-critic/TASK.md",
+          "kind": "task",
+          "sizeBytes": 709,
+          "sha256": "8765c735dc42c34c6125fb05e5314e9a5389eb2a50d9602902a647bdbf9db168"
+        },
+        {
           "path": "projects/marketing-evidence-program/tasks/initial-creator-placement-producer/TASK.md",
           "kind": "task",
           "sizeBytes": 696,
           "sha256": "dcd02912377acf137a1825397e70f47d4f22eaf9aa3cd3df8943392ca695936b"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-evidence-provenance-auditor/TASK.md",
+          "kind": "task",
+          "sizeBytes": 673,
+          "sha256": "7881d8ecb83a710949cb2baeaba6a7a86b1bf007952ced0ad22557806845e72b"
         },
         {
           "path": "projects/marketing-evidence-program/tasks/initial-hook-cta-optimizer/TASK.md",
@@ -1437,10 +1608,22 @@
           "sha256": "bcf5f333e2c34b81080d866fa476fa624149d446a9cd9f50780f60af0c8425d4"
         },
         {
+          "path": "projects/marketing-evidence-program/tasks/initial-need-solution-fit-validator/TASK.md",
+          "kind": "task",
+          "sizeBytes": 687,
+          "sha256": "a4a960782a8ad7eba5c809745f2e5dec027ec18fff8d28a5bacda21435680291"
+        },
+        {
           "path": "projects/marketing-evidence-program/tasks/initial-offer-stack-architect/TASK.md",
           "kind": "task",
           "sizeBytes": 638,
           "sha256": "a74dac93cd65bce7d2aa5745ac1e2363e7a0b092d4dfaa58939db69803751e83"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-offer-terms-auditor/TASK.md",
+          "kind": "task",
+          "sizeBytes": 630,
+          "sha256": "7b00d40e24a4ad1679656622402c18c2c2a4dceb6d120cb763bcc215e29b2110"
         },
         {
           "path": "projects/marketing-evidence-program/tasks/initial-persona-personalization-scientist/TASK.md",
@@ -1449,10 +1632,28 @@
           "sha256": "cb6f427297f55532ebc1d0232e8436aa2c781d61c3c12758729c1bbc5c9a2427"
         },
         {
+          "path": "projects/marketing-evidence-program/tasks/initial-placement-ethics-auditor/TASK.md",
+          "kind": "task",
+          "sizeBytes": 680,
+          "sha256": "f031e3f7565acb5fb7639c0df9b80cfa9992ce7d64aaea414777631f583812fd"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-post-release-learnings-critic/TASK.md",
+          "kind": "task",
+          "sizeBytes": 678,
+          "sha256": "71c8e011c813ff37cc493062417a82344b57dde775c2ea8401352c9ea6f10f03"
+        },
+        {
           "path": "projects/marketing-evidence-program/tasks/initial-product-placement-strategist/TASK.md",
           "kind": "task",
           "sizeBytes": 717,
           "sha256": "cf89318ed66e73b5c7b735cb1e1078c1116f8790b6d7b2b85ca4ac2a5e176f0f"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-product-truth-auditor/TASK.md",
+          "kind": "task",
+          "sizeBytes": 633,
+          "sha256": "fcc63de1a571de7023c5d9afc37c56310c53906481a85ae54feb43e46ff52223"
         },
         {
           "path": "projects/marketing-evidence-program/tasks/initial-referral-growth-designer/TASK.md",
@@ -1479,6 +1680,12 @@
           "sha256": "1c9fa4d1dcd1d1c0b1ddf8fe5346af0827711fcb1efac48b354d63749c03c290"
         },
         {
+          "path": "projects/marketing-evidence-program/tasks/weekly-competitive-evidence/TASK.md",
+          "kind": "task",
+          "sizeBytes": 505,
+          "sha256": "f226e065fbcadc0eee46a61952d01ace8898f74e3d4a853edf12777b1ece161c"
+        },
+        {
           "path": "projects/marketing-evidence-program/tasks/weekly-council-challenge/TASK.md",
           "kind": "task",
           "sizeBytes": 486,
@@ -1489,11 +1696,17 @@
           "kind": "task",
           "sizeBytes": 499,
           "sha256": "ff77646cfc7470db32c4dd6ca31b8b7c0da00fa95d5dc0ff0f06d51974ae1740"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/weekly-voice-of-customer/TASK.md",
+          "kind": "task",
+          "sizeBytes": 472,
+          "sha256": "74bdb7a094536090608c7ec2a45766946f4a2c6f0140072b63f840059b554310"
         }
       ],
       "trustLevel": "markdown_only",
       "compatibility": "compatible",
-      "contentHash": "sha256:528844de835e0f01b9ba29d4852dbfc21a3318c9e8b1824f1215e4aa125476cb"
+      "contentHash": "sha256:b920aa778e78b66ae0890a8dc0bb2e36a5203ed7d795818e8a97098811f8a39e"
     }
   ]
 }

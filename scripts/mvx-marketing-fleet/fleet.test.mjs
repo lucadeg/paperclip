@@ -22,10 +22,10 @@ const ab=(overrides={})=>({hypothesisId:'hyp1',registeredAt:'2026-01-01T00:00:00
   plannedEndAt:'2026-01-15T00:00:00Z',analyzedAt:'2026-01-16T00:00:00Z',randomized:true,holdout:true,
   metric:'purchase conversion',guardrailMetrics:['refunds','complaints'],guardrailsBreached:false,
   minimumPerArm:100,variantAllocation:0.5,control:{n:2000,success:200},treatment:{n:2000,success:320},...overrides});
-test('canonical roster has 27 executives and 45 specialist identities',()=>{
-  assert.equal(r.executives.length,27);assert.equal(r.specialists.length,45);
+test('canonical roster has 27 executives and 58 specialist identities',()=>{
+  assert.equal(r.executives.length,27);assert.equal(r.specialists.length,58);
   const ids=[...r.executives,...r.specialists].map(x=>x.id);
-  assert.equal(new Set(ids).size,72);
+  assert.equal(new Set(ids).size,85);
   for(const a of [...r.executives,...r.specialists]) if(a.manager) assert.ok(ids.includes(a.manager));
 });
 test('27 council profile IDs exactly align with Sovereign Council UI',()=>{
@@ -35,12 +35,12 @@ test('27 council profile IDs exactly align with Sovereign Council UI',()=>{
   const uiIDs=[...body.matchAll(/^\s+id: "([a-z-]+)",/gm)].map(m=>m[1]);
   assert.deepEqual([...new Set(uiIDs)].sort(),r.executives.map(x=>x.id).sort());
 });
-test('materialized package includes 72 docs, 45 initial tasks and 5 recurring routines',()=>{
+test('materialized package includes 85 docs, 58 initial tasks and 8 recurring routines',()=>{
   const agentFiles=fs.readdirSync(path.join(base,'agents'));
-  assert.equal(agentFiles.length,72);
+  assert.equal(agentFiles.length,85);
   const taskDirs=fs.readdirSync(path.join(base,'projects/marketing-evidence-program/tasks'));
-  assert.equal(taskDirs.filter(x=>x.startsWith('initial-')).length,45);
-  assert.equal(taskDirs.length,50);
+  assert.equal(taskDirs.filter(x=>x.startsWith('initial-')).length,58);
+  assert.equal(taskDirs.length,66);
   assert.equal(fs.readFileSync(path.join(base,'TEAM.md'),'utf8').includes('defaultInstall: false'),true);
 });
 test('reviewers chosen by domain instead of summoning all 27',()=>{
@@ -105,12 +105,12 @@ test('missing material cost fields returns invalid, never invented profit',()=>{
   assert.equal(estimateEuroContribution({currency:'EUR',salesGross:1220}).verdict,'INVALID');
 });
 
-test('compiled catalog hashes each file and lists 72 bounded markdown-only agents',async()=>{
+test('compiled catalog hashes each file and lists 85 bounded markdown-only agents',async()=>{
   const {createHash}=await import('node:crypto');
   const manifest=JSON.parse(fs.readFileSync(path.join(repo,'packages/teams-catalog/generated/catalog.json'),'utf8'));
   const team=manifest.teams.find(x=>x.slug==='mvx-evidence-growth-council');
-  assert.ok(team);assert.equal(team.counts.agents,72);
-  assert.equal(team.counts.tasks,45);assert.equal(team.counts.routines,5);
+  assert.ok(team);assert.equal(team.counts.agents,85);
+  assert.equal(team.counts.tasks,58);assert.equal(team.counts.routines,8);
   assert.equal(team.trustLevel,'markdown_only');assert.equal(team.defaultInstall,false);
   assert.equal(team.counts.externalSkillSources,0);
   for(const f of team.files) {

@@ -1,6 +1,6 @@
 ---
 name: "MVX Evidence-Governed Growth Council"
-description: "27 executive decision-lens workers plus 30 accountable marketing specialists; evidence-first tasks, safe drafts, independent challenge and consent-first provider operations."
+description: "27 executive decision-lens workers plus 58 accountable marketing specialists; evidence-first tasks, safe drafts, independent challenge and consent-first provider operations."
 schema: "agentcompanies/v1"
 slug: "mvx-evidence-growth-council"
 category: "marketing"
@@ -78,6 +78,19 @@ includes:
   - "agents/comment-dm-workflow-manager/AGENTS.md"
   - "agents/persona-personalization-scientist/AGENTS.md"
   - "agents/storyboard-video-director/AGENTS.md"
+  - "agents/communication-redteam/AGENTS.md"
+  - "agents/brand-reputation-auditor/AGENTS.md"
+  - "agents/product-truth-auditor/AGENTS.md"
+  - "agents/offer-terms-auditor/AGENTS.md"
+  - "agents/competitor-discovery-analyst/AGENTS.md"
+  - "agents/ad-library-intelligence-analyst/AGENTS.md"
+  - "agents/creative-originality-critic/AGENTS.md"
+  - "agents/audience-voice-researcher/AGENTS.md"
+  - "agents/need-solution-fit-validator/AGENTS.md"
+  - "agents/conversion-redteam/AGENTS.md"
+  - "agents/placement-ethics-auditor/AGENTS.md"
+  - "agents/evidence-provenance-auditor/AGENTS.md"
+  - "agents/post-release-learnings-critic/AGENTS.md"
   - "projects/marketing-evidence-program/PROJECT.md"
 defaultInstall: false
 recommendedForCompanyTypes:
@@ -100,7 +113,7 @@ requiredSkills:
 
 # MVX Marketing Evidence-Governed Council
 
-**Template only; not a claim of live employment or human endorsement.** This team imports 57 executable Paperclip agent identities (27 executive decision frameworks and 30 marketing task owners). Each becomes runnable only after installation into a company with configured adapters and budgets. Model descriptions do not impersonate the real people referenced by the existing Sovereign Council UI.
+**Template only; not a claim of live employment or human endorsement.** This team imports 85 Paperclip agent templates (27 executive decision frameworks and 58 marketing task owners). Each becomes runnable only after installation into a company with configured adapters and budgets. Model descriptions do not impersonate the real people referenced by the existing Sovereign Council UI.
 
 All campaign, CRM, creative, provider, spend and conversion truth remains in MVX Growth OS (Tier 1). Paperclip (Tier 2) owns issue delegation, company identity, approvals, budget limits and audit. No independent shadow database.
 

@@ -1,6 +1,6 @@
 {
   "schema": "mvx-marketing-fleet/v1",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "executives": [
     {
       "id": "cto-vogels",
@@ -642,6 +642,136 @@
       "artifact": "storyboards with opening frames, proof shots, CTA and captions",
       "check": "avoid implying false product demonstrations or unlicensed video",
       "scope": "creative.draft"
+    },
+    {
+      "id": "communication-redteam",
+      "title": "Independent Communication Red Team",
+      "manager": "critic-munger",
+      "input": "post copy and claim evidence, language market, tone and persona",
+      "metric": "critical false-claim and tone recall rate",
+      "artifact": "counter-argument audit and rewritten draft",
+      "check": "block unsupported urgency, superiority and ambiguity",
+      "scope": "content.review"
+    },
+    {
+      "id": "brand-reputation-auditor",
+      "title": "Brand Reputation and Narrative Consistency Auditor",
+      "manager": "branding-neumeier",
+      "input": "owned brand voice guide, public sources and owned asset provenance",
+      "metric": "verified message consistency violations",
+      "artifact": "brand-fit exception register and remediation",
+      "check": "cannot infer brand identity solely from product title",
+      "scope": "brand.review"
+    },
+    {
+      "id": "product-truth-auditor",
+      "title": "Product Suitability and Claims Critic",
+      "manager": "product-norman",
+      "input": "verified specifications, product availability, packaging and requirements",
+      "metric": "false-feature recall and suitability exceptions",
+      "artifact": "product proof and limitation matrix",
+      "check": "block product claims with no source",
+      "scope": "product.review"
+    },
+    {
+      "id": "offer-terms-auditor",
+      "title": "Commercial Offer and Pricing Critic",
+      "manager": "cfo-campbell",
+      "input": "real gross price, discount history, VAT, returns, unit economics",
+      "metric": "negative contribution and hidden-fee incidence",
+      "artifact": "offer economic veto with corrected terms",
+      "check": "flag fake promotions or undisclosed expenses",
+      "scope": "offers.review"
+    },
+    {
+      "id": "competitor-discovery-analyst",
+      "title": "Competitor and Substitute Discovery Analyst",
+      "manager": "consulting-bower",
+      "input": "dated public search results, product categories and source pages",
+      "metric": "verified relevant competing alternatives per segment",
+      "artifact": "source-cited competitor shortlist with overlap confidence",
+      "check": "search ranking not mistaken for direct competition",
+      "scope": "research.read"
+    },
+    {
+      "id": "ad-library-intelligence-analyst",
+      "title": "Competitor Ad Library and Creative Intelligence Auditor",
+      "manager": "marketing-godin",
+      "input": "public official ad libraries and authenticated permitted ad APIs",
+      "metric": "ads with verifiable IDs and dated creative observations",
+      "artifact": "official ad observation register with availability gaps",
+      "check": "never infer performance from ad visibility",
+      "scope": "ads.read"
+    },
+    {
+      "id": "creative-originality-critic",
+      "title": "Creative Differentiation and Copycat Prevention Reviewer",
+      "manager": "story-duarte",
+      "input": "owned creative drafts plus cited third-party ad observations",
+      "metric": "creative collision incidents and genuine differentiation experiments",
+      "artifact": "structural similarity memo and alternative original hooks",
+      "check": "no reproduced competitor copy or trademark confusion",
+      "scope": "creative.review"
+    },
+    {
+      "id": "audience-voice-researcher",
+      "title": "Voice-of-Customer Problems and Needs Researcher",
+      "manager": "product-norman",
+      "input": "consented interview records, dated public feedback and source permissions",
+      "metric": "dated evidenced pains vs unverified hypotheses",
+      "artifact": "needs/pains map with severity and alternative causes",
+      "check": "no invented customer reviews or inferred vulnerabilities",
+      "scope": "research.read"
+    },
+    {
+      "id": "need-solution-fit-validator",
+      "title": "Need-Solution Fit and Product Limitations Validator",
+      "manager": "growth-ellis",
+      "input": "customer jobs, referenced product capabilities and alternatives",
+      "metric": "evidence-covered pains and false-fit rate",
+      "artifact": "need to solution matrix with gaps and counterexamples",
+      "check": "unsupported solution promises are blocked",
+      "scope": "product.review"
+    },
+    {
+      "id": "conversion-redteam",
+      "title": "Conversion Funnel Friction and Trust Red Team",
+      "manager": "interaction-cooper",
+      "input": "user journey tests, payment terms, accessibility and friction signals",
+      "metric": "task failure and complaint rate",
+      "artifact": "checkout and landing friction defect report",
+      "check": "never propose dark patterns or nonconsensual retargeting",
+      "scope": "site.review"
+    },
+    {
+      "id": "placement-ethics-auditor",
+      "title": "Placement Fit and Advertising Disclosure Auditor",
+      "manager": "legal-frankel",
+      "input": "placement rights, contracts, channel context and sponsor disclosures",
+      "metric": "undisclosed sponsorship exceptions",
+      "artifact": "channel placement fit risks and corrective copy",
+      "check": "block hidden endorsements and counterfeit logos",
+      "scope": "placements.review"
+    },
+    {
+      "id": "evidence-provenance-auditor",
+      "title": "Research Provenance and Ad-Performance Skeptic",
+      "manager": "ai-karpathy",
+      "input": "raw public source snapshots, experiment ledger and claims",
+      "metric": "unverifiable assertion rate",
+      "artifact": "reproducibility report and evidence disputes",
+      "check": "competitive ad visibility is not proof of sales lift",
+      "scope": "analytics.review"
+    },
+    {
+      "id": "post-release-learnings-critic",
+      "title": "Post-Campaign and Sales Experiment Critic",
+      "manager": "critic-munger",
+      "input": "real campaign receipts, conversions, returns and holdout data",
+      "metric": "measured decision quality and rejected false winners",
+      "artifact": "postmortem, confounders and next experiments",
+      "check": "never declare a winner without adequate controlled outcomes",
+      "scope": "experiments.review"
     }
   ],
   "provenance": {
