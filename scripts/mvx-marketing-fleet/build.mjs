@@ -8,7 +8,7 @@ const roster = JSON.parse(await fs.readFile(path.join(dir,'roster.json'),'utf8')
 const isCheck = process.argv.includes('--check');
 const all = [...roster.executives, ...roster.specialists];
 const ids = new Set(all.map(a=>a.id));
-if (roster.executives.length!==27 || roster.specialists.length!==30 || ids.size!==57) throw Error('Expected 27 unique executives and 30 unique specialists');
+if (roster.executives.length!==27 || roster.specialists.length!==45 || ids.size!==72) throw Error('Expected 27 unique executives and 45 unique specialists');
 for (const a of all) if (a.manager && !ids.has(a.manager)) throw Error('Unknown supervisor '+a.id+' -> '+a.manager);
 for (const a of all) {
   const ancestors = new Set([a.id]); let node=a;
@@ -96,5 +96,5 @@ for (const [relative,content] of files) {
  if(isCheck){try{if(await fs.readFile(output,'utf8')!==content){drift++;console.error('DRIFT '+relative)}}catch{drift++;console.error('MISSING '+relative)}}
  else {await fs.mkdir(path.dirname(output),{recursive:true});await fs.writeFile(output,content,'utf8');}
 }
-console.log(JSON.stringify({team,executives:27,specialists:30,routines:routines.length,initialTasks:30,files:files.size,drift,mode:isCheck?'check':'write'}));
+console.log(JSON.stringify({team,executives:27,specialists:roster.specialists.length,routines:routines.length,initialTasks:roster.specialists.length,files:files.size,drift,mode:isCheck?'check':'write'}));
 if(drift)process.exitCode=1;

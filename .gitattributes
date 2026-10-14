@@ -1,1 +1,7 @@
 patches/*.patch whitespace=-space-before-tab
+
+# Keep hashed portable agent content byte-identical across Windows/Linux.
+packages/teams-catalog/catalog/optional/marketing/mvx-evidence-growth-council/** text eol=lf
+packages/teams-catalog/generated/catalog.json text eol=lf
+scripts/mvx-marketing-fleet/** text eol=lf
+docs/MVX_MARKETING_*.md text eol=lf

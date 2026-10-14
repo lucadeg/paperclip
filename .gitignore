@@ -78,3 +78,6 @@ tests/storybook-visual/playwright-report/
 .vercel/
 .env.local
 test-results/
+
+# Local tenant/client campaign captures, including raw third-party material and possible PII.
+/evidence/mvx-marketing-fleet/

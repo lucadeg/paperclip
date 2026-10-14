@@ -1,6 +1,6 @@
 {
   "schema": "mvx-marketing-fleet/v1",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "executives": [
     {
       "id": "cto-vogels",
@@ -492,6 +492,156 @@
       "artifact": "uncertainty range scenario forecast",
       "check": "no causality claim from fitted trends",
       "scope": "forecast.read"
+    },
+    {
+      "id": "brand-dna-researcher",
+      "title": "Brand DNA and Voice Forensic Analyst",
+      "manager": "branding-neumeier",
+      "input": "canonical site pages, real claim statements and brand typography",
+      "metric": "brand voice alignment and verified claim coverage",
+      "artifact": "brand evidence board: tone lexical palette, promise, anti-persona, citation IDs",
+      "check": "avoid claiming invented mission or aesthetics",
+      "scope": "research.read"
+    },
+    {
+      "id": "brand-market-positioner",
+      "title": "Category Positioning and Differentiation Strategist",
+      "manager": "branding-neumeier",
+      "input": "dated competitive positioning, market segments and product differentiators",
+      "metric": "measured message preference by audience",
+      "artifact": "positioning map, product proof and alternative hypothesis tests",
+      "check": "no fabricated competitor differentiators",
+      "scope": "research.read"
+    },
+    {
+      "id": "brand-identity-guardian",
+      "title": "Visual Identity and Design System Governor",
+      "manager": "branding-neumeier",
+      "input": "owned logo files, colors, brand kit and accessibility constraints",
+      "metric": "brand consistency and visual QA error rate",
+      "artifact": "versioned creative QA checklist and asset specification",
+      "check": "only owned or licensed art; require logo approval",
+      "scope": "creative.draft"
+    },
+    {
+      "id": "product-placement-strategist",
+      "title": "Product Placement and Contextual Distribution Strategist",
+      "manager": "ecommerce-lutke",
+      "input": "product attributes, placements, inventory, publisher audience",
+      "metric": "incremental qualified product consideration",
+      "artifact": "placement matrix: channel context, creative, proof, disclosure",
+      "check": "no unauthorized paid placement or hidden endorsement",
+      "scope": "placements.plan"
+    },
+    {
+      "id": "creator-placement-producer",
+      "title": "Creator Integration and Sponsorship Producer",
+      "manager": "community-garyvee",
+      "input": "licensed creator collaboration briefs and audience authenticity",
+      "metric": "creator-qualified traffic and net contribution",
+      "artifact": "script shot list, disclosed product usage and creator approval packet",
+      "check": "sponsorship disclosure and image rights validation",
+      "scope": "partnerships.plan"
+    },
+    {
+      "id": "affiliate-program-architect",
+      "title": "Affiliate Commission and Attribution Architect",
+      "manager": "sales-hormozi",
+      "input": "product gross margin, cookie attribution, payouts, refunds",
+      "metric": "net affiliate incrementality after commissions",
+      "artifact": "commission tier rules, fraud review, attribution ledger design",
+      "check": "no unfunded commissions or self-referral abuse",
+      "scope": "affiliate.plan"
+    },
+    {
+      "id": "referral-growth-designer",
+      "title": "Customer Referral Loop and Rewards Designer",
+      "manager": "growth-chen",
+      "input": "verified existing customers, consent, reward costs and repeat purchases",
+      "metric": "incremental net contribution per unique referrer",
+      "artifact": "double-sided referral flow with anti-fraud and reward cap",
+      "check": "no unsolicited invites and no fake referrals",
+      "scope": "referral.plan"
+    },
+    {
+      "id": "offer-stack-architect",
+      "title": "Value Proposition and Offer Stack Builder",
+      "manager": "sales-commercial-offer-architect",
+      "input": "real SKU evidence, margin and advertised terms",
+      "metric": "incremental contribution per offer",
+      "artifact": "offer ladder and approved pricing/bonus architecture",
+      "check": "false scarcity discount and guarantee bans",
+      "scope": "offers.plan"
+    },
+    {
+      "id": "sales-objection-scientist",
+      "title": "Sales Objection and JTBD Resolution Specialist",
+      "manager": "comm-voss",
+      "input": "consented user research, FAQ and return reasons",
+      "metric": "qualified objection resolution without complaints",
+      "artifact": "objection-to-proof matrix and followup response variants",
+      "check": "cannot invent product efficacy or buyer objection frequency",
+      "scope": "sales.draft"
+    },
+    {
+      "id": "conversion-journey-architect",
+      "title": "Conversion Journey and Checkout Optimization Architect",
+      "manager": "interaction-cooper",
+      "input": "funnel events, checkout steps, abandonment reasons",
+      "metric": "incremental completed purchase margin",
+      "artifact": "customer journey diagnostics and UX acceptance suite",
+      "check": "ban manipulative urgency and hidden charges",
+      "scope": "site.draft"
+    },
+    {
+      "id": "hook-cta-optimizer",
+      "title": "Hook CTA and Post-Level Experimentation Strategist",
+      "manager": "story-duarte",
+      "input": "creative performance, opening seconds, CTA clarity and consent",
+      "metric": "experiment lift per hook and CTA with confidence intervals",
+      "artifact": "post variant matrix: platform hook CTA placement and preregistered KPI",
+      "check": "no clickbait or untestable claims",
+      "scope": "content.draft"
+    },
+    {
+      "id": "lead-magnet-producer",
+      "title": "Free Value Content and Lead Magnet Producer",
+      "manager": "marketing-godin",
+      "input": "product factual sources, FAQ, customer information needs",
+      "metric": "opt-in guide completion and qualified consented leads",
+      "artifact": "free guide/worksheet/download and delivery contract",
+      "check": "never gate essential information deceptively",
+      "scope": "content.draft"
+    },
+    {
+      "id": "comment-dm-workflow-manager",
+      "title": "Consent-Based Comments and Direct Message Orchestrator",
+      "manager": "legal-frankel",
+      "input": "platform signed webhooks, opt-in consent, interaction thread",
+      "metric": "valid opt-in delivery and complaint/block rate",
+      "artifact": "comment-to-DM state machine with idempotent safe response",
+      "check": "no unsolicited DMs; no posting without provider authorization",
+      "scope": "community.plan"
+    },
+    {
+      "id": "persona-personalization-scientist",
+      "title": "Audience Segmentation and Individualization Scientist",
+      "manager": "growth-ellis",
+      "input": "consented cohort signals, language and non-sensitive needs",
+      "metric": "segment holdout incremental conversions",
+      "artifact": "persona experiments with counterfactual and fairness assessment",
+      "check": "no sensitive attribute inference or unlawful targeting",
+      "scope": "analytics.read"
+    },
+    {
+      "id": "storyboard-video-director",
+      "title": "Short Video Creative and Product Demonstration Director",
+      "manager": "story-duarte",
+      "input": "official product imagery and proven feature statements",
+      "metric": "verified watch-through and qualified action",
+      "artifact": "storyboards with opening frames, proof shots, CTA and captions",
+      "check": "avoid implying false product demonstrations or unlicensed video",
+      "scope": "creative.draft"
     }
   ],
   "provenance": {
