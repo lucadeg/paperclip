@@ -4,7 +4,7 @@
 
 ## Workforce and accountability
 
-Preserves 27 conceptual executive profiles, original 45 marketing operators and introduces **13 independent review/critique specialists**. New total: **85 Paperclip agent templates = 27 council + 58 marketing agents**, 58 initial tasks and 8 scheduled-routine templates. Additional routines: weekly competitive ads evidence QA, weekly customer-pains verification, daily campaign and offer criticism. These are importable templates; no assertion of 85 live executing jobs.
+Preserves 27 conceptual executive profiles, original 45 marketing operators, 13 independent critics, and introduces 6 dedicated visual reviewers. New total: **91 Paperclip agent templates = 27 council + 64 marketing agents**, 64 initial tasks and 10 scheduled-routine templates. Additional routines: weekly competitive ads evidence QA, weekly customer-pains verification, daily campaign and offer criticism. These are importable templates; no assertion of 91 live executing jobs.
 
 Specialist roles: `communication-redteam`, `brand-reputation-auditor`, `product-truth-auditor`, `offer-terms-auditor`, `competitor-discovery-analyst`, `ad-library-intelligence-analyst`, `creative-originality-critic`, `audience-voice-researcher`, `need-solution-fit-validator`, `conversion-redteam`, `placement-ethics-auditor`, `evidence-provenance-auditor`, `post-release-learnings-critic`.
 

@@ -1,6 +1,6 @@
 {
   "schema": "mvx-marketing-fleet/v1",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "executives": [
     {
       "id": "cto-vogels",
@@ -772,6 +772,66 @@
       "artifact": "postmortem, confounders and next experiments",
       "check": "never declare a winner without adequate controlled outcomes",
       "scope": "experiments.review"
+    },
+    {
+      "id": "visual-composition-critic",
+      "title": "Visual Composition and Creative Hierarchy Critic",
+      "manager": "story-duarte",
+      "input": "approved rendered imagery, focus order, human view and native platform crop",
+      "metric": "visual QA defects by evidence class",
+      "artifact": "layout, focal point and crop challenge with screenshot proof",
+      "check": "no visual success claim without inspecting actual licensed raster",
+      "scope": "creative.review"
+    },
+    {
+      "id": "visual-brand-guardian",
+      "title": "Visual Brand Consistency Reviewer",
+      "manager": "branding-neumeier",
+      "input": "verified logo, palette, typography, owned brand kit and rendered asset",
+      "metric": "brand kit conformant creatives",
+      "artifact": "brand colors and logo placement exception register",
+      "check": "block source-less logo similarity or unlicensed trademark reproduction",
+      "scope": "brand.review"
+    },
+    {
+      "id": "visual-accessibility-auditor",
+      "title": "Visual Accessibility and Readability Auditor",
+      "manager": "interaction-cooper",
+      "input": "raster pixels, alt text, contrast measurement, screen size and platform UI",
+      "metric": "verified WCAG checks per delivered asset",
+      "artifact": "contrast, text legibility, caption and accessibility audit",
+      "check": "no accessibility PASS solely from alt text presence",
+      "scope": "creative.review"
+    },
+    {
+      "id": "product-visual-veracity-auditor",
+      "title": "Product Photo and Demonstration Truthfulness Auditor",
+      "manager": "product-norman",
+      "input": "owned SKU images, generated visuals, original references and provenance",
+      "metric": "detected hallucinated or misleading product features",
+      "artifact": "SKU-to-media authenticity and context limitations report",
+      "check": "ban fabricated unlicensed product views and fake before/after",
+      "scope": "product.review"
+    },
+    {
+      "id": "platform-creative-spec-auditor",
+      "title": "Platform Creative Specs and Safe Zone Validator",
+      "manager": "legal-frankel",
+      "input": "platform current creative specs, aspect ratio, actual crop and overlays",
+      "metric": "valid placement specifications and text safe-area coverage",
+      "artifact": "ad format/crop/safe-zone acceptance evidence",
+      "check": "no safe-zone approval without measured pixel coordinates",
+      "scope": "placements.review"
+    },
+    {
+      "id": "cross-modal-claim-auditor",
+      "title": "Cross-Modal Creative Claim Consistency Critic",
+      "manager": "ai-karpathy",
+      "input": "ad caption, media frame captions, soundtrack transcript and landing text",
+      "metric": "text-visual factual contradictions and unresolved evidence",
+      "artifact": "cross-modal claim matrix linked to brand/product source",
+      "check": "cannot assert consistent imagery when pixels are unavailable",
+      "scope": "analytics.review"
     }
   ],
   "provenance": {

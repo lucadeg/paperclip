@@ -4,6 +4,7 @@ import {
   CircleDot,
   Target,
   LayoutDashboard,
+  ScanEye,
   DollarSign,
   History,
   Search,
@@ -153,6 +154,7 @@ export function Sidebar() {
               Cmd/Ctrl+K remains the keyboard path (command palette). */}
           <SidebarNavItem to="/search" label="Search" icon={Search} />
           <SidebarNavItem to="/dashboard" label="Dashboard" icon={LayoutDashboard} liveCount={liveRunCount} />
+          <SidebarNavItem to="/marketing-intelligence" label="MVX Marketing Intelligence" icon={ScanEye} textBadge="MVX" />
           <SidebarNavItem
             to="/inbox"
             label="Inbox"

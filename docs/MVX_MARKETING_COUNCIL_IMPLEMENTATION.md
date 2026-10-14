@@ -1,18 +1,18 @@
-# MVX Tier 2 — Evidence-Governed Marketing Council and 58 Specialists
+# MVX Tier 2 — Evidence-Governed Marketing Council and 64 Specialists
 
 **Implementation branch:** `feat/mvx-sovereign-marketing-30-evidence` (base `mvx-sovereign-master`).
 **Product boundary:** Agentic Company / Paperclip manages tasks, delegation, approvals, agent costs and audit. Tier 1 Growth OS remains the authoritative source of campaigns, CRM, conversions, provider state, spend and receipts.
 
 ## Implemented components
 
-- `scripts/mvx-marketing-fleet/roster.json`: 27 executive **decision frameworks** aligned by exact ID to the existing Sovereign Council UI, plus 58 distinct marketing specialist roles (30 original + 15 commercial + 13 critics) with a single manager, source data, KPI, real deliverable, acceptance check and maximum requested tool profile.
+- `scripts/mvx-marketing-fleet/roster.json`: 27 executive **decision frameworks** aligned by exact ID to the existing Sovereign Council UI, plus 64 distinct marketing specialist roles (30 original + 15 commercial + 13 critics + 6 visual auditors) with a single manager, source data, KPI, real deliverable, acceptance check and maximum requested tool profile.
 - `scripts/mvx-marketing-fleet/build.mjs`: reproducible compiler; verifies exact workforce size, unique IDs, manager references, acyclic reporting and materializes Agent Companies v1 markdown.
-- `packages/teams-catalog/catalog/optional/marketing/mvx-evidence-growth-council/`: installable **optional** team package with 85 AGENTS.md files, 58 initial work issues, 8 recurring review templates, one project and TEAM.md. No executable scripts or automatic installs in the portable package.
+- `packages/teams-catalog/catalog/optional/marketing/mvx-evidence-growth-council/`: installable **optional** team package with 91 AGENTS.md files, 64 initial work issues, 10 recurring review templates, one project and TEAM.md. No executable scripts or automatic installs in the portable package.
 - `scripts/mvx-marketing-fleet/council-gate.mjs`: deterministic, domain-specific council selection; independent risk critique; required evidence source/tenant/hash/version/freshness; trusted **server-side** Tier 1 evidence verifier interface; explicit dissent and veto; SHA-256 record digest; fail-closed for side effects.
 - `scripts/mvx-marketing-fleet/experiment-economics.mjs`: preregistered fixed-horizon holdout conversion analysis with confidence intervals, sample ratio mismatch, guardrails, minimum sample, early-peeking stop. EUR accounting estimate includes net/gross values, IVA on sales and media spend, refunds and fees.
 - `scripts/mvx-marketing-fleet/fleet.test.mjs`: negative and positive Node.js tests without external services.
 
-The old declaration of **199** OpenClaw specialists was in a structurally invalid catalog directory and has been preserved at `packages/teams-catalog/legacy/openclaw-sovereign-fleet/DECLARATION.md`. It is a taxonomy, not 199 installed/running agents; it refers to 26 leaders whereas the UI has 27. Do **not** add 199 to the live workforce count. The current 58 specialist definitions are **additional** and do not imply activation of the legacy fleet.
+The old declaration of **199** OpenClaw specialists was in a structurally invalid catalog directory and has been preserved at `packages/teams-catalog/legacy/openclaw-sovereign-fleet/DECLARATION.md`. It is a taxonomy, not 199 installed/running agents; it refers to 26 leaders whereas the UI has 27. Do **not** add 199 to the live workforce count. The current 64 specialist definitions are **additional** and do not imply activation of the legacy fleet.
 
 The 27 managerial lenses reference frameworks associated with known individuals in the UI; **they do not impersonate those individuals and are not real-world endorsements or board attendees.** Never display them as leaders who actually joined a meeting.
 
@@ -43,4 +43,4 @@ Financial projections distinguish sales gross, sales IVA, net revenue, refunds, 
 
 ## Truthful deployment status
 
-Code and package templates can be independently compiled and tested; company import, model adapter configuration, real Tier 1 evidence verification, active recurring schedules, provider mutation receipts, production monitoring and customer-specific consent policies **are separate operational acceptance gates**. Do not label all 85 agents as active from a catalog count or display fabricated business outcomes.
+Code and package templates can be independently compiled and tested; company import, model adapter configuration, real Tier 1 evidence verification, active recurring schedules, provider mutation receipts, production monitoring and customer-specific consent policies **are separate operational acceptance gates**. Do not label all 91 agents as active from a catalog count or display fabricated business outcomes.

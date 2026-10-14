@@ -1,7 +1,7 @@
 # MVX Branding, Placement, Conversion & Social Automation — Evidence-Based E2E
 
 **Target branch:** `feat/mvx-sovereign-marketing-30-evidence` (PR #1 against `mvx-sovereign-master`).
-**Scope:** 27 existing executive analytical frameworks + 30 original marketing specialists + **15 additional commercial specialists** + **13 independent critic specialists**, 85 importable Paperclip definitions. 58 operational initial-task templates and 8 recurring governance templates.
+**Scope:** 27 existing executive analytical frameworks + 30 original marketing specialists + **15 additional commercial specialists** + **13 independent critic specialists** + **6 visual auditors**, 91 importable Paperclip definitions. 64 operational initial-task templates and 10 recurring governance templates.
 
 ## Specialist roles added (15)
 

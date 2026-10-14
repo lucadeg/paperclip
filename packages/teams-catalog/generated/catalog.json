@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "packageName": "@paperclipai/teams-catalog",
   "packageVersion": "0.1.0",
-  "generatedAt": "2026-10-14T11:20:36.112Z",
+  "generatedAt": "2026-10-14T11:53:19.317Z",
   "teams": [
     {
       "id": "paperclipai:bundled:company-defaults:core-exec-team",
@@ -470,7 +470,7 @@
       "category": "marketing",
       "slug": "mvx-evidence-growth-council",
       "name": "MVX Evidence-Governed Growth Council",
-      "description": "27 executive decision-lens workers plus 58 accountable marketing specialists; evidence-first tasks, safe drafts, independent challenge and consent-first provider operations.",
+      "description": "27 executive decision-lens workers plus 64 accountable marketing specialists; evidence-first tasks, safe drafts, independent challenge and consent-first provider operations.",
       "path": "catalog/optional/marketing/mvx-evidence-growth-council",
       "entrypoint": "TEAM.md",
       "schema": "agentcompanies/v1",
@@ -491,10 +491,10 @@
         "consent"
       ],
       "counts": {
-        "agents": 85,
+        "agents": 91,
         "projects": 1,
-        "tasks": 58,
-        "routines": 8,
+        "tasks": 64,
+        "routines": 10,
         "localSkills": 0,
         "catalogSkills": 2,
         "externalSkillSources": 0
@@ -525,6 +525,7 @@
         "creative-originality-critic",
         "creator-placement-producer",
         "critic-munger",
+        "cross-modal-claim-auditor",
         "cto-vogels",
         "devops-hightower",
         "ecommerce-lutke",
@@ -576,10 +577,12 @@
         "people-mccord",
         "persona-personalization-scientist",
         "placement-ethics-auditor",
+        "platform-creative-spec-auditor",
         "post-release-learnings-critic",
         "product-norman",
         "product-placement-strategist",
         "product-truth-auditor",
+        "product-visual-veracity-auditor",
         "psych-cialdini",
         "referral-growth-designer",
         "sales-belfort",
@@ -587,7 +590,10 @@
         "sales-hormozi",
         "sales-objection-scientist",
         "story-duarte",
-        "storyboard-video-director"
+        "storyboard-video-director",
+        "visual-accessibility-auditor",
+        "visual-brand-guardian",
+        "visual-composition-critic"
       ],
       "projectSlugs": [
         "marketing-evidence-program"
@@ -619,6 +625,7 @@
             "creative-originality-critic",
             "creator-placement-producer",
             "critic-munger",
+            "cross-modal-claim-auditor",
             "cto-vogels",
             "devops-hightower",
             "ecommerce-lutke",
@@ -670,10 +677,12 @@
             "people-mccord",
             "persona-personalization-scientist",
             "placement-ethics-auditor",
+            "platform-creative-spec-auditor",
             "post-release-learnings-critic",
             "product-norman",
             "product-placement-strategist",
             "product-truth-auditor",
+            "product-visual-veracity-auditor",
             "psych-cialdini",
             "referral-growth-designer",
             "sales-belfort",
@@ -681,7 +690,10 @@
             "sales-hormozi",
             "sales-objection-scientist",
             "story-duarte",
-            "storyboard-video-director"
+            "storyboard-video-director",
+            "visual-accessibility-auditor",
+            "visual-brand-guardian",
+            "visual-composition-critic"
           ],
           "resolved": true,
           "catalogSkillId": "paperclipai:bundled:paperclip-operations:issue-triage",
@@ -713,6 +725,7 @@
             "creative-originality-critic",
             "creator-placement-producer",
             "critic-munger",
+            "cross-modal-claim-auditor",
             "cto-vogels",
             "devops-hightower",
             "ecommerce-lutke",
@@ -764,10 +777,12 @@
             "people-mccord",
             "persona-personalization-scientist",
             "placement-ethics-auditor",
+            "platform-creative-spec-auditor",
             "post-release-learnings-critic",
             "product-norman",
             "product-placement-strategist",
             "product-truth-auditor",
+            "product-visual-veracity-auditor",
             "psych-cialdini",
             "referral-growth-designer",
             "sales-belfort",
@@ -775,7 +790,10 @@
             "sales-hormozi",
             "sales-objection-scientist",
             "story-duarte",
-            "storyboard-video-director"
+            "storyboard-video-director",
+            "visual-accessibility-auditor",
+            "visual-brand-guardian",
+            "visual-composition-critic"
           ],
           "resolved": true,
           "catalogSkillId": "paperclipai:bundled:paperclip-operations:task-planning",
@@ -788,8 +806,8 @@
         {
           "path": "TEAM.md",
           "kind": "team",
-          "sizeBytes": 6410,
-          "sha256": "06db2c266bc8dcc07874d60a26f79d70c855832d4a25775f55f14adb282c8315"
+          "sizeBytes": 6714,
+          "sha256": "a8e96adf7c401f2b21f1ccf8fc26c65c3f41a519b346a45601a31607521e18fe"
         },
         {
           "path": "agents/ad-library-intelligence-analyst/AGENTS.md",
@@ -922,6 +940,12 @@
           "kind": "agent",
           "sizeBytes": 1605,
           "sha256": "79b4ceffef69aaaaf4cd79da342963240e0d6ba18a8695d3fd5bb29ca22f89de"
+        },
+        {
+          "path": "agents/cross-modal-claim-auditor/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2493,
+          "sha256": "3a09528bedfabf9b45223ea3c4cdb49b57d1db8c6dd3fe0853f6e9a341cc812b"
         },
         {
           "path": "agents/cto-vogels/AGENTS.md",
@@ -1230,6 +1254,12 @@
           "sha256": "13d1f3d1b963b8cd20df3f0e05e926399bad398551d931fde1d0a3ccdb25ac3c"
         },
         {
+          "path": "agents/platform-creative-spec-auditor/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2493,
+          "sha256": "154dde1ca7579f87aa061689706ef766421abe66f5033549a057aad0f9e94b47"
+        },
+        {
           "path": "agents/post-release-learnings-critic/AGENTS.md",
           "kind": "agent",
           "sizeBytes": 2462,
@@ -1252,6 +1282,12 @@
           "kind": "agent",
           "sizeBytes": 2414,
           "sha256": "7b305c57ec209f469e351ccb09c125a63ed94d4dc20889b89326e3434a78b803"
+        },
+        {
+          "path": "agents/product-visual-veracity-auditor/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2519,
+          "sha256": "52a5ba87c9af0bdc8eaee599fa3fc09305f52a941fb64e30d1441196cff9469d"
         },
         {
           "path": "agents/psych-cialdini/AGENTS.md",
@@ -1302,10 +1338,28 @@
           "sha256": "57d8335350d79492cc6db9948677080b74d34d348576fce627b41b96352c5025"
         },
         {
+          "path": "agents/visual-accessibility-auditor/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2484,
+          "sha256": "a7fbef80d718b334e324d94eb3aba8c0778a40b08a79ef351a08a1a42c19cb6c"
+        },
+        {
+          "path": "agents/visual-brand-guardian/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2436,
+          "sha256": "ae8f865a07260a6eed1a4acfcfa70bff5b965f2c0d9c11710d1c6530df7a038c"
+        },
+        {
+          "path": "agents/visual-composition-critic/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2493,
+          "sha256": "a2dc86b776b24bbaa20f520b4aaee039ecfbb3e2ebb91b77f1988f41b450e32e"
+        },
+        {
           "path": "projects/marketing-evidence-program/PROJECT.md",
           "kind": "project",
-          "sizeBytes": 780,
-          "sha256": "73b4c096b2bcf22c8c75108da9eb6dec7f0631f4de12f1855be11d83994d5938"
+          "sizeBytes": 789,
+          "sha256": "d7041f13f28da7d48139e8699b7ee581c004afc803eb1d31581fffa89215758f"
         },
         {
           "path": "projects/marketing-evidence-program/tasks/daily-creative-redteam/TASK.md",
@@ -1324,6 +1378,12 @@
           "kind": "task",
           "sizeBytes": 484,
           "sha256": "f471852b0bdb8385078c19da2ffd962db6e0097ef3afa93cfb2efb57fe7163ee"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/daily-visual-proof-audit/TASK.md",
+          "kind": "task",
+          "sizeBytes": 493,
+          "sha256": "afc0c9995424f35cdc643750d1718de644c26c05f5ac4b6091e9fc7e6e728d84"
         },
         {
           "path": "projects/marketing-evidence-program/tasks/initial-ad-library-intelligence-analyst/TASK.md",
@@ -1408,6 +1468,12 @@
           "kind": "task",
           "sizeBytes": 696,
           "sha256": "dcd02912377acf137a1825397e70f47d4f22eaf9aa3cd3df8943392ca695936b"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-cross-modal-claim-auditor/TASK.md",
+          "kind": "task",
+          "sizeBytes": 701,
+          "sha256": "a2f3378c0f22a3cb4bdc732371e376f2e101a40267749d47e92e809280f794f1"
         },
         {
           "path": "projects/marketing-evidence-program/tasks/initial-evidence-provenance-auditor/TASK.md",
@@ -1638,6 +1704,12 @@
           "sha256": "f031e3f7565acb5fb7639c0df9b80cfa9992ce7d64aaea414777631f583812fd"
         },
         {
+          "path": "projects/marketing-evidence-program/tasks/initial-platform-creative-spec-auditor/TASK.md",
+          "kind": "task",
+          "sizeBytes": 699,
+          "sha256": "069f0274aeefd611c0a20b71e7a6327104218ba82c01442632934b4733747e05"
+        },
+        {
           "path": "projects/marketing-evidence-program/tasks/initial-post-release-learnings-critic/TASK.md",
           "kind": "task",
           "sizeBytes": 678,
@@ -1656,6 +1728,12 @@
           "sha256": "fcc63de1a571de7023c5d9afc37c56310c53906481a85ae54feb43e46ff52223"
         },
         {
+          "path": "projects/marketing-evidence-program/tasks/initial-product-visual-veracity-auditor/TASK.md",
+          "kind": "task",
+          "sizeBytes": 728,
+          "sha256": "c393e9bcf54708fd8e5aa8305f7a72dd1995f6eebeed6243b11a9d9765ab0de4"
+        },
+        {
           "path": "projects/marketing-evidence-program/tasks/initial-referral-growth-designer/TASK.md",
           "kind": "task",
           "sizeBytes": 680,
@@ -1672,6 +1750,24 @@
           "kind": "task",
           "sizeBytes": 713,
           "sha256": "89612396ca5cda4db39fca448a8747a266a00790dddb1843480e7f28238dfe64"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-visual-accessibility-auditor/TASK.md",
+          "kind": "task",
+          "sizeBytes": 701,
+          "sha256": "b11737f7e224c4a9a768dea2178c4a54ffabc896a8ce86a1f5bfd2ae05042657"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-visual-brand-guardian/TASK.md",
+          "kind": "task",
+          "sizeBytes": 672,
+          "sha256": "56d6de55f46d323b2a6f24ba645d04b1c4dbe6da6876a7c26d74cc1dcbd91327"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-visual-composition-critic/TASK.md",
+          "kind": "task",
+          "sizeBytes": 720,
+          "sha256": "d4d28f52afc4cbdb155f133da97a9fcda6957636e8cdfd9106d557b522aad0dd"
         },
         {
           "path": "projects/marketing-evidence-program/tasks/weekly-campaign-safety/TASK.md",
@@ -1698,6 +1794,12 @@
           "sha256": "ff77646cfc7470db32c4dd6ca31b8b7c0da00fa95d5dc0ff0f06d51974ae1740"
         },
         {
+          "path": "projects/marketing-evidence-program/tasks/weekly-platform-creative-integrity/TASK.md",
+          "kind": "task",
+          "sizeBytes": 473,
+          "sha256": "eebabcdf4730e2e31cd31bd29cf6d4ad06836039632fd2cc1f97f167a7029419"
+        },
+        {
           "path": "projects/marketing-evidence-program/tasks/weekly-voice-of-customer/TASK.md",
           "kind": "task",
           "sizeBytes": 472,
@@ -1706,7 +1808,7 @@
       ],
       "trustLevel": "markdown_only",
       "compatibility": "compatible",
-      "contentHash": "sha256:b920aa778e78b66ae0890a8dc0bb2e36a5203ed7d795818e8a97098811f8a39e"
+      "contentHash": "sha256:67f2da3111ceb7e942da48994ff5cfc457b0bf6d50b43484f9bf3e6480aa8119"
     }
   ]
 }

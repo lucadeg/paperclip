@@ -206,7 +206,7 @@ test('Brave authorized query adapter accepts verified API JSON, no secret in out
 });
 test('end-to-end competitor audit with permitted public seeds has no invented ads or persona research',async()=>{
  const x=await performCompetitiveAudit({clientId:'example-demo',target},
-  {acquireClient:async()=>({clientId:'example-demo',companyId:'c',tenantId:'t',campaign}),
+  {acquireClient:async()=>({clientId:'example-demo',companyId:'company-demo',tenantId:'tenant-demo',campaign}),
     searchAdapter:adapter,metaAdApi:async()=>({status:'BLOCKED_AD_LIBRARY_CREDENTIALS',observations:[]})});
  assert.equal(x.competitive.competitors.length,2);
  assert.equal(x.observedAds.length,0);assert.equal(x.voiceOfCustomer.observations.length,0);

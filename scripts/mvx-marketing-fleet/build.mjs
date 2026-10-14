@@ -8,7 +8,7 @@ const roster = JSON.parse(await fs.readFile(path.join(dir,'roster.json'),'utf8')
 const isCheck = process.argv.includes('--check');
 const all = [...roster.executives, ...roster.specialists];
 const ids = new Set(all.map(a=>a.id));
-if (roster.executives.length!==27 || roster.specialists.length!==58 || ids.size!==85) throw Error('Expected 27 unique executives and 58 unique specialists');
+if (roster.executives.length!==27 || roster.specialists.length!==64 || ids.size!==91) throw Error('Expected 27 unique executives and 64 unique specialists');
 for (const a of all) if (a.manager && !ids.has(a.manager)) throw Error('Unknown supervisor '+a.id+' -> '+a.manager);
 for (const a of all) {
   const ancestors = new Set([a.id]); let node=a;
@@ -27,7 +27,7 @@ function add(p,content){ files.set(p,content.endsWith('\n')?content:content+'\n'
 const root='agents/ceo-bezos/AGENTS.md';
 add('TEAM.md',fm({
  name:'MVX Evidence-Governed Growth Council',
- description:'27 executive decision-lens workers plus 58 accountable marketing specialists; evidence-first tasks, safe drafts, independent challenge and consent-first provider operations.',
+ description:'27 executive decision-lens workers plus 64 accountable marketing specialists; evidence-first tasks, safe drafts, independent challenge and consent-first provider operations.',
  schema:'agentcompanies/v1', slug:'mvx-evidence-growth-council',category:'marketing',
  key:'paperclipai/optional/marketing/mvx-evidence-growth-council',
  manager:root,
@@ -38,7 +38,7 @@ add('TEAM.md',fm({
  requiredSkills:['paperclipai/bundled/paperclip-operations/task-planning','paperclipai/bundled/paperclip-operations/issue-triage']
 })+
 '# MVX Marketing Evidence-Governed Council\n\n'+
-'**Template only; not a claim of live employment or human endorsement.** This team imports 85 Paperclip agent templates (27 executive decision frameworks and 58 marketing task owners). Each becomes runnable only after installation into a company with configured adapters and budgets. Model descriptions do not impersonate the real people referenced by the existing Sovereign Council UI.\n\n'+
+'**Template only; not a claim of live employment or human endorsement.** This team imports 91 Paperclip agent templates (27 executive decision frameworks and 64 marketing task owners). Each becomes runnable only after installation into a company with configured adapters and budgets. Model descriptions do not impersonate the real people referenced by the existing Sovereign Council UI.\n\n'+
 'All campaign, CRM, creative, provider, spend and conversion truth remains in MVX Growth OS (Tier 1). Paperclip (Tier 2) owns issue delegation, company identity, approvals, budget limits and audit. No independent shadow database.\n\n'+
 '## Non-negotiable operating protocol\n\n'+
 '1. Resolve tenant and company ID and valid authority before retrieving or sharing data. Default deny missing grants.\n'+
@@ -71,8 +71,8 @@ for(const a of roster.specialists) {
  '## Fail-closed safety\nNo unverifiable metrics, invented testimonials or identities, unsolicited messaging, unconsented tracking, secret leakage, or unauthorized spend/publication. Mark outside-data claims as hypotheses.\n';
  add('agents/'+a.id+'/AGENTS.md',body);
 }
-add('projects/marketing-evidence-program/PROJECT.md',fm({name:'MVX Marketing Evidence Program',slug:'marketing-evidence-program',description:'58 specialist marketing missions, cross-functional evidence gates, recurring council and verification routines.',owner:'ceo-bezos'})+
- '# Operating targets\n\nProduce evidence-linked growth decisions through the Tier 1 Growth OS API and Paperclip issue ledger; do not duplicate marketing provider or CRM truth. Each issue must carry accountable owner, baseline, hypothesis, budget, authority, measured result and acceptance test.\n\n**Launch:** operator imports this optional team, assigns bounded model adapters and monthly budgets, connects Tier 1 with read-only consent-scoped tools and enables explicit task heartbeats. Importing templates is not proof that the 57 agents have executed.\n');
+add('projects/marketing-evidence-program/PROJECT.md',fm({name:'MVX Marketing Evidence Program',slug:'marketing-evidence-program',description:'64 specialist marketing missions, cross-functional evidence gates, recurring council and verification routines.',owner:'ceo-bezos'})+
+ '# Operating targets\n\nProduce evidence-linked growth decisions through the Tier 1 Growth OS API and Paperclip issue ledger; do not duplicate marketing provider or CRM truth. Each issue must carry accountable owner, baseline, hypothesis, budget, authority, measured result and acceptance test.\n\n**Launch:** operator imports this optional team, assigns bounded model adapters and monthly budgets, connects Tier 1 with read-only consent-scoped tools and enables explicit task heartbeats. Importing templates is not proof that the 91 agent templates have executed.\n');
 for(const a of roster.specialists) {
  add('projects/marketing-evidence-program/tasks/initial-'+a.id+'/TASK.md',
   fm({name:'Evidence baseline: '+a.title,slug:'initial-'+a.id,assignee:a.id,project:'marketing-evidence-program',recurring:false})+
@@ -88,6 +88,8 @@ const routines=[
  ['weekly-competitive-evidence','Weekly Competitor Ad Evidence QA','ad-library-intelligence-analyst','Review official ad observation receipts; distinguish observed public creative from claims of performance, apply freshness and competitor attribution gates.'],
  ['weekly-voice-of-customer','Weekly Customer Pains Evidence Review','audience-voice-researcher','Review sourced target interviews, public feedback and sample bias; classify real concerns separately from marketer hypotheses.'],
  ['daily-creative-redteam','Daily Communication and Offer Challenge','communication-redteam','Review source-backed posts and landing offers for unsupported claims, copied ads, accessibility, hidden fees and persona mismatches; block high severity.'],
+ ['daily-visual-proof-audit','Daily Visual Asset Evidence Review','visual-composition-critic','Inspect actual licensed image/video assets and source-to-SKU verification; record per-post vision/a11y/safe-zone receipts or mark explicitly untested.'],
+ ['weekly-platform-creative-integrity','Weekly Platform & Cross-modal Verification','cross-modal-claim-auditor','Review copy, rendered assets, transcript, CTA, platform safe zones, rights and truthful product visual evidence.'],
  ['weekly-campaign-safety','Weekly Consent and Brand Safety','legal-frankel','Check privacy, unsubscribe, consent, rights, advertising-policy and financial-claim evidence; stop high-risk provider side effects.']
 ];
 for(const [slug,name,assignee,instruction] of routines){

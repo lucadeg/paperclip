@@ -7,6 +7,8 @@ import {makeBraveWebSearchAdapter,makeSeededResearchAdapter} from './search-prov
 import {discoverCompetitors,inferCategoryNeedsFromCompetitorMessaging,normalizeObservedAds} from './competitive-intelligence.mjs';
 import {metaEuAdObservations,adLibraryProviderMatrix} from './official-ad-connectors.mjs';
 import {collectVoiceOfCustomer,critiqueFullCampaign,proposeDifferentiatedConcepts} from './redteam-needs.mjs';
+import {buildDashboard} from './dashboard-model.mjs';
+import {storeDashboardSnapshot} from './dashboard-store.mjs';
 import {searchAdKitCompetitor,proposeCreativeEvidenceChecklist} from './adkit-competitor-adapter.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 function checkLocal(file){
@@ -44,6 +46,9 @@ export async function performCompetitiveAudit(config,{acquireClient=planClientWo
  const voice=collectVoiceOfCustomer({observations:voiceObservations,target:campaign.target});
  const redteam=critiqueFullCampaign({campaign,competitive,adObservations:verifiedAdObservations,voice});
  const proposed=proposeDifferentiatedConcepts({campaign,redteam,observedAds:verifiedAdObservations});
+ const dashboard=buildDashboard({campaign,redteam,competitive,categoryNeeds,
+    voiceOfCustomer:voice,adProviderStatus,adKitResearch,originalConcepts:proposed,
+    clientId:client.clientId,tenantId:client.tenantId,companyId:client.companyId});
  return {schema:'mvx-competitor-critic-client-run/v1',
    clientId:client.clientId,tenantId:client.tenantId,companyId:client.companyId,
    timestamp:new Date().toISOString(),clientWorkflowSummary:{
@@ -52,6 +57,7 @@ export async function performCompetitiveAudit(config,{acquireClient=planClientWo
    campaignId:campaign.id,competitive,categoryNeeds,adProviderStatus,
    providerCapabilities:adLibraryProviderMatrix(),
    observedAds:verifiedAdObservations,adKitResearch,voiceOfCustomer:voice,redteam,originalConcepts:proposed,
+   dashboard,
    status:'RESEARCH_DRAFT_NOT_MARKETING_EXECUTION',
    technicalGates:{liveCompetitorPages:Boolean(competitive.competitors?.length),
      indexedCompetitorAds:verifiedAdObservations.length>0,measuredWinningAds:false,
@@ -98,6 +104,7 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
  }
  const report=await performCompetitiveAudit(config,{searchAdapter});
  const location=await writeAuditEvidence(report);
+ const dashboardStorage=await storeDashboardSnapshot(report.dashboard);
  console.log(JSON.stringify({client:report.clientId,brand:report.clientWorkflowSummary.brand,
    competitors:report.competitive.competitors?.map(c=>({
      name:c.identity.name,domain:c.identity.domain,score:c.relevance.score,
@@ -109,5 +116,6 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    voicedCustomerEvidenceCount:report.voiceOfCustomer.observations.length,
    critique:report.redteam.scorecard,
    creativeAlternatives:report.originalConcepts.length,
-   release:report.redteam.releaseVerdict,manifestDirectory:location.directory},null,2));
+   release:report.redteam.releaseVerdict,manifestDirectory:location.directory,
+   dashboardSnapshot:dashboardStorage.filename, dashboardSha256:dashboardStorage.sha256},null,2));
 }
