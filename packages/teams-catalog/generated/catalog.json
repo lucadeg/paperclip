@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "packageName": "@paperclipai/teams-catalog",
   "packageVersion": "0.1.0",
-  "generatedAt": "2026-06-04T18:03:41.262Z",
+  "generatedAt": "2026-10-14T01:25:58.476Z",
   "teams": [
     {
       "id": "paperclipai:bundled:company-defaults:core-exec-team",
@@ -96,43 +96,43 @@
         {
           "path": "TEAM.md",
           "kind": "team",
-          "sizeBytes": 2144,
-          "sha256": "4ab4f57f147e89a56a6753755d7ef142d91741b3c0159f2e53fb333cd2779eaf"
+          "sizeBytes": 2188,
+          "sha256": "44785f11361024ea571f0ea16a96599c73e6affedf885cf4be58a7fa38126394"
         },
         {
           "path": "agents/ceo/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 2492,
-          "sha256": "50f580c51807762265f09c6fe7bf32d7701d64caeb30595bfd577b2f5087c21b"
+          "sizeBytes": 2543,
+          "sha256": "f0e5579d97918af8580008b6b18b5523c47dd97756b979b394a181f3d59f15a5"
         },
         {
           "path": "agents/cto/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 1449,
-          "sha256": "596e2e9fe08d7368b3b0cfe72c2635ea80444d92a2c0414157bfb0a17773fcaf"
+          "sizeBytes": 1482,
+          "sha256": "a43e5facb227c3aa94179b0042151e26fd92a2fd6dd08e409e46ee08d5652e82"
         },
         {
           "path": "agents/qa/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 1307,
-          "sha256": "2a139b88b4b98516048395c569c1bc74fd31cdc2da65db410e9779b8d92c0343"
+          "sizeBytes": 1338,
+          "sha256": "8cb06d89ed362d6c14ea87a7cd24ba876b584ddd8a0e32fea96dc348772400d0"
         },
         {
           "path": "projects/first-project/PROJECT.md",
           "kind": "project",
-          "sizeBytes": 364,
-          "sha256": "1f457ae956da52ff83adc1cf63a3fb84337a4afb25bd43f0d123902d75e871cc"
+          "sizeBytes": 372,
+          "sha256": "ce8b08b34d0786b6d8abbce9ab6f37e38b28fc7b2f632814b1b15deaddd1e99f"
         },
         {
           "path": "projects/first-project/tasks/first-heartbeat/TASK.md",
           "kind": "task",
-          "sizeBytes": 292,
-          "sha256": "bdc979cafa43fc9b8f0d6f0e4120c01cecfb899082781a5da88e26fa262f18e4"
+          "sizeBytes": 301,
+          "sha256": "02b56e304a8214b1e2e7ec401733ed0fbe151cb668ad19f2649ec65e934f7e68"
         }
       ],
       "trustLevel": "markdown_only",
       "compatibility": "compatible",
-      "contentHash": "sha256:0f20e9d56124c1dc90a1e4b128fabd863538bcc935117220f719d9620f7c89f1"
+      "contentHash": "sha256:91b498249140444f185aab8576df0ed017fd051491e6597da547c41c0381ca24"
     },
     {
       "id": "paperclipai:bundled:product:product-design",
@@ -212,31 +212,31 @@
         {
           "path": "TEAM.md",
           "kind": "team",
-          "sizeBytes": 2074,
-          "sha256": "205be8d3ef6c1f5e73729207913c387eee4cc9379191c3ce6d943fcf9ca2545d"
+          "sizeBytes": 2118,
+          "sha256": "7cba9ea75a13b4093efbfa8fcdbe39cc99111ca07423bb97e0880c9cb2fdc52c"
         },
         {
           "path": "agents/ux-designer/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 2136,
-          "sha256": "f5a4b5696d8249e9f9d808a4373c2a1e6b07faa463e72f83fd9d5bed98d2022f"
+          "sizeBytes": 2181,
+          "sha256": "a589242c1d76851eb9da6ef188dfe913683ce64ff410547a93c4c38666104934"
         },
         {
           "path": "projects/product-design/PROJECT.md",
           "kind": "project",
-          "sizeBytes": 353,
-          "sha256": "4afe346bc5d5958216542d60a06be12983e1e018960cf2709c85c7d578f28420"
+          "sizeBytes": 361,
+          "sha256": "6318207ccd6cb8d58c9c37f9ac463ac84d8d98965134e586b5fbcd4a878289c9"
         },
         {
           "path": "projects/product-design/tasks/weekly-design-review/TASK.md",
           "kind": "task",
-          "sizeBytes": 313,
-          "sha256": "d255115eccc5c8b9f576c34fc2fb46a1cbb86ab36a56b980bdab35a952482d8a"
+          "sizeBytes": 322,
+          "sha256": "a9b9e76776d3d118a6d8bbbc2ba0f3189e0ebf513df73e2c69cb6537d005b877"
         }
       ],
       "trustLevel": "markdown_only",
       "compatibility": "compatible",
-      "contentHash": "sha256:15a04b36f31d4c9a391bb499c92e91fedfcc237cfa6c3d41ea3ddb441bc85c5b"
+      "contentHash": "sha256:df4fe4f6e4b6bb36b1aa408261e5fa2b6b7c5956dfce3aeae45821917e067457"
     },
     {
       "id": "paperclipai:bundled:software-development:product-engineering",
@@ -331,49 +331,49 @@
         {
           "path": "TEAM.md",
           "kind": "team",
-          "sizeBytes": 2583,
-          "sha256": "7204eeef78a48714dd3f82b82e171a4039adc6325e91a6bdf51a442105ee33b0"
+          "sizeBytes": 2634,
+          "sha256": "cf7d167606d11f9cd9032b52de42384b6d804835005d617859cbf42b76be075a"
         },
         {
           "path": ".paperclip.yaml",
           "kind": "extension",
-          "sizeBytes": 81,
-          "sha256": "54babf05ba130ec54a143abf01581d99c0ac2936fd0d929bf0e0edd00e29d861"
+          "sizeBytes": 86,
+          "sha256": "cd676c301e0ac03f7f14ab7d20b48e4f0e38f6a76fe35905d7a6dfd27d278f73"
         },
         {
           "path": "agents/cto/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 1499,
-          "sha256": "0a1a73ec9e5008056bca0a26325131ded2fcf4c4680a5014ba1e13400b32c173"
+          "sizeBytes": 1533,
+          "sha256": "93ccb39127a2d308ec99334d642fcea2b9178d614c86984428b52333ffcc43d5"
         },
         {
           "path": "agents/qa/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 1223,
-          "sha256": "2d5738f831aa772befa3471c844a0c9e611584be668e3ec82580ca9e92dc13fc"
+          "sizeBytes": 1253,
+          "sha256": "614bd79d14bb50612807a35d2ca2cbdd53b5b79092d412c03740fedfda51e888"
         },
         {
           "path": "agents/senior-coder/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 1413,
-          "sha256": "b61071518755d9e584c099ae2082c7a78448d09586093ee91393082fe10872b5"
+          "sizeBytes": 1448,
+          "sha256": "2c70e785b188847d7271219fc849b80ddd79fdbd9b3e18247682b00455e0cfe0"
         },
         {
           "path": "projects/product-engineering/PROJECT.md",
           "kind": "project",
-          "sizeBytes": 358,
-          "sha256": "225d01c5b5b77f5d4dafedc083899c9368c9b079db1d3b7b67cfebd4677fc527"
+          "sizeBytes": 366,
+          "sha256": "e9db8884b8a98a78d2520c3442041a6213e6c86b993779a0a74540939826b80e"
         },
         {
           "path": "projects/product-engineering/tasks/weekly-engineering-sync/TASK.md",
           "kind": "task",
-          "sizeBytes": 322,
-          "sha256": "6acf3ed2da3dfa48de163810b4bc9d385dad537fd34037ca881eec713986a2a8"
+          "sizeBytes": 331,
+          "sha256": "3684350ad5cdb122fd77e4933946f6cebdd90681166789aadb6f14775a0b8307"
         }
       ],
       "trustLevel": "assets",
       "compatibility": "compatible",
-      "contentHash": "sha256:74ddeaeb11805835a4a67fc4530b048ab7f8aa1dc7d2b80acea139a933d158d3"
+      "contentHash": "sha256:0274602ef8e42d25d4b991cbf68abc4bd22ef7a15e4727705f5e4bc93ee858e6"
     },
     {
       "id": "paperclipai:optional:content:content-machine",
@@ -431,37 +431,844 @@
         {
           "path": "TEAM.md",
           "kind": "team",
-          "sizeBytes": 1032,
-          "sha256": "f7c272c8b0c183fc840d49eb4851b7cdd1a30a5aa8d6415d215110f3238f6f13"
+          "sizeBytes": 1062,
+          "sha256": "df50b14fb7d31b824688f12d1f6fae1064071a0fbdee347c2e131826ee9d7aee"
         },
         {
           "path": "agents/content-lead/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 251,
-          "sha256": "6fc2071ff463b6981780d5b40b2c0784cb119900062f8dc40ed372e7b8415bf7"
+          "sizeBytes": 262,
+          "sha256": "7fe7edbeb61b6494ac7f3f71aad18a03233338b86162fc73e9afe7925b199a0b"
         },
         {
           "path": "projects/content-operations/PROJECT.md",
           "kind": "project",
-          "sizeBytes": 338,
-          "sha256": "1471f61cb0b3ffbb9c639a99d2d370f08217a0c63f97b3e24dbbd47861110206"
+          "sizeBytes": 346,
+          "sha256": "c2c6c934f08e3b61d48fb9669c88a64908d850c18128364ce7a95d63f83d7b09"
         },
         {
           "path": "projects/content-operations/tasks/weekly-content-review/TASK.md",
           "kind": "task",
-          "sizeBytes": 236,
-          "sha256": "3777de716334f2c3f24176f0fe121584ce9c53a7f59e1fca942a2f57995cef77"
+          "sizeBytes": 245,
+          "sha256": "5f522393724a8808e80ef7459154143ddd1df8440d06382bc80ecb70b2444bda"
         },
         {
           "path": "skills/content-calendar/SKILL.md",
           "kind": "skill",
-          "sizeBytes": 340,
-          "sha256": "aa62a332fc3149d6c0d58ca589c6b3910a373d542f16f749ec68ef2f3d7f29e9"
+          "sizeBytes": 352,
+          "sha256": "42c71ff15c34811db69d6b9a0e773ef38cf13fecee03d04a648aa5908a8c83b3"
         }
       ],
       "trustLevel": "markdown_only",
       "compatibility": "compatible",
-      "contentHash": "sha256:06822cec5f2b6910cb37ba0ebd5e04ed5c7e34f77225564ddddc2470779cdaa6"
+      "contentHash": "sha256:25b2b931a40e4517d13daed5c67d6cc594e660713bf912d49dc1ef2cfd88d1a7"
+    },
+    {
+      "id": "paperclipai:optional:marketing:mvx-evidence-growth-council",
+      "key": "paperclipai/optional/marketing/mvx-evidence-growth-council",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "mvx-evidence-growth-council",
+      "name": "MVX Evidence-Governed Growth Council",
+      "description": "27 executive decision-lens workers plus 30 accountable marketing specialists; evidence-first tasks, safe drafts, independent challenge and consent-first provider operations.",
+      "path": "catalog/optional/marketing/mvx-evidence-growth-council",
+      "entrypoint": "TEAM.md",
+      "schema": "agentcompanies/v1",
+      "defaultInstall": false,
+      "recommendedForCompanyTypes": [
+        "agency",
+        "ecommerce",
+        "saas",
+        "startup"
+      ],
+      "tags": [
+        "mvx",
+        "tier2",
+        "council",
+        "marketing",
+        "evidence",
+        "experiments",
+        "consent"
+      ],
+      "counts": {
+        "agents": 57,
+        "projects": 1,
+        "tasks": 30,
+        "routines": 5,
+        "localSkills": 0,
+        "catalogSkills": 2,
+        "externalSkillSources": 0
+      },
+      "rootAgentSlugs": [
+        "ceo-bezos"
+      ],
+      "agentSlugs": [
+        "ai-karpathy",
+        "branding-neumeier",
+        "ceo-bezos",
+        "cfo-campbell",
+        "comm-voss",
+        "community-garyvee",
+        "consulting-bower",
+        "critic-munger",
+        "cto-vogels",
+        "devops-hightower",
+        "ecommerce-lutke",
+        "fullstack-dhh",
+        "growth-chen",
+        "growth-ellis",
+        "interaction-cooper",
+        "legal-frankel",
+        "marketing-attribution",
+        "marketing-community",
+        "marketing-competitor-intel",
+        "marketing-content-seo",
+        "marketing-conversion-copy",
+        "marketing-creative-production",
+        "marketing-crm-lifecycle",
+        "marketing-data-engineer",
+        "marketing-editorial",
+        "marketing-email-reputation",
+        "marketing-experiment-owner",
+        "marketing-funnel-analysis",
+        "marketing-godin",
+        "marketing-google-ads",
+        "marketing-incrementality",
+        "marketing-influencer",
+        "marketing-landing-cro",
+        "marketing-linkedin-ads",
+        "marketing-local-seo",
+        "marketing-loyalty",
+        "marketing-meta-ads",
+        "marketing-mix-forecast",
+        "marketing-offer-pricing",
+        "marketing-organic-social",
+        "marketing-programmatic",
+        "marketing-retail-shopping",
+        "marketing-spend-pacing",
+        "marketing-technical-seo",
+        "marketing-tiktok-ads",
+        "marketing-tracking-qa",
+        "marketing-ugc-authenticity",
+        "media-hastings",
+        "mindset-naval",
+        "operations-pg",
+        "people-mccord",
+        "product-norman",
+        "psych-cialdini",
+        "sales-belfort",
+        "sales-commercial-offer-architect",
+        "sales-hormozi",
+        "story-duarte"
+      ],
+      "projectSlugs": [
+        "marketing-evidence-program"
+      ],
+      "requiredSkills": [
+        {
+          "type": "catalog",
+          "ref": "issue-triage",
+          "agentSlugs": [
+            "ai-karpathy",
+            "branding-neumeier",
+            "ceo-bezos",
+            "cfo-campbell",
+            "comm-voss",
+            "community-garyvee",
+            "consulting-bower",
+            "critic-munger",
+            "cto-vogels",
+            "devops-hightower",
+            "ecommerce-lutke",
+            "fullstack-dhh",
+            "growth-chen",
+            "growth-ellis",
+            "interaction-cooper",
+            "legal-frankel",
+            "marketing-attribution",
+            "marketing-community",
+            "marketing-competitor-intel",
+            "marketing-content-seo",
+            "marketing-conversion-copy",
+            "marketing-creative-production",
+            "marketing-crm-lifecycle",
+            "marketing-data-engineer",
+            "marketing-editorial",
+            "marketing-email-reputation",
+            "marketing-experiment-owner",
+            "marketing-funnel-analysis",
+            "marketing-godin",
+            "marketing-google-ads",
+            "marketing-incrementality",
+            "marketing-influencer",
+            "marketing-landing-cro",
+            "marketing-linkedin-ads",
+            "marketing-local-seo",
+            "marketing-loyalty",
+            "marketing-meta-ads",
+            "marketing-mix-forecast",
+            "marketing-offer-pricing",
+            "marketing-organic-social",
+            "marketing-programmatic",
+            "marketing-retail-shopping",
+            "marketing-spend-pacing",
+            "marketing-technical-seo",
+            "marketing-tiktok-ads",
+            "marketing-tracking-qa",
+            "marketing-ugc-authenticity",
+            "media-hastings",
+            "mindset-naval",
+            "operations-pg",
+            "people-mccord",
+            "product-norman",
+            "psych-cialdini",
+            "sales-belfort",
+            "sales-commercial-offer-architect",
+            "sales-hormozi",
+            "story-duarte"
+          ],
+          "resolved": true,
+          "catalogSkillId": "paperclipai:bundled:paperclip-operations:issue-triage",
+          "catalogSkillKey": "paperclipai/bundled/paperclip-operations/issue-triage"
+        },
+        {
+          "type": "catalog",
+          "ref": "task-planning",
+          "agentSlugs": [
+            "ai-karpathy",
+            "branding-neumeier",
+            "ceo-bezos",
+            "cfo-campbell",
+            "comm-voss",
+            "community-garyvee",
+            "consulting-bower",
+            "critic-munger",
+            "cto-vogels",
+            "devops-hightower",
+            "ecommerce-lutke",
+            "fullstack-dhh",
+            "growth-chen",
+            "growth-ellis",
+            "interaction-cooper",
+            "legal-frankel",
+            "marketing-attribution",
+            "marketing-community",
+            "marketing-competitor-intel",
+            "marketing-content-seo",
+            "marketing-conversion-copy",
+            "marketing-creative-production",
+            "marketing-crm-lifecycle",
+            "marketing-data-engineer",
+            "marketing-editorial",
+            "marketing-email-reputation",
+            "marketing-experiment-owner",
+            "marketing-funnel-analysis",
+            "marketing-godin",
+            "marketing-google-ads",
+            "marketing-incrementality",
+            "marketing-influencer",
+            "marketing-landing-cro",
+            "marketing-linkedin-ads",
+            "marketing-local-seo",
+            "marketing-loyalty",
+            "marketing-meta-ads",
+            "marketing-mix-forecast",
+            "marketing-offer-pricing",
+            "marketing-organic-social",
+            "marketing-programmatic",
+            "marketing-retail-shopping",
+            "marketing-spend-pacing",
+            "marketing-technical-seo",
+            "marketing-tiktok-ads",
+            "marketing-tracking-qa",
+            "marketing-ugc-authenticity",
+            "media-hastings",
+            "mindset-naval",
+            "operations-pg",
+            "people-mccord",
+            "product-norman",
+            "psych-cialdini",
+            "sales-belfort",
+            "sales-commercial-offer-architect",
+            "sales-hormozi",
+            "story-duarte"
+          ],
+          "resolved": true,
+          "catalogSkillId": "paperclipai:bundled:paperclip-operations:task-planning",
+          "catalogSkillKey": "paperclipai/bundled/paperclip-operations/task-planning"
+        }
+      ],
+      "envInputs": [],
+      "sourceRefs": [],
+      "files": [
+        {
+          "path": "TEAM.md",
+          "kind": "team",
+          "sizeBytes": 5061,
+          "sha256": "ec767a816920b7447ce7964428100d96760cb51600528323f86843ceedc17dce"
+        },
+        {
+          "path": "agents/ai-karpathy/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1597,
+          "sha256": "5487c5452d7a1f13abb5ffadde525c18ba9b01a724234a7542cd3458395917f9"
+        },
+        {
+          "path": "agents/branding-neumeier/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1591,
+          "sha256": "54c6f49948cbf9301a13d9c99e2feb838f7c65cf1f5d712335f9f56b665c6e1a"
+        },
+        {
+          "path": "agents/ceo-bezos/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1640,
+          "sha256": "2f658f7b8bb98ec97af405680ff1ed9d1a423cd8f6712c3d046128fd5f15df54"
+        },
+        {
+          "path": "agents/cfo-campbell/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1623,
+          "sha256": "cb8ff4a1c1c9eec69cecd230a47868f40bcd541946f876db4035d86806806243"
+        },
+        {
+          "path": "agents/comm-voss/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1596,
+          "sha256": "2fdb1ae54f03736c6cb43e4f1f856999dfc702819c6a708a2629cdce1254f6dc"
+        },
+        {
+          "path": "agents/community-garyvee/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1608,
+          "sha256": "1b5c873382cc65624d6acd58454e321684bcdffd272ba225d41f4ada5b3b015e"
+        },
+        {
+          "path": "agents/consulting-bower/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1605,
+          "sha256": "05c6846d2f3325485e86e80b963637361efccec917c520407949cf8800685163"
+        },
+        {
+          "path": "agents/critic-munger/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1605,
+          "sha256": "79b4ceffef69aaaaf4cd79da342963240e0d6ba18a8695d3fd5bb29ca22f89de"
+        },
+        {
+          "path": "agents/cto-vogels/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1600,
+          "sha256": "219f89302d0714926f8cefc9e3ad391855257290fbb3f12f6a5caf23dd1718fa"
+        },
+        {
+          "path": "agents/devops-hightower/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1614,
+          "sha256": "2d17599b862b99dae9ba02f9c99e4241e1dfa647df1e083e8aa0627b94e6e004"
+        },
+        {
+          "path": "agents/ecommerce-lutke/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1587,
+          "sha256": "164e8cea097899d80ac416bf7c5c18678151ad5a8ebacb46394fe58ad044f587"
+        },
+        {
+          "path": "agents/fullstack-dhh/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1589,
+          "sha256": "e0167c824b383c7febc85330797fb6e11607d294ee1664ba05612c3de556f20c"
+        },
+        {
+          "path": "agents/growth-chen/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1608,
+          "sha256": "ad5310cea11c8bac142b674bfe295f2b51f355ba88b4b242cb01d23b4711f378"
+        },
+        {
+          "path": "agents/growth-ellis/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1596,
+          "sha256": "5a79661156caf99d32fdb787dcdd41598ad4b5071905740a31878b6b0baef88f"
+        },
+        {
+          "path": "agents/interaction-cooper/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1596,
+          "sha256": "55ad7568e417c4890b8c18b00598aa5c4d4423b68cdb5fc19eca5e386c51e5dd"
+        },
+        {
+          "path": "agents/legal-frankel/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1611,
+          "sha256": "f1ef7686286a86f9beae5633e4ff7058b275d9eb7aa16a056f416b3c4a1448f5"
+        },
+        {
+          "path": "agents/marketing-attribution/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2297,
+          "sha256": "55dac0269480d65b32dd591e59f7fdf45f4ff2244d8efe13697f9e27a7327580"
+        },
+        {
+          "path": "agents/marketing-community/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2336,
+          "sha256": "539f9d1dc6ee9cbba3ba494dd804fda5efdda84eb32c1c1886670be97b8f0e11"
+        },
+        {
+          "path": "agents/marketing-competitor-intel/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2353,
+          "sha256": "86b5a1ed235e61be00f91ab503bf4127338a9ab55a6acc41f70b8c7c81b31021"
+        },
+        {
+          "path": "agents/marketing-content-seo/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2299,
+          "sha256": "10dd9176a9849e51737f4f1836e70181c60eea9e8baa7748963cc338776700d4"
+        },
+        {
+          "path": "agents/marketing-conversion-copy/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2293,
+          "sha256": "d14bb0880a35bd3f3d44db84f21b952333857476c9200bef18046065b41fb0f8"
+        },
+        {
+          "path": "agents/marketing-creative-production/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2297,
+          "sha256": "1fb75d3f54bddb9d1a8a8246c288fc257cdf1909b249948745650da3ec139255"
+        },
+        {
+          "path": "agents/marketing-crm-lifecycle/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2307,
+          "sha256": "1afd5e1993913699d5ef4c022801e15d252e302d29fc133b24fba4902399a387"
+        },
+        {
+          "path": "agents/marketing-data-engineer/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2280,
+          "sha256": "88bf13482bea8e335084711fa9cd6b7bcd9e888340addc525fc2af712f5bddc8"
+        },
+        {
+          "path": "agents/marketing-editorial/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2298,
+          "sha256": "c91d4ae4728cb05abc9d377e996f21db8788d5d07f383469308066bedbb0c855"
+        },
+        {
+          "path": "agents/marketing-email-reputation/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2322,
+          "sha256": "8f7ec05b90b6cf1076ab4d62e802b782d002eb288e81063469e5f157e8b17525"
+        },
+        {
+          "path": "agents/marketing-experiment-owner/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2303,
+          "sha256": "0fbbd799f612629c129e5996be4ec6096d0e042a27cbe78428faeeafe5721c3b"
+        },
+        {
+          "path": "agents/marketing-funnel-analysis/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2314,
+          "sha256": "48d855caeca307e436fcac8f57ef3cb3aa665e86cd722c8438e5ad3b051ab726"
+        },
+        {
+          "path": "agents/marketing-godin/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1597,
+          "sha256": "46496d83e5fa653d8bc737c148906c200daca8dfcbc3621ab2c6295c61ebd8e2"
+        },
+        {
+          "path": "agents/marketing-google-ads/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2338,
+          "sha256": "fbd8ff20b9c5e38f1b35115dab5c19c0ee24cc5395edc3d2261c83342cd5c16b"
+        },
+        {
+          "path": "agents/marketing-incrementality/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2294,
+          "sha256": "581f2a04a198c7b6f39a83bb0803bdd8b3eb4ab8db88ea02e2c0d23f8cc6a9df"
+        },
+        {
+          "path": "agents/marketing-influencer/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2332,
+          "sha256": "68425a15578c75d80b43f83e04bfffdd08ce85a79e4d281442a68ccc9e6a1abe"
+        },
+        {
+          "path": "agents/marketing-landing-cro/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2310,
+          "sha256": "bb6b230253ca724b7e1e4d192eedc5c324020216340c003e5bf5077fa940210d"
+        },
+        {
+          "path": "agents/marketing-linkedin-ads/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2320,
+          "sha256": "c79ffa8c65836608c9ac4885cf0c9adbc92d39523d0976c38a4940832de77846"
+        },
+        {
+          "path": "agents/marketing-local-seo/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2290,
+          "sha256": "31e205ff162087533d42d05d306385cb8e2f5be75e0e19611f98b5fe9c634a23"
+        },
+        {
+          "path": "agents/marketing-loyalty/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2347,
+          "sha256": "d7b27ca127b11b504fe0723a122286afa08d2a868e8623496204ec2754063c61"
+        },
+        {
+          "path": "agents/marketing-meta-ads/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2315,
+          "sha256": "b41cfa5ccaf1e9892e42bf31fe366e72c6efe62829088317e99b53fe33c7a356"
+        },
+        {
+          "path": "agents/marketing-mix-forecast/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2349,
+          "sha256": "accc140d69c89ce5ce93b14b313efcc8af42865176c6a4a587383e275db2f42b"
+        },
+        {
+          "path": "agents/marketing-offer-pricing/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2323,
+          "sha256": "341f0c47b3cebbf61eb651af8ec2449a700681571e4a3b8413d0c07a66839f5a"
+        },
+        {
+          "path": "agents/marketing-organic-social/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2322,
+          "sha256": "ff3c4e924642c52716be91b1968b08efd50f6987f0e66003077f742c48da59ea"
+        },
+        {
+          "path": "agents/marketing-programmatic/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2307,
+          "sha256": "bfd0c413463487cd042c9908d9ce402cd231d2fd06025b6c06d9dbcc7f5135a1"
+        },
+        {
+          "path": "agents/marketing-retail-shopping/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2303,
+          "sha256": "6717ed84588622010278a2969cdb133363e90ad462edaca0118f95114c475c76"
+        },
+        {
+          "path": "agents/marketing-spend-pacing/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2323,
+          "sha256": "2ffcc21bc5887a6ad1bf78a0638b000d302fc352c9c02cc2e082b979e0e5b5ca"
+        },
+        {
+          "path": "agents/marketing-technical-seo/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2285,
+          "sha256": "8ed64b9c51deeace2591d5eeec7cc97e5755db972bf6e79dc02878267000e88b"
+        },
+        {
+          "path": "agents/marketing-tiktok-ads/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2321,
+          "sha256": "d36a2a5e554de9496d99a229d09e45c2eb4fc550d4f704a15ff72b7bc8360df0"
+        },
+        {
+          "path": "agents/marketing-tracking-qa/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2271,
+          "sha256": "ebf727567319a376dc73df6fb886868b3d10c52c3829459745fdd990ef811b83"
+        },
+        {
+          "path": "agents/marketing-ugc-authenticity/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 2313,
+          "sha256": "33d4732d516b855fa139f1a6f33f721bb5047ed40807fb9f304789f370f72d08"
+        },
+        {
+          "path": "agents/media-hastings/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1602,
+          "sha256": "bb3233a817a16feddd123afd66b40336bceb9eeb0c423724d47bf857b33ab9d5"
+        },
+        {
+          "path": "agents/mindset-naval/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1588,
+          "sha256": "381681a6ca9b2711986f2d32b3205afc05d0286cb85b26613a0eef1941b7c0dd"
+        },
+        {
+          "path": "agents/operations-pg/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1591,
+          "sha256": "262da79304ab731ffa3aa55815024a635fcde058f715524a4730a3bc47f3291e"
+        },
+        {
+          "path": "agents/people-mccord/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1614,
+          "sha256": "36b6b768a1026885528b6f4850a50849132c3205634ba49b150530c57a3507c2"
+        },
+        {
+          "path": "agents/product-norman/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1586,
+          "sha256": "7ab54e16bb5f06b10e9235947d95f3d3c225fad923d86f21e20e22df127cc0cf"
+        },
+        {
+          "path": "agents/psych-cialdini/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1621,
+          "sha256": "27208c06c0d27e95abc48f7a931df901fbfd690639f590e325f32c45a429e431"
+        },
+        {
+          "path": "agents/sales-belfort/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1596,
+          "sha256": "c21817bcd3ca076b819f748bfdb76b30d7f229cdaab81a0a1b8049aafe1ef554"
+        },
+        {
+          "path": "agents/sales-commercial-offer-architect/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1662,
+          "sha256": "0e9a0837be15ae50bc730335c64e2a86453390835461eacdfc116327d41162a2"
+        },
+        {
+          "path": "agents/sales-hormozi/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1589,
+          "sha256": "a49bb497e25a3c827ed11f240e5ee1f4a62d8da393f5c421ff70af074b1dae69"
+        },
+        {
+          "path": "agents/story-duarte/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1594,
+          "sha256": "e166000c2d7433201d364a307833aa0e264071a93bcaa4b4968d3dfa1a31c0dd"
+        },
+        {
+          "path": "projects/marketing-evidence-program/PROJECT.md",
+          "kind": "project",
+          "sizeBytes": 780,
+          "sha256": "961b704e64f326e2b3615d0d715f505d29836a627a8bf9bb865a11f7aaffe9f8"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/daily-marketing-facts/TASK.md",
+          "kind": "task",
+          "sizeBytes": 461,
+          "sha256": "d3b42bdfde01b7f316b09b39ea2092221b8e2b0dcb83bcc0ab7ba70ddd76060f"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/daily-spend-reconciliation/TASK.md",
+          "kind": "task",
+          "sizeBytes": 484,
+          "sha256": "f471852b0bdb8385078c19da2ffd962db6e0097ef3afa93cfb2efb57fe7163ee"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-attribution/TASK.md",
+          "kind": "task",
+          "sizeBytes": 553,
+          "sha256": "03ddd55a24bc87987be348c6cdc4327650eea77ea5d791354968213be97be7e6"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-community/TASK.md",
+          "kind": "task",
+          "sizeBytes": 570,
+          "sha256": "9a3240f734e1c840108ead846cebd9afe3bba4f659420687288cb894f7492faf"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-competitor-intel/TASK.md",
+          "kind": "task",
+          "sizeBytes": 593,
+          "sha256": "6c64a0203bbb2cc468ca1333130fa9d1d7de4fa0e45d67aaf1bbeda2b3e0a225"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-content-seo/TASK.md",
+          "kind": "task",
+          "sizeBytes": 549,
+          "sha256": "f81863ed403c7765f9ec0eb6726e999bd0f94e5258788c60d932ab8bef2db337"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-conversion-copy/TASK.md",
+          "kind": "task",
+          "sizeBytes": 557,
+          "sha256": "22842d1bdef9eecab7261956cf0173edd60e0105b379afaa918d19a5f5b53929"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-creative-production/TASK.md",
+          "kind": "task",
+          "sizeBytes": 573,
+          "sha256": "99eb04f8012907d5d596642db94cf4f467622bc786e3d32394dcd1ff32908f52"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-crm-lifecycle/TASK.md",
+          "kind": "task",
+          "sizeBytes": 564,
+          "sha256": "816231586fc197185632ade19a36a267700165edf11b351e25d029501fc543c5"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-data-engineer/TASK.md",
+          "kind": "task",
+          "sizeBytes": 555,
+          "sha256": "edb3bf0e2338861e56bdce93cefb46ce501935f1807ff0c6e8c7f9ca5b062d3c"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-editorial/TASK.md",
+          "kind": "task",
+          "sizeBytes": 560,
+          "sha256": "06dbf8f7744c3c4bfa2cc1d53be0b958b003a8047341e96277b5cb9f849d156f"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-email-reputation/TASK.md",
+          "kind": "task",
+          "sizeBytes": 572,
+          "sha256": "592c984ef2d9147239375243c7c969649e8d6a8b9186df970d1094117e8e98c6"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-experiment-owner/TASK.md",
+          "kind": "task",
+          "sizeBytes": 564,
+          "sha256": "2d89138cd3f30d4d5e00ecb08e82f10510e2a166f00bd2abfea0198a03dab1cf"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-funnel-analysis/TASK.md",
+          "kind": "task",
+          "sizeBytes": 571,
+          "sha256": "bb834cfe6282dffe34c60fc0b32bda730b2788c84b87ed80dce1e5a7c883467c"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-google-ads/TASK.md",
+          "kind": "task",
+          "sizeBytes": 583,
+          "sha256": "f8238bdda13882a30e60bf710199eb4a736d6aec080b8f2a99e1ba188aa99af8"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-incrementality/TASK.md",
+          "kind": "task",
+          "sizeBytes": 561,
+          "sha256": "984f36fe8d8178697a7eb5b066d5a0a37d1e029454d71bdddb2295ba30dc9e5c"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-influencer/TASK.md",
+          "kind": "task",
+          "sizeBytes": 570,
+          "sha256": "b27105f0ac9e371806fa37715f4ec73f64e08a0810a1450cb11ab743d7ee3b92"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-landing-cro/TASK.md",
+          "kind": "task",
+          "sizeBytes": 561,
+          "sha256": "09a0c391c7ace4d1b744bd5b92f835f799fdd07c941ce3c56500c7f90a5624a7"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-linkedin-ads/TASK.md",
+          "kind": "task",
+          "sizeBytes": 567,
+          "sha256": "29a1f805a917b2a92e7b8ef69757d4ad502fa353a94a48675d3ade19a09965f5"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-local-seo/TASK.md",
+          "kind": "task",
+          "sizeBytes": 547,
+          "sha256": "6a69322bdd12f7f1e1cd668a3315dacb980897808cdf9bbc35cbbc800b457267"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-loyalty/TASK.md",
+          "kind": "task",
+          "sizeBytes": 550,
+          "sha256": "35272c9668e3ad76367a452c9996f845f88b96bb942c470543ef26113d05ff18"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-meta-ads/TASK.md",
+          "kind": "task",
+          "sizeBytes": 563,
+          "sha256": "a78649441fefc7524486fbea012d4adbc2296207a7b95151c350647fc1bcf46d"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-mix-forecast/TASK.md",
+          "kind": "task",
+          "sizeBytes": 597,
+          "sha256": "26a5c6a4b72a2e5dcf6a924858f37e3a7264ec2c2bc8112011509da19e64d148"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-offer-pricing/TASK.md",
+          "kind": "task",
+          "sizeBytes": 579,
+          "sha256": "877ac3ec3a476379665bf72f11fee7617b8aa3ff3c179fc51b706bb498d0aef4"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-organic-social/TASK.md",
+          "kind": "task",
+          "sizeBytes": 573,
+          "sha256": "8fc6a85265c2fec52365f8056b00af709c73347441f744649d8359895cd37746"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-programmatic/TASK.md",
+          "kind": "task",
+          "sizeBytes": 565,
+          "sha256": "5b1be603a2125b4069bff0499476bdb99bc71b36428129e85c88681e5cd62039"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-retail-shopping/TASK.md",
+          "kind": "task",
+          "sizeBytes": 562,
+          "sha256": "4337beda2cf65191197c2b46d6d368b7e24fe961a02cd1000069a002e7aae0ce"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-spend-pacing/TASK.md",
+          "kind": "task",
+          "sizeBytes": 567,
+          "sha256": "1d94054c37077752aa8fe8961f0d3b6d01c1576ddac959a2470953b5e08b141f"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-technical-seo/TASK.md",
+          "kind": "task",
+          "sizeBytes": 551,
+          "sha256": "0011a0b93c9ff10744e31be61dfcefb2c36af6412e087488c6db1382e8ce1250"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-tiktok-ads/TASK.md",
+          "kind": "task",
+          "sizeBytes": 564,
+          "sha256": "2bff97f0796376e34fc06fc587c87c81f97aecba816de290fc8f67712e0c06cd"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-tracking-qa/TASK.md",
+          "kind": "task",
+          "sizeBytes": 530,
+          "sha256": "44a28a23fd03759d3bb6b4c2d5ee5e2d4192d2c511a4f613e29075e5f42e2e17"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/initial-marketing-ugc-authenticity/TASK.md",
+          "kind": "task",
+          "sizeBytes": 566,
+          "sha256": "bcf5f333e2c34b81080d866fa476fa624149d446a9cd9f50780f60af0c8425d4"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/weekly-campaign-safety/TASK.md",
+          "kind": "task",
+          "sizeBytes": 457,
+          "sha256": "1c9fa4d1dcd1d1c0b1ddf8fe5346af0827711fcb1efac48b354d63749c03c290"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/weekly-council-challenge/TASK.md",
+          "kind": "task",
+          "sizeBytes": 486,
+          "sha256": "263d3c11a7bdcd178bfa28649a78e2283405c8a1ebd361ba0883b8a5d678f886"
+        },
+        {
+          "path": "projects/marketing-evidence-program/tasks/weekly-experiment-board/TASK.md",
+          "kind": "task",
+          "sizeBytes": 499,
+          "sha256": "ff77646cfc7470db32c4dd6ca31b8b7c0da00fa95d5dc0ff0f06d51974ae1740"
+        }
+      ],
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "contentHash": "sha256:ce319abb23bed184fe359c350e27289de0a4ceb6eed38baa24c0c731d9067e39"
     }
   ]
 }

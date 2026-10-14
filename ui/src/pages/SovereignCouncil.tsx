@@ -90,18 +90,18 @@ export function SovereignCouncil() {
           <div>
             <div className="flex items-center gap-2.5 mb-1.5">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                {SOVEREIGN_AGENTS.length} Leader in Sessione
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                {SOVEREIGN_AGENTS.length} profili manageriali — catalogo, non sessione live
               </span>
               <span className="text-xs text-muted-foreground font-mono">
                 SOP 01 • Sovereign Council
               </span>
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Consiglio dei {SOVEREIGN_AGENTS.length} Leader Mondiali
+              Consiglio strategico: {SOVEREIGN_AGENTS.length} framework dirigenziali
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Direttive esecutive, modelli mentali e KPI non negoziabili governati dal Veto di Charlie Munger.
+              Modelli di decisione per agenti AI, verificabili su evidenze reali. Nessuna partecipazione o approvazione dei professionisti citati è implicita.
             </p>
           </div>
 

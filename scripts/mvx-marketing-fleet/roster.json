@@ -1,0 +1,503 @@
+{
+  "schema": "mvx-marketing-fleet/v1",
+  "version": "1.0.0",
+  "executives": [
+    {
+      "id": "cto-vogels",
+      "title": "Technology and Reliability",
+      "kpi": "Availability SLO",
+      "veto": "Missing traceability",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "fullstack-dhh",
+      "title": "Product Engineering",
+      "kpi": "Lead time and defects",
+      "veto": "Untested complexity",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "operations-pg",
+      "title": "Founder Operations",
+      "kpi": "Validated learning time",
+      "veto": "No falsifiable outcome",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "devops-hightower",
+      "title": "Infrastructure and Delivery",
+      "kpi": "Change failure rate",
+      "veto": "No rollback gate",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "ai-karpathy",
+      "title": "Model and AI Evaluation",
+      "kpi": "Evaluation pass rate",
+      "veto": "Unevaluated AI claim",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "critic-munger",
+      "title": "Independent Risk and Veto",
+      "kpi": "Open critical vetoes",
+      "veto": "Unbounded downside",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "mindset-naval",
+      "title": "Resource Leverage",
+      "kpi": "Value per invested hour",
+      "veto": "Incentive misalignment",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "consulting-bower",
+      "title": "Evidence and Strategy",
+      "kpi": "Decisions with provenance",
+      "veto": "Unfalsifiable claim",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "product-norman",
+      "title": "Customer Research",
+      "kpi": "User task completion",
+      "veto": "Misleading experience",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "interaction-cooper",
+      "title": "Product Interactions",
+      "kpi": "Flow completion",
+      "veto": "Unmeasured friction",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "comm-voss",
+      "title": "Customer Communications",
+      "kpi": "Consented resolution rate",
+      "veto": "Coercive messaging",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "psych-cialdini",
+      "title": "Behavioral Science and Ethics",
+      "kpi": "Fair tested conversion lift",
+      "veto": "Dark patterns",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "marketing-godin",
+      "title": "Permission Marketing",
+      "kpi": "Opt-in qualified demand",
+      "veto": "Consent violations",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "branding-neumeier",
+      "title": "Brand Positioning",
+      "kpi": "Message differentiation",
+      "veto": "Unsupported claim",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "story-duarte",
+      "title": "Creative Narrative",
+      "kpi": "Comprehension and creative lift",
+      "veto": "Misleading creative",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "community-garyvee",
+      "title": "Organic Distribution",
+      "kpi": "Verified audience engagement",
+      "veto": "Spam/fake engagement",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "sales-hormozi",
+      "title": "Commercial Offers",
+      "kpi": "Contribution margin by offer",
+      "veto": "Unprofitable offer",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "growth-ellis",
+      "title": "Growth Experimentation",
+      "kpi": "Incremental activation",
+      "veto": "No preregistration",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "growth-chen",
+      "title": "Retention and Network Growth",
+      "kpi": "Cohort retention",
+      "veto": "Unconsented virality",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "sales-commercial-offer-architect",
+      "title": "Offer and Retention Economics",
+      "kpi": "Incremental gross profit",
+      "veto": "False bundled savings",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "sales-belfort",
+      "title": "Sales Process Quality",
+      "kpi": "Qualified stage conversion",
+      "veto": "Deceptive sales",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "ceo-bezos",
+      "title": "Council Chair and Final Recommendation",
+      "kpi": "Accepted business outcomes",
+      "veto": "Bypass of hard governance stop",
+      "manager": null
+    },
+    {
+      "id": "ecommerce-lutke",
+      "title": "Ecommerce Growth",
+      "kpi": "Net margin per order",
+      "veto": "Ignored refunds/returns",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "media-hastings",
+      "title": "Organizational Quality",
+      "kpi": "Accepted output by cost",
+      "veto": "Unreviewed autonomy",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "cfo-campbell",
+      "title": "Finance and Spend Governance",
+      "kpi": "Net margin including VAT and fees",
+      "veto": "Unapproved spend",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "legal-frankel",
+      "title": "Legal Privacy Compliance",
+      "kpi": "Consent and claim coverage",
+      "veto": "GDPR or ad law breach",
+      "manager": "ceo-bezos"
+    },
+    {
+      "id": "people-mccord",
+      "title": "Quality and Performance",
+      "kpi": "Evidence-backed task acceptance",
+      "veto": "Fabricated performance",
+      "manager": "ceo-bezos"
+    }
+  ],
+  "specialists": [
+    {
+      "id": "marketing-data-engineer",
+      "title": "Marketing Data Engineer",
+      "manager": "ai-karpathy",
+      "input": "tracking event schemas and ingestion logs",
+      "metric": "event completeness",
+      "artifact": "versioned lineage report",
+      "check": "dedupe and schema replay",
+      "scope": "data.read"
+    },
+    {
+      "id": "marketing-tracking-qa",
+      "title": "Tracking and Consent QA",
+      "manager": "cto-vogels",
+      "input": "tag audit and consent receipts",
+      "metric": "valid conversion match rate",
+      "artifact": "tag QA log",
+      "check": "tracking off without consent",
+      "scope": "measurement.read"
+    },
+    {
+      "id": "marketing-attribution",
+      "title": "Attribution Analyst",
+      "manager": "consulting-bower",
+      "input": "reconciled conversions and touchpoints",
+      "metric": "margin attribution range",
+      "artifact": "attribution model sensitivity",
+      "check": "no causal claims without holdout",
+      "scope": "analytics.read"
+    },
+    {
+      "id": "marketing-incrementality",
+      "title": "Causal Impact Researcher",
+      "manager": "growth-ellis",
+      "input": "randomized assignment and outcomes",
+      "metric": "incremental lift CI",
+      "artifact": "preregistered holdout verdict",
+      "check": "sample ratio mismatch checks",
+      "scope": "analytics.read"
+    },
+    {
+      "id": "marketing-experiment-owner",
+      "title": "Experimentation Program Lead",
+      "manager": "growth-ellis",
+      "input": "hypothesis baseline guardrails",
+      "metric": "completed valid tests",
+      "artifact": "experiment registry",
+      "check": "frozen primary metric and horizon",
+      "scope": "experiments.plan"
+    },
+    {
+      "id": "marketing-spend-pacing",
+      "title": "Budget and Pacing Controller",
+      "manager": "cfo-campbell",
+      "input": "approved caps spend fees refunds",
+      "metric": "net contribution and forecast variance",
+      "artifact": "daily spend reconciliation",
+      "check": "VAT and reserved budget consistency",
+      "scope": "finance.read"
+    },
+    {
+      "id": "marketing-google-ads",
+      "title": "Google Ads Paid Search Strategist",
+      "manager": "marketing-godin",
+      "input": "search terms bids auction data",
+      "metric": "incremental profitable leads",
+      "artifact": "negative keywords and bid proposal",
+      "check": "real receipt and disallowed term review",
+      "scope": "ads.plan"
+    },
+    {
+      "id": "marketing-meta-ads",
+      "title": "Meta Paid Social Strategist",
+      "manager": "community-garyvee",
+      "input": "placement audience creative cohorts",
+      "metric": "incremental qualified CAC",
+      "artifact": "creative and audience test proposal",
+      "check": "frequency and provenance gate",
+      "scope": "ads.plan"
+    },
+    {
+      "id": "marketing-tiktok-ads",
+      "title": "TikTok Paid Media Strategist",
+      "manager": "community-garyvee",
+      "input": "short video performance and policy",
+      "metric": "incremental qualified video CTR",
+      "artifact": "creative hook test protocol",
+      "check": "unsafe targeting and creative ban",
+      "scope": "ads.plan"
+    },
+    {
+      "id": "marketing-linkedin-ads",
+      "title": "LinkedIn B2B Demand Specialist",
+      "manager": "marketing-godin",
+      "input": "firmographics and qualified pipeline",
+      "metric": "qualified account opportunities",
+      "artifact": "account targeting plan",
+      "check": "consent and qualification guard",
+      "scope": "ads.plan"
+    },
+    {
+      "id": "marketing-retail-shopping",
+      "title": "Shopping Feed Optimizer",
+      "manager": "ecommerce-lutke",
+      "input": "SKU inventory returns and margin",
+      "metric": "net contribution per SKU",
+      "artifact": "feed audit and exclusion set",
+      "check": "block unprofitable or zero stock",
+      "scope": "commerce.read"
+    },
+    {
+      "id": "marketing-programmatic",
+      "title": "Programmatic Safety Analyst",
+      "manager": "cfo-campbell",
+      "input": "placement logs IVT viewability fees",
+      "metric": "verified human-viewable reach",
+      "artifact": "fraud filtered placements report",
+      "check": "hidden fee and fraud audit",
+      "scope": "ads.plan"
+    },
+    {
+      "id": "marketing-technical-seo",
+      "title": "Technical SEO Engineer",
+      "manager": "cto-vogels",
+      "input": "crawl canonical sitemap errors",
+      "metric": "qualified indexed landing pages",
+      "artifact": "crawl remediation ticket",
+      "check": "verify indexed state after change",
+      "scope": "web.read"
+    },
+    {
+      "id": "marketing-content-seo",
+      "title": "Search Content Strategist",
+      "manager": "marketing-godin",
+      "input": "SERP demand and search intent",
+      "metric": "qualified organic lead lift",
+      "artifact": "topic briefs with sources",
+      "check": "avoid claims without evidence",
+      "scope": "content.draft"
+    },
+    {
+      "id": "marketing-local-seo",
+      "title": "Local Search Specialist",
+      "manager": "product-norman",
+      "input": "verified local profiles and intent",
+      "metric": "local qualified visits",
+      "artifact": "directory correction queue",
+      "check": "no invented locations/reviews",
+      "scope": "profiles.plan"
+    },
+    {
+      "id": "marketing-editorial",
+      "title": "Editorial Program Manager",
+      "manager": "story-duarte",
+      "input": "topic cohorts brand constraints",
+      "metric": "qualified engagement",
+      "artifact": "source-backed editorial calendar",
+      "check": "owner hypothesis and gate per asset",
+      "scope": "content.plan"
+    },
+    {
+      "id": "marketing-conversion-copy",
+      "title": "Conversion Copywriter",
+      "manager": "story-duarte",
+      "input": "interviews offer proof funnel data",
+      "metric": "incremental conversion lift",
+      "artifact": "variant drafts with claim IDs",
+      "check": "every quantified claim cited",
+      "scope": "content.draft"
+    },
+    {
+      "id": "marketing-creative-production",
+      "title": "Creative Asset Lead",
+      "manager": "story-duarte",
+      "input": "licensed assets and approved briefs",
+      "metric": "usable creative rate",
+      "artifact": "versioned creative production pack",
+      "check": "IP rights and accessibility checks",
+      "scope": "creative.draft"
+    },
+    {
+      "id": "marketing-ugc-authenticity",
+      "title": "UGC Content Producer",
+      "manager": "community-garyvee",
+      "input": "creator releases and real testimonies",
+      "metric": "verified qualified engagement",
+      "artifact": "consented creator sourcing brief",
+      "check": "ban synthetic fake testimonials",
+      "scope": "creative.draft"
+    },
+    {
+      "id": "marketing-organic-social",
+      "title": "Organic Social Specialist",
+      "manager": "community-garyvee",
+      "input": "native analytics and audience consent",
+      "metric": "qualified referral actions",
+      "artifact": "platform-native post drafts",
+      "check": "no automatic publish without approval",
+      "scope": "social.draft"
+    },
+    {
+      "id": "marketing-community",
+      "title": "Community and Reputation Manager",
+      "manager": "community-garyvee",
+      "input": "moderation records and reply history",
+      "metric": "resolution time and retention",
+      "artifact": "moderation queue and reply drafts",
+      "check": "privacy and abuse filters",
+      "scope": "community.plan"
+    },
+    {
+      "id": "marketing-influencer",
+      "title": "Creator Partnerships Manager",
+      "manager": "legal-frankel",
+      "input": "audience authenticity and contracts",
+      "metric": "verified collaboration gross profit",
+      "artifact": "sponsorship shortlist and contract QA",
+      "check": "ad disclosure and bot checks",
+      "scope": "partnerships.plan"
+    },
+    {
+      "id": "marketing-landing-cro",
+      "title": "Landing Page CRO Designer",
+      "manager": "branding-neumeier",
+      "input": "funnel telemetry and page revisions",
+      "metric": "incremental qualified CVR",
+      "artifact": "landing variant PR and rollback",
+      "check": "sample size and accessibility",
+      "scope": "site.draft"
+    },
+    {
+      "id": "marketing-funnel-analysis",
+      "title": "Funnel Analytics Specialist",
+      "manager": "growth-ellis",
+      "input": "event steps cohorts and exclusions",
+      "metric": "qualified stage progression",
+      "artifact": "segmented funnel diagnostic",
+      "check": "missingness and bias sensitivity",
+      "scope": "analytics.read"
+    },
+    {
+      "id": "marketing-crm-lifecycle",
+      "title": "CRM Lifecycle Campaign Lead",
+      "manager": "growth-chen",
+      "input": "consent history and CRM lifecycle",
+      "metric": "retention incremental net margin",
+      "artifact": "consented sequence drafts",
+      "check": "unsubscribe suppression enforced",
+      "scope": "crm.draft"
+    },
+    {
+      "id": "marketing-email-reputation",
+      "title": "Email Deliverability Specialist",
+      "manager": "legal-frankel",
+      "input": "bounce logs SPF DKIM DMARC",
+      "metric": "complaint rate and deliverability",
+      "artifact": "sender health action plan",
+      "check": "no cold sends and fake open stats",
+      "scope": "email.plan"
+    },
+    {
+      "id": "marketing-loyalty",
+      "title": "Retention and Loyalty Analyst",
+      "manager": "sales-commercial-offer-architect",
+      "input": "purchase cohorts refunds rewards",
+      "metric": "90 day incremental gross profit",
+      "artifact": "holdout loyalty design",
+      "check": "consumer terms and margin gate",
+      "scope": "retention.plan"
+    },
+    {
+      "id": "marketing-offer-pricing",
+      "title": "Pricing and Promotions Analyst",
+      "manager": "sales-hormozi",
+      "input": "A/B pricing costs competitor facts",
+      "metric": "contribution after taxes",
+      "artifact": "price/offer test and disclosures",
+      "check": "truthful discount labels with IVA",
+      "scope": "offers.plan"
+    },
+    {
+      "id": "marketing-competitor-intel",
+      "title": "Competitive Intelligence Researcher",
+      "manager": "consulting-bower",
+      "input": "dated public sources and competitor offers",
+      "metric": "source freshness and decisions",
+      "artifact": "dated source-verified dossier",
+      "check": "no scraper terms violation",
+      "scope": "research.read"
+    },
+    {
+      "id": "marketing-mix-forecast",
+      "title": "Marketing Mix and Forecast Analyst",
+      "manager": "cfo-campbell",
+      "input": "verified spend seasonal and cohort data",
+      "metric": "out of sample forecast MAPE",
+      "artifact": "uncertainty range scenario forecast",
+      "check": "no causality claim from fitted trends",
+      "scope": "forecast.read"
+    }
+  ],
+  "provenance": {
+    "source": "MVX Agentic Company Tier2 technical documentation 2026-09-20; 27 UI managerial lens ids",
+    "tier1": "Growth OS authoritative marketing/provider evidence",
+    "tier2": "Paperclip controlled agent execution",
+    "limitations": "Profiles are methodological agent templates, not real individuals. Not installed or running until enabled with model adapters and approved Tier1 connections."
+  }
+}
