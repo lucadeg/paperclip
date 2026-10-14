@@ -1,6 +1,7 @@
 import {createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
+import {assessContentClaims} from './strategy-engine.mjs';
 const catalogRoster=JSON.parse(readFileSync(new URL('./roster.json',import.meta.url),'utf8'));
 const totalFleet=[...catalogRoster.executives.map(x=>({...x,classification:'executive-framework'})),
   ...catalogRoster.specialists.map(x=>({...x,classification:'marketing-specialist'}))];
@@ -22,13 +23,18 @@ export const AUDIT_AGENTS=[
  ['cross-modal-claim-auditor','Claim tra testo e media']
 ];
 const ratio=(n,d)=>d?Math.round(n/d*1000)/10:null;
-function onePost(post,findings){
+function onePost(post,findings,campaign){
+ const acceptedEvidenceIds=new Set(campaign.sourceStatements.map(x=>x.evidenceId));
+ const sourceLinked=Array.isArray(post.sourceEvidenceIds)&&post.sourceEvidenceIds.length>0&&
+   post.sourceEvidenceIds.every(id=>acceptedEvidenceIds.has(id));
+ const claimAudit=assessContentClaims(post,campaign);
  const media=Array.isArray(post.mediaAssets)?post.mediaAssets:[];
  const issues=findings.filter(x=>x.message?.includes(post.id));
  const checks=[
   ['Hook',Boolean(post.hook?.text),'TEXT'],['CTA',Boolean(post.cta?.copy),'TEXT'],
   ['Alt-text',Boolean(post.altText),'STRUCTURAL'],['Storyboard',(post.storyboard?.length||0)>=3,'STRUCTURAL'],
-  ['Evidenze',(post.sourceEvidenceIds?.length||0)>0,'SOURCE'],
+  ['Evidenze',sourceLinked,'SOURCE'],
+  ['Claim/source QA',claimAudit.status==='DRAFT_QA_PASSED_NOT_PUBLICATION_AUTHORIZED','SOURCE'],
   ['Media reali',media.length>0,'BINARY'],
   ['Licenze immagini',media.length?media.every(x=>x.licenseVerified):null,'RIGHTS'],
   ['Dimensioni verificate',media.length?media.every(x=>x.width>0&&x.height>0):null,'ASSET'],
@@ -38,8 +44,8 @@ function onePost(post,findings){
   ['Confronto immagine/prodotto',null,'VISION']
  ].map(([label,ok,kind])=>({label,kind,state:ok===null?'NOT_TESTED':ok?'PASS':'FAIL'}));
  const ruleStates={
-  'communication-redteam':post.caption?.length>30?'RULE_PASS':'RULE_BLOCKED',
-  'evidence-provenance-auditor':post.sourceEvidenceIds?.length?'RULE_PASS':'RULE_BLOCKED',
+  'communication-redteam':claimAudit.status==='DRAFT_QA_PASSED_NOT_PUBLICATION_AUTHORIZED'?'RULE_PASS':'RULE_BLOCKED',
+  'evidence-provenance-auditor':sourceLinked?'RULE_PASS':'RULE_BLOCKED',
   'conversion-redteam':post.cta?.copy?'CTA_PRESENT_VISUAL_PENDING':'RULE_BLOCKED',
   'visual-accessibility-auditor':post.altText?'ALT_PRESENT_VISUAL_PENDING':'RULE_BLOCKED'
  };
@@ -51,7 +57,7 @@ function onePost(post,findings){
   altText:post.altText,storyboard:post.storyboard||[],placement:post.placement,
   evidenceIds:post.sourceEvidenceIds||[],status:post.status,
   mediaStatus:media.length?'METADATA_ONLY':'NO_VISUAL_ASSET',
-  checks,agents,issues,structuralPass:checks.slice(0,5).every(x=>x.state==='PASS')&&
+  checks,agents,issues,claimAudit,structuralPass:checks.slice(0,6).every(x=>x.state==='PASS')&&
     !issues.some(f=>f.severity==='BLOCKER'),providerPublished:false,
   kpis:{impressions:null,clicks:null,conversions:null,ctr:null,cvr:null,roas:null,
     spendNet:null,spendVat:null,spendGross:null}};
@@ -63,7 +69,7 @@ export function buildDashboard({campaign,redteam,competitive,categoryNeeds,voice
    campaign.id!==redteam.campaignId)throw Error('Verified campaign+critic identity required');
  if(!/^[a-z0-9_-]{3,80}$/i.test(companyId||'')||!/^[a-z0-9_-]{3,80}$/i.test(tenantId||'')||
     !/^[a-z0-9_-]{3,80}$/i.test(clientId||''))throw Error('Tenant/company/client scope required');
- const posts=campaign.posts.map(p=>onePost(p,redteam.findings||[]));
+ const posts=campaign.posts.map(p=>onePost(p,redteam.findings||[],campaign));
  const findings=(redteam.findings||[]).map(f=>({
   id:f.id,domain:f.domain,severity:f.severity,owner:f.owner,
   message:f.message,remediation:f.remediation,evidenceRefs:f.evidenceRefs||[],status:f.status}));

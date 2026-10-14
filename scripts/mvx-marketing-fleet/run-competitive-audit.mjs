@@ -8,6 +8,7 @@ import {discoverCompetitors,inferCategoryNeedsFromCompetitorMessaging,normalizeO
 import {metaEuAdObservations,adLibraryProviderMatrix} from './official-ad-connectors.mjs';
 import {collectVoiceOfCustomer,critiqueFullCampaign,proposeDifferentiatedConcepts} from './redteam-needs.mjs';
 import {buildDashboard} from './dashboard-model.mjs';
+import {auditCrossWorkflow} from './cross-workflow-audit.mjs';
 import {storeDashboardSnapshot} from './dashboard-store.mjs';
 import {searchAdKitCompetitor,proposeCreativeEvidenceChecklist} from './adkit-competitor-adapter.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
@@ -49,7 +50,7 @@ export async function performCompetitiveAudit(config,{acquireClient=planClientWo
  const dashboard=buildDashboard({campaign,redteam,competitive,categoryNeeds,
     voiceOfCustomer:voice,adProviderStatus,adKitResearch,originalConcepts:proposed,
     clientId:client.clientId,tenantId:client.tenantId,companyId:client.companyId});
- return {schema:'mvx-competitor-critic-client-run/v1',
+ const report={schema:'mvx-competitor-critic-client-run/v1',
    clientId:client.clientId,tenantId:client.tenantId,companyId:client.companyId,
    timestamp:new Date().toISOString(),clientWorkflowSummary:{
      brand:campaign.brand,products:campaign.products.map(x=>({name:x.name,sourceId:x.sourceId})),
@@ -63,12 +64,16 @@ export async function performCompetitiveAudit(config,{acquireClient=planClientWo
      indexedCompetitorAds:verifiedAdObservations.length>0,measuredWinningAds:false,
      voiceOfCustomerCollected:voice.observations.length>0,signedTier1ResearchLedger:false,
      approvedForPublications:false}};
+ report.crossWorkflowAcceptance=auditCrossWorkflow({client,competitiveRun:report});
+ return report;
 }
 export async function writeAuditEvidence(report,{rootDirectory=path.join(root,'evidence','mvx-marketing-fleet','competitive')}={}){
  checkLocal(rootDirectory);
- if(!/^[a-z0-9_-]{3,50}$/i.test(report.clientId))throw Error('unsafe client id');
+ if(!/^[a-z0-9_-]{3,80}$/i.test(report.clientId)||
+    !/^[a-z0-9_-]{3,80}$/i.test(report.companyId)||
+    !/^[a-z0-9_-]{3,80}$/i.test(report.tenantId))throw Error('unsafe company/tenant/client scope');
  const date=report.timestamp.replace(/[:.]/g,'-');
- const output=path.join(rootDirectory,report.clientId,date);checkLocal(output);
+ const output=path.join(rootDirectory,report.companyId,report.clientId,date);checkLocal(output);
  await fs.mkdir(output,{recursive:true});
  const files=[
    ['competitor-candidates.json',report.competitive],
@@ -78,6 +83,7 @@ export async function writeAuditEvidence(report,{rootDirectory=path.join(root,'e
    ['adkit-verified-advertiser-matches.json',report.adKitResearch],
    ['voice-of-customer.json',report.voiceOfCustomer],
    ['redteam-findings.json',report.redteam],
+   ['cross-workflow-acceptance.json',report.crossWorkflowAcceptance],
    ['differentiated-ad-concepts.json',report.originalConcepts],
    ['client-audit.json',{clientId:report.clientId,campaignId:report.campaignId,
      technicalGates:report.technicalGates,clientWorkflowSummary:report.clientWorkflowSummary}]
@@ -89,7 +95,8 @@ export async function writeAuditEvidence(report,{rootDirectory=path.join(root,'e
    inventory.push({name,bytes:bytes.length,sha256:hash(bytes)});
  }
  const manifest={schema:'mvx-competitor-audit-files/v1',runAt:report.timestamp,
-   clientId:report.clientId,inventory,authority:'read-only market research and draft insights'};
+   clientId:report.clientId,companyId:report.companyId,tenantId:report.tenantId,
+   inventory,authority:'read-only market research and draft insights'};
  await fs.writeFile(path.join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
  return {directory:output,files:inventory.length+1};
 }

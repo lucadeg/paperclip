@@ -15,7 +15,8 @@ function assertSubpath(folder,target) {
 }
 function assertClientConfig(config){
   if(!config?.clientId||!/^[a-z0-9_-]{3,50}$/i.test(config.clientId)) throw Error('Safe clientId required');
-  if(!config.tenantId||!config.companyId) throw Error('tenant and company ID required');
+  if(!/^[a-z0-9_-]{3,80}$/i.test(config.tenantId||'')||
+    !/^[a-z0-9_-]{3,80}$/i.test(config.companyId||'')) throw Error('Safe tenant and company ID required');
   if(!Array.isArray(config.urls)||config.urls.length>5||!config.urls.length) throw Error('1-5 allowed site pages required');
   if(!Array.isArray(config.allowedHosts)||!config.allowedHosts.length) throw Error('Explicit read-only website allowlist required');
   if(!config.target?.market||!config.target?.label||!config.target?.need||!config.target?.language)
@@ -52,9 +53,11 @@ export async function planClientWorkflow(config,{acquire=acquirePublicBrand,now=
 export async function writeWorkflowEvidence(result,{baseDir=path.join(root,'evidence','mvx-marketing-fleet','clients')}={}) {
   assertSubpath(root,baseDir);
   const id=result.clientId;
-  if(!/^[a-z0-9_-]{3,50}$/i.test(id)) throw Error('Invalid client ID');
+  if(!/^[a-z0-9_-]{3,80}$/i.test(id)||
+     !/^[a-z0-9_-]{3,80}$/i.test(result.companyId||'')||
+     !/^[a-z0-9_-]{3,80}$/i.test(result.tenantId||'')) throw Error('Invalid company/tenant/client scope');
   const runId=new Date(result.observedAt).toISOString().replace(/[:.]/g,'-');
-  const directory=path.join(baseDir,id,runId);
+  const directory=path.join(baseDir,result.companyId,id,runId);
   assertSubpath(root,directory);
   await fs.mkdir(directory,{recursive:true});
   const documents=[
@@ -74,7 +77,8 @@ export async function writeWorkflowEvidence(result,{baseDir=path.join(root,'evid
   await fs.writeFile(path.join(directory,'free-guide.md'),guide);
   manifest.push({name:'free-guide.md',size:guide.length,sha256:digest(guide)});
   const evidenceManifest={schema:'mvx-workflow-files/v1',
-    createdAt:result.observedAt,clientId:id,directory,files:manifest,
+    createdAt:result.observedAt,clientId:id,companyId:result.companyId,tenantId:result.tenantId,
+    directory,files:manifest,
     executionState:'PUBLIC_READ_ONLY_BRAND_CAPTURE_AND_DRAFTS_ONLY'};
   await fs.writeFile(path.join(directory,'manifest.json'),JSON.stringify(evidenceManifest,null,2)+'\n');
   return evidenceManifest;
