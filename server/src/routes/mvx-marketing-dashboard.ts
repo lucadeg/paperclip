@@ -10,6 +10,53 @@ export const MAX_SNAPSHOT_BYTES = 3_000_000;
 export function isSafeDashboardId(id: unknown): id is string {
   return typeof id === "string" && ALLOWED.test(id);
 }
+export function validateResearchDashboardShape(snapshot: Record<string, unknown>): boolean {
+  if (!isSafeDashboardId(snapshot.companyId)||!isSafeDashboardId(snapshot.tenantId)||
+      !isSafeDashboardId(snapshot.clientId)||snapshot.provenance!=="UNSIGNED_LOCAL_RESEARCH_NOT_PRODUCTION_PERFORMANCE"||
+      typeof snapshot.generatedAt!=="string" || !Number.isFinite(Date.parse(snapshot.generatedAt))) return false;
+  const campaign = snapshot.campaign as Record<string,unknown>|undefined;
+  if (!campaign || typeof campaign.id!=="string"||!campaign.id ||
+      campaign.approved!==false||campaign.providerPublishing!==false) return false;
+  const metrics=snapshot.kpis as Record<string,unknown>|undefined;
+  if (!metrics||!Number.isSafeInteger(metrics.postDrafts)||metrics.postDrafts<1||metrics.postDrafts>500)
+    return false;
+  if(metrics.actualAgentExecutions!==0||metrics.completedVisualAgentAudits!==0) return false;
+  for(const key of ["impressions","reach","clicks","ctr","conversions","cvr","cpa","roas",
+      "customerAcquisitionCost","revenueNet","spendNet","vat","spendGross","incrementalProfit"])
+    if(metrics[key]!==null)return false;
+  const posts=snapshot.posts;
+  if(!Array.isArray(posts)||posts.length!==metrics.postDrafts)return false;
+  const ids=new Set<string>();
+  for(const entry of posts) {
+    if(!entry||typeof entry!=="object")return false;
+    const post=entry as Record<string,unknown>;
+    if(typeof post.id!=="string"||ids.has(post.id)||post.providerPublished!==false) return false;
+    ids.add(post.id);
+    const kpis=post.kpis as Record<string,unknown>|undefined;
+    if(!kpis||Object.values(kpis).some(v=>v!==null))return false;
+    const agents=post.agents;
+    if(!Array.isArray(agents)||agents.length>100||agents.some(a=>
+      !a||a.actualAgentRunId!==null||a.approved!==false))return false;
+  }
+  const sources=snapshot.evidence;
+  if(!Array.isArray(sources)||!sources.length||sources.length>20)return false;
+  for(const row of sources) {
+    if(!row||typeof row!=="object"||typeof row.url!=="string"||
+       typeof row.sha256!=="string"||!/^[a-f0-9]{64}$/i.test(row.sha256))return false;
+    try{
+      const url=new URL(row.url);
+      if(url.protocol!=="https:"||url.username||url.password||url.hostname==="localhost")return false;
+    } catch{return false;}
+  }
+  const competitorRows=snapshot.competitors;
+  if(!Array.isArray(competitorRows)||competitorRows.length>100) return false;
+  for(const row of competitorRows) {
+    if(!row||typeof row.url!=="string")return false;
+    try{if(new URL(row.url).protocol!=="https:")return false;}catch{return false;}
+  }
+  return true;
+}
+
 export function validateMarketingSnapshotEnvelope(value: unknown, companyId: string): boolean {
   if (!value || typeof value !== "object") return false;
   const envelope = value as {
@@ -18,6 +65,7 @@ export function validateMarketingSnapshotEnvelope(value: unknown, companyId: str
   if (envelope.schema !== "mvx-marketing-dashboard-envelope/v1" ||
       !envelope.snapshot || envelope.snapshot.schema !== "mvx-marketing-dashboard/v1" ||
       envelope.snapshot.companyId !== companyId ||
+      !validateResearchDashboardShape(envelope.snapshot) ||
       typeof envelope.payloadSha256 !== "string" ||
       !/^[a-f0-9]{64}$/.test(envelope.payloadSha256)) return false;
   const expected = createHash("sha256").update(JSON.stringify(envelope.snapshot)).digest("hex");
@@ -89,4 +137,21 @@ export async function readMarketingDashboard(companyId: string, options: {
   return { ...empty, status:snapshots.length?"LOCAL_EVIDENCE_SNAPSHOTS":"NO_VERIFIED_SNAPSHOTS",
     snapshots, history:history.sort((a,b)=>String(a.runAt).localeCompare(String(b.runAt))),
     availableClients:clientNames };
+}
+
+export async function resolveMarketingDashboardQuery(
+  companyId: unknown,
+  clientId: unknown,
+  authorizeCompany: (companyId: string) => void,
+  reader: typeof readMarketingDashboard = readMarketingDashboard,
+) {
+  // Authorization is intentionally enforced BEFORE input validation or any file I/O.
+  authorizeCompany(String(companyId ?? ""));
+  if (!isSafeDashboardId(companyId) ||
+      (clientId != null && !isSafeDashboardId(clientId))) {
+    return { status: 400, body: { error: "Invalid dashboard scope" },
+      cacheControl: "private, no-store" };
+  }
+  const body = await reader(companyId, { clientId: clientId as string | undefined });
+  return { status: 200, body, cacheControl: "private, no-store" };
 }

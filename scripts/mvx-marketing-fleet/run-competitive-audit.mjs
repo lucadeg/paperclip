@@ -9,6 +9,7 @@ import {metaEuAdObservations,adLibraryProviderMatrix} from './official-ad-connec
 import {collectVoiceOfCustomer,critiqueFullCampaign,proposeDifferentiatedConcepts} from './redteam-needs.mjs';
 import {buildDashboard} from './dashboard-model.mjs';
 import {auditCrossWorkflow} from './cross-workflow-audit.mjs';
+import {verifyEvidenceManifest,verifyDashboardFile} from './evidence-validator.mjs';
 import {storeDashboardSnapshot} from './dashboard-store.mjs';
 import {searchAdKitCompetitor,proposeCreativeEvidenceChecklist} from './adkit-competitor-adapter.mjs';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
@@ -100,6 +101,28 @@ export async function writeAuditEvidence(report,{rootDirectory=path.join(root,'e
  await fs.writeFile(path.join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
  return {directory:output,files:inventory.length+1};
 }
+export async function persistValidatedAudit(report,{auditDirectory,saveSnapshot=storeDashboardSnapshot}={}) {
+ const audit=report?.crossWorkflowAcceptance;
+ if(audit?.schema!=='mvx-cross-workflow-acceptance/v1'||audit.statistics.blockers>0||
+     audit.companyId!==report.companyId||audit.tenantId!==report.tenantId||
+     audit.clientId!==report.clientId||audit.campaignId!==report.campaignId)
+   throw Error('Cross-workflow integrity BLOCKED; no dashboard snapshot persisted');
+ if(report.dashboard?.kpis?.roas!==null||report.dashboard?.campaign?.approved!==false||
+    report.dashboard?.posts?.some(p=>p.providerPublished!==false))
+   throw Error('Unofficial performance or provider mutation in draft dashboard');
+ const artifact=await writeAuditEvidence(report,{rootDirectory:auditDirectory});
+ const verified=await verifyEvidenceManifest(artifact.directory,{
+   expectedCompanyId:report.companyId,expectedTenantId:report.tenantId,expectedClientId:report.clientId});
+ if(verified.status!=='VERIFIED_LOCAL_INTEGRITY')
+   throw Error('Audit files failed SHA-256 manifest reconciliation');
+ const dashboardSaved=await saveSnapshot(report.dashboard);
+ const check=await verifyDashboardFile(dashboardSaved.filename,{
+   expectedCompanyId:report.companyId,expectedTenantId:report.tenantId,expectedClientId:report.clientId});
+ if(check.status!=='VERIFIED_LOCAL_INTEGRITY')
+   throw Error('Dashboard file failed independent SHA-256 verification');
+ return {artifact,dashboardSaved,verifiedFiles:verified.passed.length,
+   crossWorkflowVerdict:audit.verdict,releaseAuthorized:false};
+}
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const configPath=process.argv[2];if(!configPath)throw Error('Usage: run-competitive-audit.mjs <client-config> [source-seeds]');
  const config=JSON.parse(await fs.readFile(checkLocal(configPath),'utf8'));
@@ -110,8 +133,9 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    searchAdapter=makeSeededResearchAdapter({seeds:seeds.seeds});
  }
  const report=await performCompetitiveAudit(config,{searchAdapter});
- const location=await writeAuditEvidence(report);
- const dashboardStorage=await storeDashboardSnapshot(report.dashboard);
+ const saved=await persistValidatedAudit(report);
+ const location=saved.artifact;
+ const dashboardStorage=saved.dashboardSaved;
  console.log(JSON.stringify({client:report.clientId,brand:report.clientWorkflowSummary.brand,
    competitors:report.competitive.competitors?.map(c=>({
      name:c.identity.name,domain:c.identity.domain,score:c.relevance.score,
@@ -123,6 +147,9 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
    voicedCustomerEvidenceCount:report.voiceOfCustomer.observations.length,
    critique:report.redteam.scorecard,
    creativeAlternatives:report.originalConcepts.length,
-   release:report.redteam.releaseVerdict,manifestDirectory:location.directory,
+   release:report.redteam.releaseVerdict,
+   crossWorkflowAcceptance:report.crossWorkflowAcceptance.statistics,
+   persistenceVerdict:saved.crossWorkflowVerdict,verifiedFiles:saved.verifiedFiles,
+   manifestDirectory:location.directory,
    dashboardSnapshot:dashboardStorage.filename, dashboardSha256:dashboardStorage.sha256},null,2));
 }

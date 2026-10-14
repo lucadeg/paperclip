@@ -297,7 +297,7 @@ test('generic client runner executes capture to campaign to 24 post QA and strat
   assert.equal(flow.readiness.messaging,'NOT_AUTHORIZED');
 });
 test('generic runner rejects unapproved mutating mode and absent target definition',async()=>{
-  const config={clientId:'demo-brand',tenantId:'t',companyId:'c',mode:'publish',urls:[url],
+  const config={clientId:'demo-brand',tenantId:'tenant-demo',companyId:'company-demo',mode:'publish',urls:[url],
     allowedHosts:['example.org'],target};
   await assert.rejects(()=>planClientWorkflow(config,{acquire:async()=>capture()}),/Externally mutating mode/);
   await assert.rejects(()=>planClientWorkflow({...config,mode:'research_draft_only',target:null},

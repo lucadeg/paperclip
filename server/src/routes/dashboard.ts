@@ -7,7 +7,7 @@ import {
   recoveryObservabilityService,
 } from "../services/recovery-observability.js";
 import { assertCompanyAccess } from "./authz.js";
-import { isSafeDashboardId, readMarketingDashboard } from "./mvx-marketing-dashboard.js";
+import { resolveMarketingDashboardQuery } from "./mvx-marketing-dashboard.js";
 
 function parsePositiveNumber(
   value: unknown,
@@ -27,16 +27,10 @@ export function dashboardRoutes(db: Db) {
 
   router.get("/companies/:companyId/mvx-marketing/dashboard", async (req, res) => {
     const companyId = req.params.companyId as string;
-    assertCompanyAccess(req, companyId);
-    const clientId = req.query.clientId;
-    if (!isSafeDashboardId(companyId) ||
-        (clientId != null && (typeof clientId !== "string" || !isSafeDashboardId(clientId)))) {
-      res.status(400).json({ error: "Invalid dashboard scope" });
-      return;
-    }
-    const result = await readMarketingDashboard(companyId, { clientId: clientId as string | undefined });
-    res.setHeader("Cache-Control", "private, no-store");
-    res.json(result);
+    const result = await resolveMarketingDashboardQuery(companyId, req.query.clientId,
+      (id) => assertCompanyAccess(req, id));
+    res.setHeader("Cache-Control", result.cacheControl);
+    res.status(result.status).json(result.body);
   });
 
   router.get("/companies/:companyId/dashboard", async (req, res) => {

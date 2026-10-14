@@ -114,7 +114,7 @@ test('source code wires authenticated endpoint, multi-layout route and navigable
  const route=await fs.readFile(path.join(root,'server/src/routes/dashboard.ts'),'utf8');
  const app=await fs.readFile(path.join(root,'ui/src/App.tsx'),'utf8');
  const sidebar=await fs.readFile(path.join(root,'ui/src/components/Sidebar.tsx'),'utf8');
- assert.match(route,/assertCompanyAccess\(req, companyId\)/);
+ assert.match(route,/assertCompanyAccess\(req, id\)/);
  assert.match(route,/mvx-marketing\/dashboard/);
  assert.ok((app.match(/path="marketing-intelligence"/g)||[]).length>=3);
  assert.match(sidebar,/\/marketing-intelligence/);
@@ -159,4 +159,67 @@ test('source-verified vision adapter returns audit receipt without authorizing p
  assert.equal(run.status,'VISION_REVIEW_OBSERVED_NOT_AUTOPUBLISHED');
  assert.equal(run.publicationAllowed,false);
  assert.equal(run.verdict,'REVIEW');
+});
+
+import {resolveMarketingDashboardQuery} from '../../server/src/routes/mvx-marketing-dashboard.ts';
+test('HTTP controller enforces company authorization before file I/O',async()=>{
+ let reads=0,authorizations=0;
+ const reader=async()=>{reads++;return {snapshots:[{companyId:'real-company'}]}};
+ const auth=(id:string)=>{authorizations++;if(id!=='real-company')throw Error('401/403');};
+ await assert.rejects(()=>resolveMarketingDashboardQuery('foreign-company',undefined,auth,reader as never),/401\/403/);
+ assert.equal(reads,0);
+ assert.equal(authorizations,1);
+ const allowed=await resolveMarketingDashboardQuery('real-company',undefined,auth,reader as never);
+ assert.equal(allowed.status,200);assert.equal(allowed.cacheControl,'private, no-store');
+ assert.equal(reads,1);
+});
+test('HTTP controller rejects malformed company/client IDs without touching reader',async()=>{
+ let calls=0;
+ const reader=async()=>{calls++;return {snapshots:[]}};
+ const auth=()=>{};
+ for(const [companyId,clientId] of [['c1','../../../etc'],['c1',['array']],['../escape',null]]){
+  const result=await resolveMarketingDashboardQuery(companyId,clientId,auth,reader as never);
+  assert.equal(result.status,400);
+  assert.equal(result.cacheControl,'private, no-store');
+ }
+ assert.equal(calls,0);
+});
+test('HTTP controller forwards exact company scope and optional client filter',async()=>{
+ let observed:any;
+ const reader=async(companyId:string,params:any)=>{observed={companyId,params};return {status:'GOOD'}};
+ await resolveMarketingDashboardQuery('company-12','client-16',()=>{},reader as never);
+ assert.deepEqual(observed,{companyId:'company-12',params:{clientId:'client-16'}});
+});
+
+test('untrusted local author cannot inject fake real performance even by recomputing SHA256',()=>{
+ const raw=example();
+ raw.kpis.roas=120 as never;
+ const fake=envelopeDashboard(raw);
+ assert.equal(validateMarketingSnapshotEnvelope(fake,'company-demo-123'),false);
+});
+test('untrusted local author cannot forge completed vision/agent review or publication by recomputing hash',()=>{
+ const base=example();
+ const invalid=[
+  (x:any)=>x.posts[0].agents[0].actualAgentRunId='fabricated-agent-run',
+  (x:any)=>x.posts[0].providerPublished=true,
+  (x:any)=>x.campaign.approved=true,
+  (x:any)=>x.posts[0].kpis.spendGross=700,
+  (x:any)=>x.kpis.actualAgentExecutions=99,
+ ];
+ for(const mutator of invalid){
+  const modified=structuredClone(base);
+  mutator(modified);
+  const report=envelopeDashboard(modified);
+  assert.equal(validateMarketingSnapshotEnvelope(report,'company-demo-123'),false);
+ }
+});
+test('untrusted local author cannot inject javascript URLs into source or competitor navigations',()=>{
+ const source=example();
+ source.evidence[0].url='javascript:alert(1)';
+ assert.equal(validateMarketingSnapshotEnvelope(envelopeDashboard(source),'company-demo-123'),false);
+ const competitor=example();
+ competitor.competitors.push({id:'c',name:'hacked',domain:'evil',matchScore:0,
+  relationship:'unverified',url:'javascript:alert(1)',actualObservedAds:0,
+  verifiedAdROAS:null,officialLibraries:[]});
+ assert.equal(validateMarketingSnapshotEnvelope(envelopeDashboard(competitor),'company-demo-123'),false);
 });
