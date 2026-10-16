@@ -23,6 +23,8 @@ import {
 import { useDialogActions } from "@/context/DialogContext";
 import { Button } from "@/components/ui/button";
 import { CrmLogo } from "@/components/AppLogos";
+import { useCompany } from "@/context/CompanyContext";
+import { api } from "@/api/client";
 
 export interface CrmLead {
   row?: number;
@@ -58,6 +60,9 @@ export interface CrmLead {
 
 export function CrmContacts() {
   const { openNewIssue } = useDialogActions();
+  const { selectedCompanyId } = useCompany();
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [retryKey, setRetryKey] = useState(0);
   const [leads, setLeads] = useState<CrmLead[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -65,20 +70,27 @@ export function CrmContacts() {
   const [selectedLead, setSelectedLead] = useState<CrmLead | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:8770/api/crm/contacts")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && Array.isArray(data.contacts)) {
-          setLeads(data.contacts);
-        }
-      })
-      .catch((err) => {
-        console.error("Failed to load CRM leads:", err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+    let active = true;
+    setLeads([]);
+    setLoadError(null);
+    setLoading(Boolean(selectedCompanyId));
+    if (!selectedCompanyId) return;
+    api.get<{ companyId: string; items: CrmLead[] }>(
+      `/companies/${encodeURIComponent(selectedCompanyId)}/mvx-marketing/crm/contacts`,
+    ).then((response) => {
+      if (!active) return;
+      if (response.companyId !== selectedCompanyId || !Array.isArray(response.items)) {
+        throw new Error("CRM company scope mismatch");
+      }
+      setLeads(response.items.filter((x) => x && typeof x.first_name === "string" &&
+        typeof x.last_name === "string" && typeof x.email === "string"));
+    }).catch(() => {
+      if (active) setLoadError("MVX Tier 1 CRM non connesso o dati non disponibili. Nessun contatto dimostrativo viene mostrato.");
+    }).finally(() => {
+      if (active) setLoading(false);
+    });
+    return () => { active = false; };
+  }, [selectedCompanyId, retryKey]);
 
   const stats = useMemo(() => {
     const total = leads.length;
@@ -144,15 +156,13 @@ export function CrmContacts() {
         </div>
 
         <div className="flex items-center gap-2">
-          <a
-            href="http://localhost:8770/apps/crm/index.html"
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border/70 bg-card hover:bg-muted transition-colors text-foreground"
+          <button type="button" disabled
+            title="L'interfaccia CRM esterna richiede un URL aziendale autorizzato"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border/70 bg-muted/50 text-muted-foreground opacity-70"
           >
-            <ExternalLink className="h-3.5 w-3.5 text-amber-400" />
-            Apri App MVX CRM
-          </a>
+            <ExternalLink className="h-3.5 w-3.5" />
+            App CRM esterna non collegata
+          </button>
           <Button
             size="sm"
             onClick={() => openNewIssue()}
@@ -214,6 +224,17 @@ export function CrmContacts() {
           <Target className="h-5 w-5 text-emerald-400/60" />
         </div>
       </div>
+
+      {loadError && (
+        <div role="alert" className="m-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-sm">
+          <p>{loadError}</p>
+          <button type="button" className="mt-2 rounded-md border border-border px-3 py-1.5"
+            onClick={() => setRetryKey((n) => n + 1)}>Riprova connessione CRM</button>
+        </div>
+      )}
+      {!selectedCompanyId && (
+        <p className="mx-4 text-sm text-muted-foreground">Seleziona un'azienda autorizzata per vedere i contatti.</p>
+      )}
 
       {/* Filters & Search Toolbar */}
       <div className="p-4 flex flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-card/20 shrink-0">

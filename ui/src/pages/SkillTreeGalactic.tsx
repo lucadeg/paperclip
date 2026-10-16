@@ -120,7 +120,7 @@ export function SkillTreeGalactic() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const [graphData, setGraphData] = useState<SkillTreePayload>(STATIC_SKILL_TREE);
+  const [graphData, setGraphData] = useState<SkillTreePayload>(() => ({ ...STATIC_SKILL_TREE, totalSkills: 0, skills: [], departments: [], graph: { ...STATIC_SKILL_TREE.graph, nodes: [], edges: [] } }));
   const [selectedNode, setSelectedNode] = useState<SkillNode | null>(null);
   const [selectedDeptFilter, setSelectedDeptFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -835,7 +835,7 @@ export function SkillTreeGalactic() {
     return filtered;
   }, [graphData.skills, selectedDeptFilter, searchQuery]);
 
-  const totalSkillsCount = graphData.totalSkills || (graphData.skills ? graphData.skills.length : 5125);
+  const totalSkillsCount = graphData.skills?.length ?? 0;
 
   return (
     <div className="relative w-full h-[calc(100vh-3.5rem)] overflow-hidden bg-[#070b16] select-none flex flex-col">
@@ -972,7 +972,7 @@ export function SkillTreeGalactic() {
                     setSearchQuery(e.target.value);
                     setMatrixPage(1);
                   }}
-                  placeholder="Cerca tra le 5.125 competenze per nome, ID o hub..."
+                  placeholder="Cerca tra le competenze verificate per nome, ID o hub..."
                   className="w-full pl-9 pr-4 py-2 bg-card border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>

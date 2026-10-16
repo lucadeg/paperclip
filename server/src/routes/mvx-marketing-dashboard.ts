@@ -18,14 +18,15 @@ export function validateResearchDashboardShape(snapshot: Record<string, unknown>
   if (!campaign || typeof campaign.id!=="string"||!campaign.id ||
       campaign.approved!==false||campaign.providerPublishing!==false) return false;
   const metrics=snapshot.kpis as Record<string,unknown>|undefined;
-  if (!metrics||!Number.isSafeInteger(metrics.postDrafts)||metrics.postDrafts<1||metrics.postDrafts>500)
+  const draftCount = metrics?.postDrafts;
+  if (typeof draftCount !== "number" || !Number.isSafeInteger(draftCount) || draftCount < 1 || draftCount > 500)
     return false;
   if(metrics.actualAgentExecutions!==0||metrics.completedVisualAgentAudits!==0) return false;
   for(const key of ["impressions","reach","clicks","ctr","conversions","cvr","cpa","roas",
       "customerAcquisitionCost","revenueNet","spendNet","vat","spendGross","incrementalProfit"])
     if(metrics[key]!==null)return false;
   const posts=snapshot.posts;
-  if(!Array.isArray(posts)||posts.length!==metrics.postDrafts)return false;
+  if(!Array.isArray(posts)||posts.length!==draftCount)return false;
   const ids=new Set<string>();
   for(const entry of posts) {
     if(!entry||typeof entry!=="object")return false;

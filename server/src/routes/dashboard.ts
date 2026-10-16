@@ -6,7 +6,8 @@ import {
   MAX_WINDOW_WEEKS,
   recoveryObservabilityService,
 } from "../services/recovery-observability.js";
-import { assertCompanyAccess } from "./authz.js";
+import { assertBoard, assertCompanyAccess } from "./authz.js";
+import { readTier1CompanyResource, Tier1ReadError, type Tier1Resource } from "./mvx-tier1-read.js";
 import { resolveMarketingDashboardQuery } from "./mvx-marketing-dashboard.js";
 
 function parsePositiveNumber(
@@ -24,6 +25,23 @@ export function dashboardRoutes(db: Db) {
   const router = Router();
   const svc = dashboardService(db);
   const recoveryObservability = recoveryObservabilityService(db);
+
+  for (const resource of ["crm/contacts", "content/phrases", "content/calendar"] as const) {
+    router.get(`/companies/:companyId/mvx-marketing/${resource}`, async (req, res) => {
+      const companyId = req.params.companyId as string;
+      assertBoard(req);
+      assertCompanyAccess(req, companyId);
+      try {
+        const result = await readTier1CompanyResource(companyId, resource as Tier1Resource);
+        res.setHeader("Cache-Control", "private, no-store");
+        res.json(result);
+      } catch (error) {
+        if (!(error instanceof Tier1ReadError)) throw error;
+        res.setHeader("Cache-Control", "private, no-store");
+        res.status(error.status).json({ error: error.reason, resource });
+      }
+    });
+  }
 
   router.get("/companies/:companyId/mvx-marketing/dashboard", async (req, res) => {
     const companyId = req.params.companyId as string;

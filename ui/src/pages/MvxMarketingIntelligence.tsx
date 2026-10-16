@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   Activity, AlertTriangle, ArrowUpRight, BarChart3, CheckCircle2, ChevronDown, CircleHelp,
@@ -255,9 +255,10 @@ export function MvxMarketingIntelligence() {
  const {selectedCompanyId}=useCompany();
  const [currentView,setCurrentView]=useState<View>("overview");
  const [client,setClient]=useState("all");
+ useEffect(()=>{setClient("all");},[selectedCompanyId]);
  const data=useQuery<Response>({
-  queryKey:["mvx-marketing-dashboard",selectedCompanyId],
-  queryFn:()=>api.get<Response>(`/companies/${encodeURIComponent(selectedCompanyId!)}/mvx-marketing/dashboard`),
+  queryKey:["mvx-marketing-dashboard",selectedCompanyId,client],
+  queryFn:()=>api.get<Response>(`/companies/${encodeURIComponent(selectedCompanyId!)}/mvx-marketing/dashboard${client==="all"?"":"?clientId="+encodeURIComponent(client)}`),
   enabled:Boolean(selectedCompanyId),staleTime:30_000,refetchInterval:60_000
  });
  const snaps=data.data?.snapshots||[];
@@ -277,7 +278,7 @@ export function MvxMarketingIntelligence() {
     <span><b>Mercato:</b> {active.campaign.market}</span>
     <span><b>Acquisito:</b> {new Date(active.generatedAt).toLocaleString("it-IT")}</span>
     <label className="ml-auto flex items-center gap-2"><span>Cliente</span><select aria-label="Cliente" className="rounded-lg border border-border bg-background px-2 py-1.5" value={client} onChange={e=>setClient(e.target.value)}>
-    <option value="all">Ultimo acquisito</option>{snaps.map(s=><option key={s.clientId} value={s.clientId}>{s.clientId}</option>)}</select></label></div>:null}
+    <option value="all">Ultimo acquisito</option>{(data.data?.availableClients||[]).map(id=><option key={id} value={id}>{id}</option>)}</select></label></div>:null}
   </header>
   {!selectedCompanyId?<div className="rounded-xl border border-border p-10 text-center text-sm text-muted-foreground"><Users className="mx-auto mb-2 h-7 w-7"/>Seleziona prima un'azienda autorizzata.</div>:
   data.isLoading?<div role="status" className="rounded-xl border border-border p-10 text-center text-sm">Caricamento KPI e audit tenant-scoped…</div>:
