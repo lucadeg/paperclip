@@ -78,3 +78,7 @@ tests/storybook-visual/playwright-report/
 .vercel/
 .env.local
 test-results/
+
+# Local tenant/client campaign captures, including raw third-party material and possible PII.
+# Local QA/provider evidence, test stores and dependency cache; never commit credentials or PII
+/evidence/

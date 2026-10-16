@@ -105,7 +105,7 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [selectionSource, setSelectionSource] = useState<CompanySelectionSource>("bootstrap");
   const [selectedCompanyId, setSelectedCompanyIdState] = useState<string | null>(
-    () => localStorage.getItem(STORAGE_KEY) || "mvx-ads-master-hq"
+    () => null // Resolve only after the authenticated company list has loaded.
   );
 
   // Keyed by account, so there is no such thing here as "the list, but whose?".
@@ -123,21 +123,8 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
       retry: 1,
     });
   const rawCompanies = companiesResult.companies;
-  const companies = useMemo(() => {
-    if (rawCompanies && rawCompanies.length > 0) return rawCompanies;
-    return [
-      {
-        id: "mvx-ads-master-hq",
-        name: "MVX Ads Master — HQ",
-        issuePrefix: "MVX",
-        description: "Enterprise Sovereign AI Content & Ads Automation Hub",
-        status: "active",
-        budgetMonthlyCents: 500000,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      } as unknown as Company,
-    ];
-  }, [rawCompanies]);
+  // Never substitute a synthetic tenant for an unavailable/empty API response.
+  const companies = useMemo(() => rawCompanies ?? [], [rawCompanies]);
   const companyListUnauthorized = companiesResult.unauthorized;
   const sidebarCompanies = useMemo(
     () => companies.filter((company) => company.status !== "archived"),
@@ -306,25 +293,7 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
 export function useCompany() {
   const ctx = useContext(CompanyContext);
   if (!ctx) {
-    const fallback = {
-      id: "mvx-ads-master-hq",
-      name: "MVX Ads Master — HQ",
-      issuePrefix: "MVX",
-      status: "active",
-    } as unknown as Company;
-    return {
-      companies: [fallback],
-      selectedCompanyId: "mvx-ads-master-hq",
-      selectedCompany: fallback,
-      selectionSource: "bootstrap" as const,
-      loading: false,
-      error: null,
-      companyListUnavailable: false,
-      retryCompanies: async () => {},
-      setSelectedCompanyId: () => {},
-      reloadCompanies: async () => {},
-      createCompany: async () => fallback,
-    };
+    throw new Error("useCompany requires CompanyProvider; use useOptionalCompany for optional contexts");
   }
   return ctx;
 }

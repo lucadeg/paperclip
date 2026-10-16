@@ -1,5 +1,9 @@
 import { execFileSync } from "node:child_process";
+import { createRequire } from "node:module";
 import { describe, expect, it } from "vitest";
+
+// Vitest's module runner does not implement import.meta.resolve. Resolve via Node's module system.
+const tsxPreload = createRequire(import.meta.url).resolve("tsx");
 
 describe("protocol-failure cleanup", () => {
   it.each(["immediate", "delayed", "successful"])(
@@ -54,7 +58,7 @@ describe("protocol-failure cleanup", () => {
         process.stdout.write("HOST_ALIVE_CLEANUP_OUTCOME_PRESERVED");
       `;
       expect(execFileSync(process.execPath, [
-        "--unhandled-rejections=strict", "--import", import.meta.resolve("tsx"),
+        "--unhandled-rejections=strict", "--import", tsxPreload,
         "--input-type=module", "--eval", source,
       ], { encoding: "utf8", timeout: 10_000 })).toBe("HOST_ALIVE_CLEANUP_OUTCOME_PRESERVED");
     },
