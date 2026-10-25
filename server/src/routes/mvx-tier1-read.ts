@@ -3,6 +3,8 @@
  * The Tier 1 server MUST echo the same company UUID in its response;
  * no demo entries, unsigned attribution, or public-browser localhost requests.
  */
+import { isIP } from "node:net";
+
 export type Tier1Resource = "crm/contacts" | "content/phrases" | "content/calendar";
 
 export class Tier1ReadError extends Error {
@@ -26,6 +28,44 @@ const ARRAY_KEYS: Record<Tier1Resource, string> = {
   "content/phrases": "phrases",
   "content/calendar": "events",
 };
+const MAX_TIER1_BODY_BYTES = 2_000_000;
+
+// Bound memory use while reading an untrusted upstream response. Checking the
+// string length after Response.text() materializes the entire body is too late.
+async function readLimitedTier1Body(response: Response): Promise<string> {
+  const contentLength = response.headers.get("content-length");
+  if (contentLength && /^\d+$/.test(contentLength) &&
+      Number(contentLength) > MAX_TIER1_BODY_BYTES) {
+    throw new Tier1ReadError(502, "TIER1_PAYLOAD_TOO_LARGE");
+  }
+  if (!response.body) return "";
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder("utf-8", { fatal: true });
+  let size = 0;
+  let body = "";
+  let complete = false;
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) {
+        complete = true;
+        break;
+      }
+      size += value.byteLength;
+      if (size > MAX_TIER1_BODY_BYTES) {
+        throw new Tier1ReadError(502, "TIER1_PAYLOAD_TOO_LARGE");
+      }
+      body += decoder.decode(value, { stream: true });
+    }
+    return body + decoder.decode();
+  } catch (error) {
+    if (error instanceof Tier1ReadError) throw error;
+    throw new Tier1ReadError(502, "TIER1_RESPONSE_READ_FAILED");
+  } finally {
+    if (!complete) await reader.cancel().catch(() => {});
+    reader.releaseLock();
+  }
+}
 
 export async function readTier1CompanyResource(
   companyId: string,
@@ -47,10 +87,16 @@ export async function readTier1CompanyResource(
   } catch {
     throw new Tier1ReadError(503, "INVALID_TIER1_API_ORIGIN");
   }
+  const hostname = origin.hostname.replace(/^\[|\]$/g, "").toLowerCase();
   const localDev = env.NODE_ENV === "development" &&
-    /^(localhost|127\.0\.0\.1)$/.test(origin.hostname) &&
+    /^(localhost|127\.0\.0\.1)$/.test(hostname) &&
     origin.protocol === "http:";
-  if (!((origin.protocol === "https:" && origin.hostname) || localDev) ||
+  // HTTPS alone does not make an internal/metadata host a safe outbound target.
+  // For production, require a DNS host rather than an IP literal or local name.
+  const unsafeHost = isIP(hostname) !== 0 || hostname === "localhost" ||
+    hostname.endsWith(".localhost") || hostname.endsWith(".local") ||
+    hostname.endsWith(".internal");
+  if (!((origin.protocol === "https:" && origin.hostname && !unsafeHost) || localDev) ||
       origin.username || origin.password || origin.search || origin.hash ||
       origin.pathname !== "/" || /[\s\r\n]/.test(token)) {
     throw new Tier1ReadError(503, "INVALID_TIER1_API_ORIGIN");
@@ -77,8 +123,7 @@ export async function readTier1CompanyResource(
     throw new Tier1ReadError(502, "TIER1_SERVICE_AUTHORIZATION_FAILED");
   }
   if (!response.ok) throw new Tier1ReadError(502, "TIER1_UPSTREAM_ERROR");
-  const bytes = await response.text();
-  if (bytes.length > 2_000_000) throw new Tier1ReadError(502, "TIER1_PAYLOAD_TOO_LARGE");
+  const bytes = await readLimitedTier1Body(response);
   let payload: unknown;
   try { payload = JSON.parse(bytes); } catch {
     throw new Tier1ReadError(502, "TIER1_INVALID_JSON");
@@ -91,7 +136,14 @@ export async function readTier1CompanyResource(
   // An upstream response MUST prove company-scoped ownership; unscoped legacy
   // responses are deliberately rejected instead of blended across tenants.
   if (record.companyId !== companyId || !Array.isArray(rows) || rows.length > 1000 ||
-      rows.some(item => !item || typeof item !== "object" || Array.isArray(item))) {
+      rows.some(item => {
+        if (!item || typeof item !== "object" || Array.isArray(item)) return true;
+        const row = item as Record<string, unknown>;
+        // The envelope alone is not sufficient: reject any explicitly
+        // company-labelled item that belongs to another company.
+        return ("companyId" in row && row.companyId !== companyId) ||
+          ("company_id" in row && row.company_id !== companyId);
+      })) {
     throw new Tier1ReadError(502, "TIER1_COMPANY_SCOPE_OR_SCHEMA_MISMATCH");
   }
   return {

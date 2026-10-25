@@ -72,6 +72,68 @@ test("too many contacts are rejected, not silently truncated",async()=>{
   fetcher:(async()=>ok(Array.from({length:1001},()=>({id:"x"})))) as typeof fetch}),
   /TIER1_COMPANY_SCOPE_OR_SCHEMA_MISMATCH/);
 });
+test("production rejects literal-IP and local HTTPS upstream targets before network I/O", async () => {
+ let calls = 0;
+ for (const origin of [
+  "https://127.0.0.1/", "https://169.254.169.254/", "https://[::1]/",
+  "https://tier1.local/", "https://metadata.google.internal/", "https://localhost/",
+ ]) {
+  await assert.rejects(readTier1CompanyResource(company,"crm/contacts",{
+   env:{...env,MVX_TIER1_API_ORIGIN:origin},
+   fetcher:(async()=>{calls++;return ok();}) as typeof fetch,
+  }),/INVALID_TIER1_API_ORIGIN/,origin);
+ }
+ assert.equal(calls,0);
+});
+test("local HTTP is limited to explicitly configured development origins",async()=>{
+ let calls=0;
+ const report=await readTier1CompanyResource(company,"crm/contacts",{
+  env:{...env,NODE_ENV:"development",MVX_TIER1_API_ORIGIN:"http://127.0.0.1:3100/"},
+  fetcher:(async()=>{calls++;return ok();}) as typeof fetch,
+ });
+ assert.equal(calls,1);
+ assert.equal(report.companyId,company);
+});
+test("nested company ownership cannot contradict verified envelope",async()=>{
+ for (const row of [{companyId:other,id:"leak"}, {company_id:other,id:"leak"}]) {
+  await assert.rejects(readTier1CompanyResource(company,"crm/contacts",{
+   env,fetcher:(async()=>ok([row])) as typeof fetch,
+  }),/TIER1_COMPANY_SCOPE_OR_SCHEMA_MISMATCH/);
+ }
+ const valid=await readTier1CompanyResource(company,"crm/contacts",{
+  env,fetcher:(async()=>ok([{companyId:company,id:"valid"}])) as typeof fetch,
+ });
+ assert.equal(valid.items.length,1);
+});
+test("oversized announced payload rejected before body consumption",async()=>{
+ const upstream = new Response(new ReadableStream({
+  start(controller){controller.enqueue(new Uint8Array([123,125]));controller.close();}
+ }),{headers:{"Content-Length":"3000000"}});
+ await assert.rejects(readTier1CompanyResource(company,"crm/contacts",{
+  env,fetcher:(async()=>upstream) as typeof fetch,
+ }),/TIER1_PAYLOAD_TOO_LARGE/);
+});
+test("untrusted streamed payload is limited to 2 MB before full materialization",async()=>{
+ let canceled=false;
+ const stream=new ReadableStream<Uint8Array>({
+  start(controller){
+   controller.enqueue(new Uint8Array(1_200_000));
+   controller.enqueue(new Uint8Array(1_200_000));
+   controller.enqueue(new Uint8Array(1_200_000));
+  },
+  cancel(){canceled=true;},
+ });
+ await assert.rejects(readTier1CompanyResource(company,"crm/contacts",{
+  env,fetcher:(async()=>new Response(stream)) as typeof fetch,
+ }),/TIER1_PAYLOAD_TOO_LARGE/);
+ assert.equal(canceled,true,"stream must be canceled after overflow");
+});
+test("malformed UTF-8 in Tier 1 JSON response fails closed",async()=>{
+ await assert.rejects(readTier1CompanyResource(company,"crm/contacts",{
+  env,fetcher:(async()=>new Response(new Uint8Array([123,34,255,34,125]))) as typeof fetch,
+ }),/TIER1_RESPONSE_READ_FAILED/);
+});
+
 test("UI never hardcodes fake company, fake metrics, or local CRM/editor URLs",async()=>{
  const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"../..");
  const read=async(file:string)=>fs.readFile(path.join(root,file),"utf8");
