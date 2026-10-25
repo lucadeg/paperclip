@@ -1,4 +1,5 @@
 import { test } from "node:test";
+import { createServer } from "node:http";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -132,6 +133,48 @@ test("malformed UTF-8 in Tier 1 JSON response fails closed",async()=>{
  await assert.rejects(readTier1CompanyResource(company,"crm/contacts",{
   env,fetcher:(async()=>new Response(new Uint8Array([123,34,255,34,125]))) as typeof fetch,
  }),/TIER1_RESPONSE_READ_FAILED/);
+});
+
+test("actual loopback HTTP response is authenticated, company scoped and rejected on mismatch",async()=>{
+ let attestedCompany=company;
+ const observed:{method?:string;path?:string;company?:string;authorization?:string}={};
+ const server=createServer((req,res)=>{
+  const requestUrl=new URL(req.url||"/","http://127.0.0.1");
+  observed.method=req.method;
+  observed.path=requestUrl.pathname;
+  observed.company=req.headers["x-mvx-company-id"] as string | undefined;
+  observed.authorization=req.headers.authorization;
+  res.writeHead(200,{"content-type":"application/json"});
+  res.end(JSON.stringify({
+   companyId:attestedCompany,
+   contacts:[{id:"http-evidence",companyId:attestedCompany}],
+  }));
+ });
+ await new Promise<void>((resolve,reject)=>{
+  server.once("error",reject);
+  server.listen(0,"127.0.0.1",()=>resolve());
+ });
+ try {
+  const address=server.address();
+  assert(address && typeof address==="object");
+  const devEnv={...env,NODE_ENV:"development",
+   MVX_TIER1_API_ORIGIN:`http://127.0.0.1:${address.port}/`};
+  const result=await readTier1CompanyResource(company,"crm/contacts",{env:devEnv});
+  assert.equal(result.items.length,1);
+  assert.equal(result.companyId,company);
+  assert.equal(observed.method,"GET");
+  assert.equal(observed.path,"/api/crm/contacts");
+  assert.equal(observed.company,company);
+  assert.equal(observed.authorization,`Bearer ${env.MVX_TIER1_SERVICE_TOKEN}`);
+  attestedCompany=other;
+  await assert.rejects(
+   readTier1CompanyResource(company,"crm/contacts",{env:devEnv}),
+   /TIER1_COMPANY_SCOPE_OR_SCHEMA_MISMATCH/
+  );
+ } finally {
+  await new Promise<void>((resolve,reject)=>
+   server.close(error=>error?reject(error):resolve()));
+ }
 });
 
 test("UI never hardcodes fake company, fake metrics, or local CRM/editor URLs",async()=>{
