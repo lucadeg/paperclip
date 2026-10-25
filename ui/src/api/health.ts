@@ -55,15 +55,13 @@ export const healthApi = {
       const payload = await res.json().catch(() => null) as { error?: string } | null;
       const recovery = tenantSessionRecovery.recoverIfNeeded(res.status, payload);
       if (recovery) return recovery;
-      return {
-        status: "ok",
-        version: "0.3.1",
-        database: "embedded",
-        authReady: true,
-        bootstrapStatus: "ready",
-      };
+      throw new Error(payload?.error ?? `Failed to fetch server health (${res.status})`);
     }
-    return res.json();
+    const payload: unknown = await res.json();
+    if (!payload || typeof payload !== "object" || (payload as { status?: unknown }).status !== "ok") {
+      throw new Error("Invalid server health response");
+    }
+    return payload as HealthStatus;
   },
   requestDevServerRestart: async (): Promise<void> => {
     const res = await fetch("/api/health/dev-server/restart", {

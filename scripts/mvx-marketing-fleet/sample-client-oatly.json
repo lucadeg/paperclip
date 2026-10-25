@@ -1,0 +1,26 @@
+{
+  "clientId": "oatly-public-research",
+  "tenantId": "sandbox-research",
+  "companyId": "sandbox-research-company",
+  "mode": "research_draft_only",
+  "allowedHosts": [
+    "www.oatly.com"
+  ],
+  "urls": [
+    "https://www.oatly.com/products",
+    "https://www.oatly.com/products/oat-drink/oat-drink-barista-edition-1l"
+  ],
+  "target": {
+    "label": "adulti che preparano caffè a casa — ipotesi di test",
+    "need": "valutare se una bevanda a base d'avena è adatta alla propria routine",
+    "market": "Italia",
+    "language": "it"
+  },
+  "channels": [
+    "instagram",
+    "facebook",
+    "tiktok",
+    "linkedin"
+  ],
+  "objective": "consented_guide_requests"
+}

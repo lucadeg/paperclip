@@ -83,7 +83,7 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: oklch(0.45 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
@@ -3047,4 +3047,22 @@ span.paperclip-mention-chip[data-mention-kind="external-object"] {
 }
 @media (prefers-reduced-motion: reduce) {
   .announcement-well { animation: none; }
+}
+
+/* MVX evidence-driven accessibility: keep compact navigation and secondary text
+   readable in the light theme without changing dark-theme semantic colors.
+   Axe 4.13 found 2.17:1 for translucent sidebar labels and 4.34:1 for
+   neutral badges against pale surfaces; normal text requires >= 4.5:1. */
+:root:not(.dark) {
+  --muted-foreground: oklch(0.39 0 0);
+}
+
+:root:not(.dark) .group\/sidebar-section .text-muted-foreground\/60,
+:root:not(.dark) .text-muted-foreground\/90 {
+  color: var(--muted-foreground);
+}
+
+:root:not(.dark) [data-slot="badge"][data-variant="ghost"],
+:root:not(.dark) [data-slot="avatar-fallback"] {
+  color: var(--muted-foreground);
 }

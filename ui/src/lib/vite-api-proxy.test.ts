@@ -3,6 +3,15 @@ import { EventEmitter } from "node:events";
 import { createApiProxy } from "./vite-api-proxy";
 
 describe("createApiProxy", () => {
+  it("defaults to the Paperclip backend rather than an unrelated Tier 1 legacy port", () => {
+    vi.stubEnv("VITE_API_TARGET", "");
+    try {
+      expect(createApiProxy()["/api"].target).toBe("http://127.0.0.1:3100");
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
   function fireProxyReq(req: {
     headers: Record<string, string | string[] | undefined>;
     socket?: { encrypted?: boolean };

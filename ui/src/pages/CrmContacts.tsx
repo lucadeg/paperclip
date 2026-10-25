@@ -23,6 +23,8 @@ import {
 import { useDialogActions } from "@/context/DialogContext";
 import { Button } from "@/components/ui/button";
 import { CrmLogo } from "@/components/AppLogos";
+import { useCompany } from "@/context/CompanyContext";
+import { api } from "@/api/client";
 
 export interface CrmLead {
   row?: number;
@@ -58,6 +60,9 @@ export interface CrmLead {
 
 export function CrmContacts() {
   const { openNewIssue } = useDialogActions();
+  const { selectedCompanyId } = useCompany();
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [retryKey, setRetryKey] = useState(0);
   const [leads, setLeads] = useState<CrmLead[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -65,20 +70,27 @@ export function CrmContacts() {
   const [selectedLead, setSelectedLead] = useState<CrmLead | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:8770/api/crm/contacts")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && Array.isArray(data.contacts)) {
-          setLeads(data.contacts);
-        }
-      })
-      .catch((err) => {
-        console.error("Failed to load CRM leads:", err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+    let active = true;
+    setLeads([]);
+    setLoadError(null);
+    setLoading(Boolean(selectedCompanyId));
+    if (!selectedCompanyId) return;
+    api.get<{ companyId: string; items: CrmLead[] }>(
+      `/companies/${encodeURIComponent(selectedCompanyId)}/mvx-marketing/crm/contacts`,
+    ).then((response) => {
+      if (!active) return;
+      if (response.companyId !== selectedCompanyId || !Array.isArray(response.items)) {
+        throw new Error("CRM company scope mismatch");
+      }
+      setLeads(response.items.filter((x) => x && typeof x.first_name === "string" &&
+        typeof x.last_name === "string" && typeof x.email === "string"));
+    }).catch(() => {
+      if (active) setLoadError("MVX Tier 1 CRM non connesso o dati non disponibili. Nessun contatto dimostrativo viene mostrato.");
+    }).finally(() => {
+      if (active) setLoading(false);
+    });
+    return () => { active = false; };
+  }, [selectedCompanyId, retryKey]);
 
   const stats = useMemo(() => {
     const total = leads.length;
@@ -113,13 +125,13 @@ export function CrmContacts() {
   const getStatusBadgeColor = (status: string = "") => {
     const s = status.toLowerCase();
     if (s.includes("trattativa") || s.includes("qualificato") || s.includes("vinto")) {
-      return "bg-emerald-500/15 text-emerald-400 border-emerald-500/30";
+      return "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30";
     }
     if (s.includes("chiamato") || s.includes("in corso")) {
-      return "bg-sky-500/15 text-sky-400 border-sky-500/30";
+      return "bg-sky-500/15 text-sky-700 dark:text-sky-400 border-sky-500/30";
     }
     if (s.includes("chiamare") || s.includes("nuovo")) {
-      return "bg-amber-500/15 text-amber-400 border-amber-500/30";
+      return "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30";
     }
     return "bg-slate-500/15 text-slate-300 border-slate-500/30";
   };
@@ -133,7 +145,7 @@ export function CrmContacts() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-lg font-bold tracking-tight">CRM & Contatti B2B</h1>
-              <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">
+              <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 font-semibold">
                 {leads.length} Lead Sovrani
               </span>
             </div>
@@ -144,15 +156,13 @@ export function CrmContacts() {
         </div>
 
         <div className="flex items-center gap-2">
-          <a
-            href="http://localhost:8770/apps/crm/index.html"
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border/70 bg-card hover:bg-muted transition-colors text-foreground"
+          <button type="button" disabled
+            title="L'interfaccia CRM esterna richiede un URL aziendale autorizzato"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border/70 bg-muted/50 text-muted-foreground opacity-70"
           >
-            <ExternalLink className="h-3.5 w-3.5 text-amber-400" />
-            Apri App MVX CRM
-          </a>
+            <ExternalLink className="h-3.5 w-3.5" />
+            App CRM esterna non collegata
+          </button>
           <Button
             size="sm"
             onClick={() => openNewIssue()}
@@ -180,40 +190,51 @@ export function CrmContacts() {
 
         <div className="p-3 rounded-xl border border-amber-500/30 bg-amber-500/5 flex items-center justify-between">
           <div>
-            <div className="text-[11px] font-semibold text-amber-400 uppercase tracking-wider">
+            <div className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
               Da Chiamare
             </div>
-            <div className="text-xl font-bold font-mono text-amber-400 mt-0.5">
+            <div className="text-xl font-bold font-mono text-amber-700 dark:text-amber-400 mt-0.5">
               {stats.daChiamare}
             </div>
           </div>
-          <Phone className="h-5 w-5 text-amber-400/60" />
+          <Phone className="h-5 w-5 text-amber-700 dark:text-amber-400/60" />
         </div>
 
         <div className="p-3 rounded-xl border border-sky-500/30 bg-sky-500/5 flex items-center justify-between">
           <div>
-            <div className="text-[11px] font-semibold text-sky-400 uppercase tracking-wider">
+            <div className="text-[11px] font-semibold text-sky-700 dark:text-sky-400 uppercase tracking-wider">
               Contattati
             </div>
-            <div className="text-xl font-bold font-mono text-sky-400 mt-0.5">
+            <div className="text-xl font-bold font-mono text-sky-700 dark:text-sky-400 mt-0.5">
               {stats.chiamati}
             </div>
           </div>
-          <CheckCircle2 className="h-5 w-5 text-sky-400/60" />
+          <CheckCircle2 className="h-5 w-5 text-sky-700 dark:text-sky-400/60" />
         </div>
 
         <div className="p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/5 flex items-center justify-between">
           <div>
-            <div className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">
+            <div className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
               In Trattativa
             </div>
-            <div className="text-xl font-bold font-mono text-emerald-400 mt-0.5">
+            <div className="text-xl font-bold font-mono text-emerald-700 dark:text-emerald-400 mt-0.5">
               {stats.inTrattativa}
             </div>
           </div>
-          <Target className="h-5 w-5 text-emerald-400/60" />
+          <Target className="h-5 w-5 text-emerald-700 dark:text-emerald-400/60" />
         </div>
       </div>
+
+      {loadError && (
+        <div role="alert" className="m-4 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-sm">
+          <p>{loadError}</p>
+          <button type="button" className="mt-2 rounded-md border border-border px-3 py-1.5"
+            onClick={() => setRetryKey((n) => n + 1)}>Riprova connessione CRM</button>
+        </div>
+      )}
+      {!selectedCompanyId && (
+        <p className="mx-4 text-sm text-muted-foreground">Seleziona un'azienda autorizzata per vedere i contatti.</p>
+      )}
 
       {/* Filters & Search Toolbar */}
       <div className="p-4 flex flex-wrap items-center justify-between gap-3 border-b border-border/60 bg-card/20 shrink-0">
@@ -223,6 +244,7 @@ export function CrmContacts() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label="Cerca contatti CRM"
             placeholder="Cerca per nome, azienda, email, città o telefono..."
             className="w-full pl-9 pr-3 py-1.5 bg-card border border-border/70 rounded-lg text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
           />
@@ -315,7 +337,7 @@ export function CrmContacts() {
                       )}
                       {lead.phone && (
                         <div className="flex items-center gap-1.5 text-muted-foreground mt-0.5">
-                          <Phone className="h-3 w-3 text-amber-400 shrink-0" />
+                          <Phone className="h-3 w-3 text-amber-700 dark:text-amber-400 shrink-0" />
                           <span>{lead.phone}</span>
                         </div>
                       )}
@@ -409,7 +431,7 @@ export function CrmContacts() {
                   </span>
                   <a
                     href={`tel:${selectedLead.phone}`}
-                    className="font-mono text-amber-400 hover:underline"
+                    className="font-mono text-amber-700 dark:text-amber-400 hover:underline"
                   >
                     {selectedLead.phone}
                   </a>

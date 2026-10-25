@@ -1,4 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
+import { api } from "@/api/client";
+import { useCompany } from "@/context/CompanyContext";
 import {
   Calendar,
   CalendarDays,
@@ -68,144 +70,7 @@ export interface CreativePhrase {
   quality_score?: number;
 }
 
-const INITIAL_CONTENT_ITEMS: ContentItem[] = [
-  {
-    id: "MVX-CONTENT-101",
-    title: "The Majestic Monolith vs Microservices Trap: 10x Velocity Secrets",
-    channel: "reels_tiktok",
-    channelLabel: "Reels / TikTok 9:16",
-    channelIcon: Video,
-    channelColor: "#f43f5e",
-    phase: "studio",
-    assignedLeader: "David Heinemeier Hansson (DHH)",
-    leaderRole: "Fullstack Architecture",
-    hookFormula: "Negative Pattern Interrupt: 'Stop building microservices before 10k users...'",
-    scheduledDate: "2026-09-17",
-    scheduledTime: "18:30",
-    priority: "high",
-    metricsTarget: "45,000 Views • 1,200 Shares",
-    fullScript: "Hook: Stop building microservices before 10,000 active users. Here is why the Majestic Monolith will save your startup 80% on AWS bills and ship features 5x faster.",
-  },
-  {
-    id: "MVX-CONTENT-102",
-    title: "Grand Slam Offer Breakdown: The $100M Value Equation in 6 Slides",
-    channel: "linkedin",
-    channelLabel: "LinkedIn Carousel",
-    channelIcon: Layers,
-    channelColor: "#0284c7",
-    phase: "ready",
-    assignedLeader: "Alex Hormozi",
-    leaderRole: "Offer Architecture",
-    hookFormula: "Mathematical Contrast: 'Why 90% of B2B offers fail the Dream Outcome certainty test'",
-    scheduledDate: "2026-09-18",
-    scheduledTime: "09:15",
-    priority: "critical",
-    metricsTarget: "250 Saves • 45 Demo Requests",
-    fullScript: "Slide 1: If your offer is not an absolute no-brainer, lower effort and sacrifice instead of cutting your price. Slide 2: The Dream Outcome multiplied by Perceived Likelihood of Achievement...",
-  },
-  {
-    id: "MVX-CONTENT-103",
-    title: "Charlie Munger Pre-Mortem: Why 80% of AI Startups Die in 12 Months",
-    channel: "youtube",
-    channelLabel: "YouTube Long-form",
-    channelIcon: Tv,
-    channelColor: "#ef4444",
-    phase: "scripting",
-    assignedLeader: "Charlie Munger",
-    leaderRole: "Sovereign Inversion Critic",
-    hookFormula: "Inversion Hook: 'I asked the world's greatest skeptic how he would destroy our company...'",
-    scheduledDate: "2026-09-20",
-    scheduledTime: "17:00",
-    priority: "high",
-    metricsTarget: "12,000 Views • 48% Retention",
-    fullScript: "Invert, always invert. If you want to know how an AI startup succeeds, list every single way it can run out of cash, hallucinate critical data, or get disintermediated by foundation models.",
-  },
-  {
-    id: "MVX-CONTENT-104",
-    title: "Software 3.0: How Autonomous Deterministic Harnesses Replace Flaky Prompts",
-    channel: "x_twitter",
-    channelLabel: "X / Twitter Thread",
-    channelIcon: Share2,
-    channelColor: "#38bdf8",
-    phase: "compliance",
-    assignedLeader: "Andrej Karpathy",
-    leaderRole: "Foundation Model Architect",
-    hookFormula: "Counter-Intuitive Insight: 'Stop tweaking system prompts. Build deterministic eval harnesses instead.'",
-    scheduledDate: "2026-09-21",
-    scheduledTime: "14:00",
-    priority: "medium",
-    metricsTarget: "1,500 Bookmarks • 85 Retweets",
-    fullScript: "1/8: In Software 1.0 we wrote rules. In Software 2.0 we trained weights. In Software 3.0 we build verifiable harnesses where LLM calls are bound to deterministic linters and test suites.",
-  },
-  {
-    id: "MVX-CONTENT-105",
-    title: "The Cold Start Solution: How to Build Your First 100-User Atomic Network",
-    channel: "newsletter",
-    channelLabel: "Newsletter Editoriale",
-    channelIcon: Mail,
-    channelColor: "#10b981",
-    phase: "radar",
-    assignedLeader: "Andrew Chen",
-    leaderRole: "Network Effects Master",
-    hookFormula: "Case Study Breakdown: 'The exact playbook used to crack the two-sided marketplace dead-end'",
-    scheduledDate: "2026-09-22",
-    scheduledTime: "08:00",
-    priority: "medium",
-    metricsTarget: "52% Open Rate • 14% CTR",
-    fullScript: "Deep dive on how Uber cracked Portland by subsidizing supply before demand ever opened the app.",
-  },
-  {
-    id: "MVX-CONTENT-106",
-    title: "Tactical Empathy: 3 Questions FBI Negotiators Use to Close Enterprise Deals",
-    channel: "reels_tiktok",
-    channelLabel: "Reels / TikTok 9:16",
-    channelIcon: Video,
-    channelColor: "#f43f5e",
-    phase: "scripting",
-    assignedLeader: "Chris Voss",
-    leaderRole: "Crisis Negotiation",
-    hookFormula: "'Never ask Why. Here is the single calibrated question that makes clients reveal their real budget...'",
-    scheduledDate: "2026-09-23",
-    scheduledTime: "19:00",
-    priority: "high",
-    metricsTarget: "38,000 Views • 850 Saves",
-    fullScript: "When a prospect says 'That sounds interesting but we don't have budget', don't pitch benefits. Say: 'It seems like timing is the biggest obstacle right now?' and listen.",
-  },
-  {
-    id: "MVX-CONTENT-107",
-    title: "The Purple Cow Angle: Why Safe Advertising is the Riskiest Strategy",
-    channel: "linkedin",
-    channelLabel: "LinkedIn Carousel",
-    channelIcon: Layers,
-    channelColor: "#0284c7",
-    phase: "ready",
-    assignedLeader: "Seth Godin",
-    leaderRole: "Permission Marketing",
-    hookFormula: "'In a crowded marketplace, fitting in is failing. Standing out is the only safe move.'",
-    scheduledDate: "2026-09-25",
-    scheduledTime: "10:30",
-    priority: "high",
-    metricsTarget: "400 Saves • 80 Comments",
-    fullScript: "Slide 1: You are either remarkable or invisible. Slide 2: If a cow was purple, you would stop your car and take a photo. If all cows are brown, nobody notices.",
-  },
-  {
-    id: "MVX-CONTENT-108",
-    title: "Zero to One: Secrets of Monopolies That Don't Compete",
-    channel: "youtube",
-    channelLabel: "YouTube Long-form",
-    channelIcon: Tv,
-    channelColor: "#ef4444",
-    phase: "studio",
-    assignedLeader: "Peter Thiel",
-    leaderRole: "Contrarian Strategy",
-    hookFormula: "'Competition is for losers. Build a monopoly in a small niche before expanding.'",
-    scheduledDate: "2026-09-28",
-    scheduledTime: "18:00",
-    priority: "critical",
-    metricsTarget: "25,000 Views • 55% Retention",
-    fullScript: "What valuable company is nobody building? Every great business is built on a secret that the consensus thinks is impossible.",
-  },
-];
+
 
 const PHASES = [
   { id: "radar", label: "01. Trend & Hook Radar", description: "Ideazione e validazione semantica dell'angolo", badgeColor: "#818cf8" },
@@ -215,31 +80,48 @@ const PHASES = [
   { id: "ready", label: "05. Pronto per Pubblicazione", description: "Asset approvati e pronti alla programmazione", badgeColor: "#34d399" },
 ] as const;
 
+function formatLocalDate(value: Date): string {
+  return String(value.getFullYear()) + "-" +
+    String(value.getMonth() + 1).padStart(2, "0") + "-" +
+    String(value.getDate()).padStart(2, "0");
+}
+
 export function ContentPlanner() {
   const { openNewIssue } = useDialogActions();
-  const [items, setItems] = useState<ContentItem[]>(INITIAL_CONTENT_ITEMS);
+  const { selectedCompanyId } = useCompany();
+  const [syncError, setSyncError] = useState<string | null>(null);
+  const [retryKey, setRetryKey] = useState(0);
+  const [items, setItems] = useState<ContentItem[]>([]);
   const [channelFilter, setChannelFilter] = useState<string>("all");
   const [searchFilter, setSearchFilter] = useState<string>("");
   const [viewMode, setViewMode] = useState<"calendar" | "kanban" | "studio">("calendar");
 
-  // Creative Studio Phrases (408 Items from backend)
+  // Company-scoped Tier 1 phrases; no fabricated content or counts.
   const [creativePhrases, setCreativePhrases] = useState<CreativePhrase[]>([]);
   const [creativeCategoryFilter, setCreativeCategoryFilter] = useState<string>("all");
 
-  // Calendar State (Defaults to September 2026)
-  const [calendarDate, setCalendarDate] = useState<Date>(new Date(2026, 8, 17)); // Month 8 = September
+  // Calendar initializes to the actual local date.
+  const [calendarDate, setCalendarDate] = useState<Date>(new Date());
   const [selectedItem, setSelectedItem] = useState<ContentItem | null>(null);
 
-  // Fetch 408 Creative Studio contents
+  // Marketing content comes from an authorized, company-scoped Tier 1 connector.
   useEffect(() => {
-    fetch("http://localhost:8770/api/phrases")
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => {
-        const phrases: CreativePhrase[] = Array.isArray(data) ? data : (data as any)?.phrases || [];
-        setCreativePhrases(phrases);
-      })
-      .catch(() => {});
-  }, []);
+    let active = true;
+    setCreativePhrases([]);
+    setSyncError(null);
+    if (!selectedCompanyId) return;
+    api.get<{ companyId: string; items: CreativePhrase[] }>(
+      "/companies/" + encodeURIComponent(selectedCompanyId) + "/mvx-marketing/content/phrases",
+    ).then((data) => {
+      if (!active) return;
+      if (data.companyId !== selectedCompanyId || !Array.isArray(data.items)) throw new Error("Company scope mismatch");
+      setCreativePhrases(data.items.filter((p) => p && typeof p.id === "string" &&
+        typeof p.title === "string" && typeof p.phrase === "string"));
+    }).catch(() => {
+      if (active) setSyncError("Archivio contenuti Tier 1 non connesso o non autorizzato. Nessun dato dimostrativo viene mostrato.");
+    });
+    return () => { active = false; };
+  }, [selectedCompanyId, retryKey]);
 
   // Helper to map a CreativePhrase into a ContentItem
   const mapPhraseToContentItem = (p: CreativePhrase): ContentItem => {
@@ -269,32 +151,28 @@ export function ContentPlanner() {
     }
 
     return {
-      id: p.id || `PH-${Math.random().toString(36).slice(2, 8)}`,
+      id: p.id,
       title: p.title || "Contenuto Studio Creativo",
       channel: ch,
       channelLabel: chLabel,
       channelIcon: ChIcon,
       channelColor: chColor,
       phase: "studio",
-      assignedLeader: "Creative Studio Sovereign",
+      assignedLeader: "Non assegnato",
       leaderRole: p.category || "Content Architecture",
-      hookFormula: p.hook || p.hook_intro || "Gancio di conversione ottimizzato",
-      scheduledDate: "2026-09-17",
-      scheduledTime: "18:00",
+      hookFormula: p.hook || p.hook_intro || "",
+      scheduledDate: "",
+      scheduledTime: undefined,
       priority: "high",
-      metricsTarget: `${(p.metrics_views || 25000).toLocaleString()} Views stimate`,
-      fullScript: `${p.phrase}\n\nCall to Action: ${p.call_to_action || "Commenta con la tua opinione"}\n\nHashtags: ${p.hashtags || "#business #growth"}`,
+      metricsTarget: "N/D - risultati pubblicitari non verificati",
+      fullScript: [p.phrase, p.call_to_action?.trim() ? `Call to Action: ${p.call_to_action}` : null,
+        p.hashtags?.trim() ? `Hashtags: ${p.hashtags}` : null].filter(Boolean).join("\n\n"),
     };
   };
 
-  const handleSchedulePhrase = (phrase: CreativePhrase) => {
-    const newItem = mapPhraseToContentItem(phrase);
-    setItems((prev) => {
-      if (prev.some((it) => it.id === newItem.id)) return prev;
-      return [newItem, ...prev];
-    });
-    setSelectedItem(newItem);
-    setViewMode("calendar");
+  const handleSchedulePhrase = (_phrase: CreativePhrase) => {
+    // No fake scheduling: require a writable Tier 1 API, approval and provider receipt.
+    setSyncError("Pianificazione non disponibile: connettore Tier 1 in scrittura non configurato.");
   };
 
   const handleInspectPhrase = (phrase: CreativePhrase) => {
@@ -317,77 +195,50 @@ export function ContentPlanner() {
     });
   }, [creativePhrases, creativeCategoryFilter, searchFilter]);
 
-  // Fetch real calendar events from backend if available
+  // Calendar contains only stored, source-scoped entries; no inferred schedule.
   useEffect(() => {
-    fetch("http://localhost:8770/api/calendar/events")
-      .then((res) => (res.ok ? res.json() : []))
-      .then((events) => {
-        if (Array.isArray(events) && events.length > 0) {
-          // Map backend events into ContentItem format
-          const mapped: ContentItem[] = events.slice(0, 40).map((ev: any, idx: number) => {
-            const timeNum = typeof ev.scheduled_time === "number" ? ev.scheduled_time * 1000 : Date.now();
-            const dateObj = new Date(timeNum);
-            const dateStr = !isNaN(dateObj.getTime())
-              ? dateObj.toISOString().slice(0, 10)
-              : "2026-09-17";
-            const timeStr = !isNaN(dateObj.getTime())
-              ? `${String(dateObj.getHours()).padStart(2, "0")}:${String(dateObj.getMinutes()).padStart(2, "0")}`
-              : "18:00";
-
-            let ch: ContentItem["channel"] = "reels_tiktok";
-            let chLabel = "Reels / TikTok 9:16";
-            let chColor = "#f43f5e";
-            let ChIcon = Video;
-
-            const platformStr = String(ev.platform || "").toLowerCase();
-            if (platformStr.includes("linkedin")) {
-              ch = "linkedin";
-              chLabel = "LinkedIn Carousel";
-              chColor = "#0284c7";
-              ChIcon = Layers;
-            } else if (platformStr.includes("youtube")) {
-              ch = "youtube";
-              chLabel = "YouTube Video";
-              chColor = "#ef4444";
-              ChIcon = Tv;
-            } else if (platformStr.includes("twitter") || platformStr.includes("x")) {
-              ch = "x_twitter";
-              chLabel = "X Thread";
-              chColor = "#38bdf8";
-              ChIcon = Share2;
-            }
-
-            return {
-              id: ev.id || `PUB-${idx + 200}`,
-              title: ev.title || `Pubblicazione #${idx + 1}`,
-              channel: ch,
-              channelLabel: chLabel,
-              channelIcon: ChIcon,
-              channelColor: chColor,
-              phase: ev.status === "published" ? "ready" : "studio",
-              assignedLeader: "Sovereign Content Engine",
-              leaderRole: "Autonomous Publisher",
-              hookFormula: ev.hook_used || ev.caption || "Gancio di conversione testato",
-              scheduledDate: dateStr,
-              scheduledTime: timeStr,
-              priority: "high",
-              metricsTarget: `${ev.views_count || 15000} Views stimati`,
-              fullScript: ev.caption || "",
-            };
-          });
-
-          // Merge without duplicate IDs
-          setItems((prev) => {
-            const existingIds = new Set(prev.map((p) => p.id));
-            const newOnes = mapped.filter((m) => !existingIds.has(m.id));
-            return [...prev, ...newOnes];
-          });
-        }
-      })
-      .catch(() => {
-        // Use initial items on network failure
-      });
-  }, []);
+    let active = true;
+    setItems([]);
+    if (!selectedCompanyId) return;
+    api.get<{ companyId: string; items: Array<{
+      id: string; title: string; scheduled_time: string; status: string;
+      platform?: string; hook_used?: string; caption?: string;
+    }> }>(
+      "/companies/" + encodeURIComponent(selectedCompanyId) + "/mvx-marketing/content/calendar",
+    ).then((report) => {
+      if (!active) return;
+      if (report.companyId !== selectedCompanyId || !Array.isArray(report.items)) throw new Error("Company scope mismatch");
+      const mapped: ContentItem[] = [];
+      for (const item of report.items) {
+        if (!item || typeof item.id !== "string" || !item.id ||
+            typeof item.title !== "string" || typeof item.scheduled_time !== "string") continue;
+        const when = new Date(item.scheduled_time);
+        if (!Number.isFinite(when.getTime())) continue;
+        const platform = String(item.platform || "").toLowerCase();
+        const channel: ContentItem["channel"] = platform.includes("linkedin") ? "linkedin" :
+          platform.includes("youtube") ? "youtube" :
+          platform.includes("twitter") ? "x_twitter" : "reels_tiktok";
+        mapped.push({
+          id: item.id, title: item.title, channel,
+          channelLabel: channel, channelColor: "#64748b",
+          channelIcon: channel === "linkedin" ? Layers : channel === "youtube" ? Tv :
+            channel === "x_twitter" ? Share2 : Video,
+          phase: item.status === "published" ? "ready" : "studio",
+          assignedLeader: "Tier 1", leaderRole: "Archivio editoriale",
+          hookFormula: item.hook_used || item.caption || "",
+          scheduledDate: formatLocalDate(when),
+          scheduledTime: String(when.getHours()).padStart(2,"0") + ":" +
+            String(when.getMinutes()).padStart(2,"0"),
+          priority: "medium", metricsTarget: "N/D — performance non verificata",
+          fullScript: item.caption || "",
+        });
+      }
+      setItems(mapped);
+    }).catch(() => {
+      if (active) setSyncError("Calendario Tier 1 non connesso o non autorizzato: nessun evento dimostrativo verrà mostrato.");
+    });
+    return () => { active = false; };
+  }, [selectedCompanyId, retryKey]);
 
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
@@ -424,7 +275,7 @@ export function ContentPlanner() {
     // Previous month filler days
     for (let i = startDayOffset - 1; i >= 0; i--) {
       const d = new Date(year, month - 1, daysInPrevMonth - i);
-      const dateStr = d.toISOString().slice(0, 10);
+      const dateStr = formatLocalDate(d);
       days.push({
         date: d,
         dateString: dateStr,
@@ -435,7 +286,7 @@ export function ContentPlanner() {
     }
 
     // Current month days
-    const todayStr = "2026-09-17"; // Synced local date
+    const todayStr = `${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`;
     for (let day = 1; day <= daysInMonth; day++) {
       const d = new Date(year, month, day);
       const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -452,7 +303,7 @@ export function ContentPlanner() {
     const remaining = 35 - days.length >= 0 ? 35 - days.length : 42 - days.length;
     for (let day = 1; day <= remaining; day++) {
       const d = new Date(year, month + 1, day);
-      const dateStr = d.toISOString().slice(0, 10);
+      const dateStr = formatLocalDate(d);
       days.push({
         date: d,
         dateString: dateStr,
@@ -478,23 +329,31 @@ export function ContentPlanner() {
   };
 
   const handleToday = () => {
-    setCalendarDate(new Date(2026, 8, 17));
+    setCalendarDate(new Date());
   };
 
   return (
     <div className="relative w-full h-[calc(100vh-3.5rem)] overflow-hidden bg-background select-none flex flex-col">
+      {syncError && (
+        <div role="alert" className="m-3 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs">
+          <p>{syncError}</p>
+          {selectedCompanyId && <button type="button" className="mt-2 rounded-md border border-border px-3 py-1.5"
+            onClick={() => setRetryKey((n) => n + 1)}>Riprova sincronizzazione</button>}
+        </div>
+      )}
       {/* Top Header & View Controls */}
       <div className="p-4 border-b border-border/60 bg-card/60 backdrop-blur-md shrink-0 flex flex-col gap-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span aria-hidden="true" className={`h-2.5 w-2.5 rounded-full ${selectedCompanyId ? "bg-amber-400" : "bg-slate-400"}`} />
+              <span className="sr-only" role="status">{selectedCompanyId ? "Stato Tier 1 non verificato" : "Nessuna azienda autorizzata selezionata"}</span>
               <h1 className="text-base font-bold text-foreground">
                 MVX Content Planner &amp; Calendario Editoriale
               </h1>
             </div>
             <span className="text-xs bg-muted text-muted-foreground px-2.5 py-0.5 rounded-full font-mono border border-border/50">
-              {filteredItems.length} Pubblicazioni Totali
+              {filteredItems.length} Elementi editoriali
             </span>
 
             {/* View Switcher Toggle */}
@@ -530,7 +389,7 @@ export function ContentPlanner() {
                 }`}
               >
                 <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-                Studio Creativo ({creativePhrases.length || 408})
+                Studio Creativo ({creativePhrases.length})
               </button>
             </div>
           </div>
@@ -622,6 +481,7 @@ export function ContentPlanner() {
           <div className="relative w-72">
             <input
               type="text"
+              aria-label="Cerca contenuti editoriali"
               placeholder="Cerca per titolo, gancio o leader..."
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
@@ -647,7 +507,7 @@ export function ContentPlanner() {
                 onClick={handleToday}
                 className="h-7 text-xs px-2.5"
               >
-                Oggi (17 Set)
+                Oggi ({new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "short" }).format(new Date())})
               </Button>
             </div>
 
@@ -693,7 +553,7 @@ export function ContentPlanner() {
                       ? "border-primary/80 bg-primary/5 shadow-xs ring-1 ring-primary/30"
                       : dayCell.isCurrentMonth
                       ? "border-border/60 bg-card/50 hover:bg-card hover:border-border"
-                      : "border-border/20 bg-muted/10 opacity-50"
+                      : "border-border/20 bg-muted/10"
                   }`}
                 >
                   {/* Day Number Header */}
@@ -836,7 +696,7 @@ export function ContentPlanner() {
         </div>
       )}
 
-      {/* VIEW 3: Creative Studio (408 Contenuti Pronti) */}
+      {/* VIEW 3: Creative Studio contents from the verified provider */}
       {viewMode === "studio" && (
         <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
           {/* Header Banner & Stats */}
@@ -848,7 +708,7 @@ export function ContentPlanner() {
                   Creative Studio — Archivio Master
                 </h2>
                 <span className="text-[10px] font-mono bg-amber-400/10 text-amber-400 border border-amber-400/20 px-2 py-0.5 rounded-full font-semibold">
-                  {creativePhrases.length || 408} Formule Pronte
+                  {creativePhrases.length} Formule disponibili (Tier 1)
                 </span>
               </div>
               <p className="text-xs text-muted-foreground">
@@ -857,31 +717,15 @@ export function ContentPlanner() {
             </div>
 
             <div className="flex items-center gap-2">
-              <a
-                href="http://localhost:8770/apps/video-editor/index.html"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-500 hover:bg-rose-600 text-white shadow-xs transition-colors"
-              >
-                <Play className="h-3.5 w-3.5" />
-                Lancia Video Editor
-              </a>
-              <a
-                href="http://localhost:8770/apps/crm/index.html"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-muted hover:bg-muted/80 text-foreground border border-border/60 transition-colors"
-              >
-                <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
-                Studio Assets
-              </a>
+              <button type="button" disabled title="Studio esterno non connesso" className="inline-flex items-center rounded-lg border border-border bg-muted px-3 py-1.5 text-xs text-muted-foreground">Integrazione non connessa</button>
+              <button type="button" disabled title="Studio esterno non connesso" className="inline-flex items-center rounded-lg border border-border bg-muted px-3 py-1.5 text-xs text-muted-foreground">Integrazione non connessa</button>
             </div>
           </div>
 
           {/* Category Filter Pills */}
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
             {[
-              { id: "all", label: "Tutti i Contenuti", count: creativePhrases.length || 408 },
+              { id: "all", label: "Tutti i Contenuti", count: creativePhrases.length },
               { id: "Reel Script", label: "Reel Script 9:16", count: creativePhrases.filter((p) => p.category === "Reel Script").length },
               { id: "Educational", label: "Educational & Framework", count: creativePhrases.filter((p) => p.category === "Educational").length },
               { id: "Viral Sketch", label: "Viral Sketch", count: creativePhrases.filter((p) => p.category === "Viral Sketch").length },
@@ -967,23 +811,22 @@ export function ContentPlanner() {
                     </button>
 
                     <div className="flex items-center gap-1.5">
-                      <a
-                        href="http://localhost:8770/apps/video-editor/index.html"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        type="button"
+                        disabled
                         className="inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 font-medium transition-colors"
                         title="Apri nello Studio Video OpenChatCut"
                       >
                         <Play className="h-3 w-3" />
-                        Editor
-                      </a>
+                        Editor non connesso
+                      </button>
                       <Button
                         size="sm"
                         onClick={() => handleSchedulePhrase(phrase)}
                         className="h-7 text-[11px] px-2.5 gap-1 bg-primary text-primary-foreground font-semibold"
                       >
                         <Calendar className="h-3 w-3" />
-                        Pianifica
+                        Richiedi pianificazione
                       </Button>
                     </div>
                   </div>
@@ -1117,15 +960,7 @@ export function ContentPlanner() {
               Chiudi
             </Button>
             <div className="flex items-center gap-2">
-              <a
-                href="http://localhost:8770/apps/video-editor/index.html"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-500 hover:bg-rose-600 text-white transition-colors"
-              >
-                <Play className="h-3.5 w-3.5" />
-                Apri Video Editor
-              </a>
+              <button type="button" disabled title="Studio esterno non connesso" className="inline-flex items-center rounded-lg border border-border bg-muted px-3 py-1.5 text-xs text-muted-foreground">Integrazione non connessa</button>
               <Button
                 size="sm"
                 onClick={() => {

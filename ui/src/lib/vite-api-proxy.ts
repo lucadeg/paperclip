@@ -6,7 +6,7 @@ import type { ProxyOptions } from "vite";
 // the browser's Origin as trusted when the SPA is served from a different
 // port than the API (e.g. `pnpm dev:mobile` on :3101 → API on :3100).
 export function createApiProxy(
-  target = process.env.VITE_API_TARGET || "http://localhost:8770"
+  target = process.env.VITE_API_TARGET || "http://127.0.0.1:3100"
 ): Record<string, ProxyOptions> {
   return {
     "/api": {

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import {
   Search,
   ShieldAlert,
@@ -47,6 +47,46 @@ export function SovereignCouncil() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeDrawerAgent, setActiveDrawerAgent] = useState<SovereignAgent | null>(null);
   const [mungerVetoOpen, setMungerVetoOpen] = useState<boolean>(false);
+  const detailDialogRef = useRef<HTMLDivElement | null>(null);
+  const vetoDialogRef = useRef<HTMLDivElement | null>(null);
+
+  // Trap focus inside open dialogs, support Escape and restore trigger focus.
+  useEffect(() => {
+    const dialog = activeDrawerAgent ? detailDialogRef.current : mungerVetoOpen ? vetoDialogRef.current : null;
+    if (!dialog) return;
+    const priorFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const focusable = () => Array.from(dialog.querySelectorAll<HTMLElement>(
+      'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )).filter((element) => element.getClientRects().length > 0);
+    (focusable()[0] ?? dialog).focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        if (activeDrawerAgent) setActiveDrawerAgent(null);
+        else setMungerVetoOpen(false);
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const targets = focusable();
+      if (!targets.length) { event.preventDefault(); dialog.focus(); return; }
+      const first = targets[0];
+      const last = targets[targets.length - 1];
+      const within = dialog.contains(document.activeElement);
+      if (event.shiftKey && (!within || document.activeElement === first)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (!within || document.activeElement === last)) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      priorFocus?.focus();
+    };
+  }, [activeDrawerAgent, mungerVetoOpen]);
 
   // Filter agents
   const filteredAgents = useMemo(() => {
@@ -89,26 +129,26 @@ export function SovereignCouncil() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2.5 mb-1.5">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                {SOVEREIGN_AGENTS.length} Leader in Sessione
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                {SOVEREIGN_AGENTS.length} profili manageriali — catalogo, non sessione live
               </span>
               <span className="text-xs text-muted-foreground font-mono">
                 SOP 01 • Sovereign Council
               </span>
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Consiglio dei {SOVEREIGN_AGENTS.length} Leader Mondiali
+              Consiglio strategico: {SOVEREIGN_AGENTS.length} framework dirigenziali
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Direttive esecutive, modelli mentali e KPI non negoziabili governati dal Veto di Charlie Munger.
+              Modelli di decisione per agenti AI, verificabili su evidenze reali. Nessuna partecipazione o approvazione dei professionisti citati è implicita.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMungerVetoOpen(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/25 transition-all shadow-sm"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold bg-red-500/10 text-red-700 dark:text-red-400 hover:bg-red-500/20 border border-red-500/25 transition-all shadow-sm"
             >
               <ShieldAlert className="h-4 w-4 shrink-0" />
               <span>Veto di Munger & Pre-Mortem</span>
@@ -160,6 +200,7 @@ export function SovereignCouncil() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
             <input
               type="text"
+              aria-label="Cerca profili e modelli del consiglio"
               placeholder="Cerca leader, modelli mentali..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -234,7 +275,7 @@ export function SovereignCouncil() {
                       className="text-[10px] font-semibold px-2 py-0.5 rounded-md uppercase tracking-wider"
                       style={{
                         backgroundColor: `${agent.color}15`,
-                        color: agent.color,
+                        color: "var(--foreground)",
                         border: `1px solid ${agent.color}35`,
                       }}
                     >
@@ -261,7 +302,7 @@ export function SovereignCouncil() {
                       </span>
                     ))}
                     {agent.frameworks.length > 2 && (
-                      <span className="text-[10px] text-muted-foreground/60">
+                      <span className="text-[10px] text-muted-foreground">
                         +{agent.frameworks.length - 2}
                       </span>
                     )}
@@ -287,6 +328,7 @@ export function SovereignCouncil() {
                       onClick={() => handleCreateTaskForAgent(agent)}
                       className="inline-flex items-center justify-center p-1.5 rounded-md text-primary-foreground transition-colors"
                       style={{ backgroundColor: agent.color }}
+                      aria-label={`Crea task per ${agent.name}`}
                       title={`Crea task per ${agent.name}`}
                     >
                       <Plus className="h-3.5 w-3.5" />
@@ -302,7 +344,8 @@ export function SovereignCouncil() {
       {/* Slide-over Drawer for Agent Details */}
       {activeDrawerAgent && (
         <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-xs flex justify-end animate-in fade-in duration-150">
-          <div className="w-full max-w-xl bg-card border-l border-border h-full flex flex-col shadow-2xl overflow-y-auto">
+          <div ref={detailDialogRef} role="dialog" aria-modal="true" aria-label={`Dettagli e KPI: ${activeDrawerAgent.name}`} tabIndex={-1}
+            className="w-full max-w-xl bg-card border-l border-border h-full flex flex-col shadow-2xl overflow-y-auto">
             {/* Drawer Header */}
             <div className="p-6 border-b border-border flex items-start justify-between gap-4 sticky top-0 bg-card/95 backdrop-blur-md z-10">
               <div className="flex items-center gap-3.5">
@@ -347,6 +390,7 @@ export function SovereignCouncil() {
                 </div>
               </div>
               <button
+                type="button" aria-label="Chiudi dettagli del profilo"
                 onClick={() => setActiveDrawerAgent(null)}
                 className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               >
@@ -480,8 +524,10 @@ export function SovereignCouncil() {
       {/* Munger Veto Modal */}
       {mungerVetoOpen && (
         <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-2xl bg-card border border-red-500/30 rounded-2xl shadow-2xl p-6 relative">
+          <div ref={vetoDialogRef} role="dialog" aria-modal="true" aria-labelledby="mvx-veto-dialog-title" tabIndex={-1}
+            className="w-full max-w-2xl bg-card border border-red-500/30 rounded-2xl shadow-2xl p-6 relative">
             <button
+              type="button" aria-label="Chiudi il veto di Munger"
               onClick={() => setMungerVetoOpen(false)}
               className="absolute top-4 right-4 p-1.5 text-muted-foreground hover:text-foreground rounded-lg"
             >
@@ -493,7 +539,7 @@ export function SovereignCouncil() {
                 <ShieldAlert className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-foreground">
+                <h3 id="mvx-veto-dialog-title" className="text-lg font-bold text-foreground">
                   Charlie Munger Inversion & Veto Gate
                 </h3>
                 <p className="text-xs text-muted-foreground">
@@ -503,7 +549,7 @@ export function SovereignCouncil() {
             </div>
 
             <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20 text-xs text-red-300 leading-relaxed mb-4">
-              <strong>Regola Invariante:</strong> Nessun task, piano di lancio o campagna editoriale può procedere in stato 'In Esecuzione' se un'analisi pre-mortem rivela un rischio di rovina non mitigato o la violazione di uno dei veto trigger dei 25 Leader.
+              <strong>Regola Invariante:</strong> Nessun task, piano di lancio o campagna editoriale può procedere in stato 'In Esecuzione' se un'analisi pre-mortem rivela un rischio di rovina non mitigato o la violazione di uno dei veto trigger dei 27 framework dirigenziali.
             </div>
 
             <div className="space-y-3">

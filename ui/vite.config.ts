@@ -2,28 +2,29 @@ import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import { createUiDevWatchOptions } from "./src/lib/vite-watch";
-import { createApiProxy } from "./src/lib/vite-api-proxy";
-import { serviceWorkerBuildIdPlugin } from "./src/lib/vite-sw-build-id";
+import { createUiDevWatchOptions } from "./src/lib/vite-watch.ts";
+import { createApiProxy } from "./src/lib/vite-api-proxy.ts";
+import { serviceWorkerBuildIdPlugin } from "./src/lib/vite-sw-build-id.ts";
 
 const apiProxy = createApiProxy();
 
 export default defineConfig(({ mode }) => ({
   plugins: [react(), tailwindcss(), serviceWorkerBuildIdPlugin()],
   build: {
-    minify: "esbuild",
+    // Vite 8 uses Oxc/Rolldown. Avoid deprecated esbuild minification
+    // settings, which are ignored when Oxc is enabled.
+    rolldownOptions: {
+      output: {
+        minify: mode === "production"
+          ? { compress: { dropConsole: true, dropDebugger: true } }
+          : undefined,
+      },
+    },
   },
-  esbuild:
-    mode === "production"
-      ? {
-          drop: ["console", "debugger"],
-          legalComments: "none",
-        }
-      : undefined,
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-      lexical: path.resolve(__dirname, "./node_modules/lexical/dist/Lexical.mjs"),
+      "@": path.resolve(import.meta.dirname, "./src"),
+      lexical: path.resolve(import.meta.dirname, "./node_modules/lexical/dist/Lexical.mjs"),
     },
   },
   server: {

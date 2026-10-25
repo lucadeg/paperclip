@@ -19,6 +19,7 @@ import {
   Unplug,
   MessagesSquare,
   GanttChartSquare,
+  ScanEye,
   LayoutGrid,
   Users,
   Briefcase,
@@ -243,9 +244,10 @@ export function Sidebar({ children }: { children?: ReactNode }) {
           collapsible={{ open: sovereignOpen, onOpenChange: setSovereignOpen }}
         >
           <SidebarNavItem to="/content-planner" label="Content Planner" icon={GanttChartSquare} textBadge="MVX" />
-          <SidebarNavItem to="/council" label="Sovereign Council" icon={Users} textBadge="27" />
-          <SidebarNavItem to="/skill-tree" label="Skill Tree Galattico" icon={Network} textBadge="5,125" />
-          <SidebarNavItem to="/crm-contacts" label="CRM & Lead B2B" icon={Briefcase} textBadge="159" />
+          <SidebarNavItem to="/marketing-intelligence" label="Marketing Intelligence" icon={ScanEye} textBadge="AUDIT" />
+          <SidebarNavItem to="/council" label="Sovereign Council" icon={Users} />
+          <SidebarNavItem to="/skill-tree" label="Skill Tree Galattico" icon={Network} />
+          <SidebarNavItem to="/crm-contacts" label="CRM & Lead B2B" icon={Briefcase} />
         </SidebarSection>
 
         {streamlinedUiEnabled ? (
@@ -253,8 +255,8 @@ export function Sidebar({ children }: { children?: ReactNode }) {
             label="Org"
             collapsible={{ open: organizationOpen, onOpenChange: setOrganizationOpen }}
           >
-            <SidebarNavItem to="/agents" label="Agents" icon={Users} textBadge="226" />
-            <SidebarNavItem to="/skills" label="Skills" icon={Boxes} textBadge="5,125+" />
+            <SidebarNavItem to="/agents" label="Agents" icon={Users} />
+            <SidebarNavItem to="/skills" label="Skills" icon={Boxes} />
             <SidebarNavItem to="/apps" label="Connectors" icon={Unplug} />
             <SidebarNavItem to="/activity" label="Audit" icon={History} />
           </SidebarSection>

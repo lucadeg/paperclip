@@ -1292,6 +1292,9 @@ const BOARD_ONLY_PREFIXES = [
 ];
 
 const BOARD_ONLY_OPERATIONS = new Set([
+  "GET /api/companies/{companyId}/mvx-marketing/crm/contacts",
+  "GET /api/companies/{companyId}/mvx-marketing/content/phrases",
+  "GET /api/companies/{companyId}/mvx-marketing/content/calendar",
   "GET /api/companies/{companyId}/ai-connections",
   "POST /api/companies/{companyId}/ai-connections",
   "POST /api/companies/{companyId}/ai-connections/local",
@@ -5167,6 +5170,45 @@ registry.registerPath({
   request: { params: z.object({ companyId: z.string() }) },
   responses: { 200: r.ok(), 401: r.unauthorized },
 });
+
+registry.registerPath({
+  method: "get",
+  path: "/api/companies/{companyId}/mvx-marketing/dashboard",
+  tags: ["dashboard"],
+  summary: "Get source-verified marketing intelligence snapshots for an authorized company",
+  request: {
+    params: z.object({ companyId: z.string() }),
+    query: z.object({ clientId: z.string().optional() }),
+  },
+  responses: {
+    200: r.ok(),
+    400: r.badRequest,
+    401: r.unauthorized,
+    403: r.forbidden,
+  },
+});
+
+for (const path of [
+  "/api/companies/{companyId}/mvx-marketing/crm/contacts",
+  "/api/companies/{companyId}/mvx-marketing/content/phrases",
+  "/api/companies/{companyId}/mvx-marketing/content/calendar",
+]) {
+  registry.registerPath({
+    method: "get",
+    path,
+    tags: ["dashboard"],
+    summary: "Read a company-isolated MVX Tier 1 resource; returns 503 when the upstream integration is unconfigured",
+    request: { params: z.object({ companyId: z.string().uuid() }) },
+    responses: {
+      200: r.ok(),
+      400: r.badRequest,
+      401: r.unauthorized,
+      403: r.forbidden,
+      502: { description: "Tier 1 provider error or company-scope mismatch" },
+      503: { description: "Tier 1 integration not configured" },
+    },
+  });
+}
 
 registry.registerPath({
   method: "get",

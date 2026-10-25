@@ -101,6 +101,7 @@ import { JoinRequestQueue } from "./pages/JoinRequestQueue";
 import { SovereignCouncil } from "./pages/SovereignCouncil";
 import { SkillTreeGalactic } from "./pages/SkillTreeGalactic";
 import { ContentPlanner } from "./pages/ContentPlanner";
+import { MvxMarketingIntelligence } from "./pages/MvxMarketingIntelligence";
 import { CrmContacts } from "./pages/CrmContacts";
 import { NotFoundPage } from "./pages/NotFound";
 import { useCompany } from "./context/CompanyContext";
@@ -156,6 +157,8 @@ function boardRoutes(streamlinedUiEnabled: boolean) {
       <Route path="council" element={<SovereignCouncil />} />
       <Route path="skill-tree" element={<SkillTreeGalactic />} />
       <Route path="content-planner" element={<ContentPlanner />} />
+      <Route path="marketing-intelligence" element={<MvxMarketingIntelligence />} />
+      <Route path="marketing-audit" element={<Navigate to="/marketing-intelligence" replace />} />
       <Route path="planner" element={<Navigate to="content-planner" replace />} />
       <Route path="crm-contacts" element={<CrmContacts />} />
       <Route path="crm" element={<Navigate to="crm-contacts" replace />} />
@@ -312,6 +315,8 @@ function boardRoutes(streamlinedUiEnabled: boolean) {
       <Route path="council" element={<SovereignCouncil />} />
       <Route path="skill-tree" element={<SkillTreeGalactic />} />
       <Route path="content-planner" element={<ContentPlanner />} />
+      <Route path="marketing-intelligence" element={<MvxMarketingIntelligence />} />
+      <Route path="marketing-audit" element={<Navigate to="/marketing-intelligence" replace />} />
       <Route path="planner" element={<Navigate to="content-planner" replace />} />
       <Route path="search" element={<Search />} />
       <Route path="issues/all" element={<Navigate to="/issues" replace />} />
@@ -778,6 +783,8 @@ export function App() {
           <Route path="council" element={<SovereignCouncil />} />
           <Route path="skill-tree" element={<SkillTreeGalactic />} />
           <Route path="content-planner" element={<ContentPlanner />} />
+      <Route path="marketing-intelligence" element={<MvxMarketingIntelligence />} />
+      <Route path="marketing-audit" element={<Navigate to="/marketing-intelligence" replace />} />
           <Route path="planner" element={<Navigate to="/content-planner" replace />} />
           <Route path="crm-contacts" element={<CrmContacts />} />
           <Route path="crm" element={<Navigate to="/crm-contacts" replace />} />
