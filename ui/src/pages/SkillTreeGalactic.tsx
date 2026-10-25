@@ -840,13 +840,13 @@ export function SkillTreeGalactic() {
   return (
     <div className="relative w-full h-[calc(100vh-3.5rem)] overflow-hidden bg-[#070b16] select-none flex flex-col">
       {/* Top Controls Bar */}
-      <div className="p-4 flex flex-wrap items-center justify-between gap-3 border-b border-border/40 bg-card/60 backdrop-blur-md z-10 shrink-0">
+      <div className="p-4 flex flex-wrap items-center justify-between gap-3 border-b border-border/40 bg-card backdrop-blur-md z-10 shrink-0">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-cyan-400 animate-pulse shadow-sm" />
             <h1 className="text-base font-bold text-foreground">Skill Tree Galattico</h1>
           </div>
-          <span className="text-xs bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-2 py-0.5 rounded-full font-mono font-semibold">
+          <span className="text-xs bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20 px-2 py-0.5 rounded-full font-mono font-semibold">
             {totalSkillsCount.toLocaleString()} Competenze Sovrane
           </span>
 

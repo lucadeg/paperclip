@@ -125,13 +125,13 @@ export function CrmContacts() {
   const getStatusBadgeColor = (status: string = "") => {
     const s = status.toLowerCase();
     if (s.includes("trattativa") || s.includes("qualificato") || s.includes("vinto")) {
-      return "bg-emerald-500/15 text-emerald-400 border-emerald-500/30";
+      return "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30";
     }
     if (s.includes("chiamato") || s.includes("in corso")) {
-      return "bg-sky-500/15 text-sky-400 border-sky-500/30";
+      return "bg-sky-500/15 text-sky-700 dark:text-sky-400 border-sky-500/30";
     }
     if (s.includes("chiamare") || s.includes("nuovo")) {
-      return "bg-amber-500/15 text-amber-400 border-amber-500/30";
+      return "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30";
     }
     return "bg-slate-500/15 text-slate-300 border-slate-500/30";
   };
@@ -145,7 +145,7 @@ export function CrmContacts() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-lg font-bold tracking-tight">CRM & Contatti B2B</h1>
-              <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">
+              <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 font-semibold">
                 {leads.length} Lead Sovrani
               </span>
             </div>
@@ -190,38 +190,38 @@ export function CrmContacts() {
 
         <div className="p-3 rounded-xl border border-amber-500/30 bg-amber-500/5 flex items-center justify-between">
           <div>
-            <div className="text-[11px] font-semibold text-amber-400 uppercase tracking-wider">
+            <div className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
               Da Chiamare
             </div>
-            <div className="text-xl font-bold font-mono text-amber-400 mt-0.5">
+            <div className="text-xl font-bold font-mono text-amber-700 dark:text-amber-400 mt-0.5">
               {stats.daChiamare}
             </div>
           </div>
-          <Phone className="h-5 w-5 text-amber-400/60" />
+          <Phone className="h-5 w-5 text-amber-700 dark:text-amber-400/60" />
         </div>
 
         <div className="p-3 rounded-xl border border-sky-500/30 bg-sky-500/5 flex items-center justify-between">
           <div>
-            <div className="text-[11px] font-semibold text-sky-400 uppercase tracking-wider">
+            <div className="text-[11px] font-semibold text-sky-700 dark:text-sky-400 uppercase tracking-wider">
               Contattati
             </div>
-            <div className="text-xl font-bold font-mono text-sky-400 mt-0.5">
+            <div className="text-xl font-bold font-mono text-sky-700 dark:text-sky-400 mt-0.5">
               {stats.chiamati}
             </div>
           </div>
-          <CheckCircle2 className="h-5 w-5 text-sky-400/60" />
+          <CheckCircle2 className="h-5 w-5 text-sky-700 dark:text-sky-400/60" />
         </div>
 
         <div className="p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/5 flex items-center justify-between">
           <div>
-            <div className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">
+            <div className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
               In Trattativa
             </div>
-            <div className="text-xl font-bold font-mono text-emerald-400 mt-0.5">
+            <div className="text-xl font-bold font-mono text-emerald-700 dark:text-emerald-400 mt-0.5">
               {stats.inTrattativa}
             </div>
           </div>
-          <Target className="h-5 w-5 text-emerald-400/60" />
+          <Target className="h-5 w-5 text-emerald-700 dark:text-emerald-400/60" />
         </div>
       </div>
 
@@ -244,6 +244,7 @@ export function CrmContacts() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label="Cerca contatti CRM"
             placeholder="Cerca per nome, azienda, email, città o telefono..."
             className="w-full pl-9 pr-3 py-1.5 bg-card border border-border/70 rounded-lg text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
           />
@@ -336,7 +337,7 @@ export function CrmContacts() {
                       )}
                       {lead.phone && (
                         <div className="flex items-center gap-1.5 text-muted-foreground mt-0.5">
-                          <Phone className="h-3 w-3 text-amber-400 shrink-0" />
+                          <Phone className="h-3 w-3 text-amber-700 dark:text-amber-400 shrink-0" />
                           <span>{lead.phone}</span>
                         </div>
                       )}
@@ -430,7 +431,7 @@ export function CrmContacts() {
                   </span>
                   <a
                     href={`tel:${selectedLead.phone}`}
-                    className="font-mono text-amber-400 hover:underline"
+                    className="font-mono text-amber-700 dark:text-amber-400 hover:underline"
                   >
                     {selectedLead.phone}
                   </a>

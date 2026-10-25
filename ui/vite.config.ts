@@ -11,15 +11,16 @@ const apiProxy = createApiProxy();
 export default defineConfig(({ mode }) => ({
   plugins: [react(), tailwindcss(), serviceWorkerBuildIdPlugin()],
   build: {
-    minify: "esbuild",
+    // Vite 8 uses Oxc/Rolldown. Avoid deprecated esbuild minification
+    // settings, which are ignored when Oxc is enabled.
+    rolldownOptions: {
+      output: {
+        minify: mode === "production"
+          ? { compress: { dropConsole: true, dropDebugger: true } }
+          : undefined,
+      },
+    },
   },
-  esbuild:
-    mode === "production"
-      ? {
-          drop: ["console", "debugger"],
-          legalComments: "none",
-        }
-      : undefined,
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "./src"),

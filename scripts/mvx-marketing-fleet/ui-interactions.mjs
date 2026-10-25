@@ -59,6 +59,29 @@ await check("Council labeled as catalog, not live agents",async()=>{
  if((await input.inputValue())!=="Munger")throw Error("Search input not functional");
  return "Catalog badge and search";
 });
+await check("Council dialogs: accessible name, keyboard focus and Escape",async()=>{
+  await goto("/council");
+  const details=page.getByRole("button",{name:/Dettagli & KPIs/i}).first();
+  await details.click();
+  const drawer=page.getByRole("dialog",{name:/Dettagli e KPI:/i});
+  await drawer.waitFor({state:"visible"});
+  if((await drawer.getAttribute("aria-modal"))!=="true")throw Error("Details must be modal");
+  await page.keyboard.press("Tab");
+  if(!(await page.evaluate(()=>Boolean(document.activeElement?.closest('[role="dialog"]')))))throw Error("Focus escaped details dialog");
+  await page.keyboard.press("Escape");
+  await drawer.waitFor({state:"hidden"});
+  if(!(await details.evaluate(el=>el===document.activeElement)))throw Error("Details trigger focus not restored");
+  const vetoTrigger=page.getByRole("button",{name:/Veto di Munger & Pre-Mortem/i});
+  await vetoTrigger.click();
+  const veto=page.getByRole("dialog",{name:/Charlie Munger Inversion/i});
+  await veto.waitFor({state:"visible"});
+  await veto.getByRole("button",{name:"Chiudi il veto di Munger"}).focus();
+  await page.keyboard.press("Shift+Tab");
+  if(!(await page.evaluate(()=>Boolean(document.activeElement?.closest('[role="dialog"]')))))throw Error("Veto focus escaped modal");
+  await page.keyboard.press("Escape");
+  await veto.waitFor({state:"hidden"});
+  return "Both dialogs keyboard-accessible and trigger focus restored";
+});
 await check("Marketing company gate and no fabricated ROAS",async()=>{
  await goto("/marketing-intelligence");const body=await page.locator("body").innerText();
  if(!body.includes("Seleziona prima un'azienda autorizzata"))throw Error("Company gate absent");

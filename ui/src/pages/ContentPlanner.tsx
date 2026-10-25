@@ -90,23 +90,25 @@ export function ContentPlanner() {
   const { openNewIssue } = useDialogActions();
   const { selectedCompanyId } = useCompany();
   const [syncError, setSyncError] = useState<string | null>(null);
+  const [retryKey, setRetryKey] = useState(0);
   const [items, setItems] = useState<ContentItem[]>([]);
   const [channelFilter, setChannelFilter] = useState<string>("all");
   const [searchFilter, setSearchFilter] = useState<string>("");
   const [viewMode, setViewMode] = useState<"calendar" | "kanban" | "studio">("calendar");
 
-  // Creative Studio Phrases (408 Items from backend)
+  // Company-scoped Tier 1 phrases; no fabricated content or counts.
   const [creativePhrases, setCreativePhrases] = useState<CreativePhrase[]>([]);
   const [creativeCategoryFilter, setCreativeCategoryFilter] = useState<string>("all");
 
-  // Calendar State (Defaults to September 2026)
-  const [calendarDate, setCalendarDate] = useState<Date>(new Date()); // Month 8 = September
+  // Calendar initializes to the actual local date.
+  const [calendarDate, setCalendarDate] = useState<Date>(new Date());
   const [selectedItem, setSelectedItem] = useState<ContentItem | null>(null);
 
   // Marketing content comes from an authorized, company-scoped Tier 1 connector.
   useEffect(() => {
     let active = true;
     setCreativePhrases([]);
+    setSyncError(null);
     if (!selectedCompanyId) return;
     api.get<{ companyId: string; items: CreativePhrase[] }>(
       "/companies/" + encodeURIComponent(selectedCompanyId) + "/mvx-marketing/content/phrases",
@@ -119,7 +121,7 @@ export function ContentPlanner() {
       if (active) setSyncError("Archivio contenuti Tier 1 non connesso o non autorizzato. Nessun dato dimostrativo viene mostrato.");
     });
     return () => { active = false; };
-  }, [selectedCompanyId]);
+  }, [selectedCompanyId, retryKey]);
 
   // Helper to map a CreativePhrase into a ContentItem
   const mapPhraseToContentItem = (p: CreativePhrase): ContentItem => {
@@ -156,14 +158,15 @@ export function ContentPlanner() {
       channelIcon: ChIcon,
       channelColor: chColor,
       phase: "studio",
-      assignedLeader: "Creative Studio Sovereign",
+      assignedLeader: "Non assegnato",
       leaderRole: p.category || "Content Architecture",
-      hookFormula: p.hook || p.hook_intro || "Gancio di conversione ottimizzato",
+      hookFormula: p.hook || p.hook_intro || "",
       scheduledDate: "",
       scheduledTime: undefined,
       priority: "high",
       metricsTarget: "N/D - risultati pubblicitari non verificati",
-      fullScript: `${p.phrase}\n\nCall to Action: ${p.call_to_action || "Commenta con la tua opinione"}\n\nHashtags: ${p.hashtags || "#business #growth"}`,
+      fullScript: [p.phrase, p.call_to_action?.trim() ? `Call to Action: ${p.call_to_action}` : null,
+        p.hashtags?.trim() ? `Hashtags: ${p.hashtags}` : null].filter(Boolean).join("\n\n"),
     };
   };
 
@@ -235,7 +238,7 @@ export function ContentPlanner() {
       if (active) setSyncError("Calendario Tier 1 non connesso o non autorizzato: nessun evento dimostrativo verrà mostrato.");
     });
     return () => { active = false; };
-  }, [selectedCompanyId]);
+  }, [selectedCompanyId, retryKey]);
 
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
@@ -333,7 +336,9 @@ export function ContentPlanner() {
     <div className="relative w-full h-[calc(100vh-3.5rem)] overflow-hidden bg-background select-none flex flex-col">
       {syncError && (
         <div role="alert" className="m-3 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3 text-xs">
-          {syncError}
+          <p>{syncError}</p>
+          {selectedCompanyId && <button type="button" className="mt-2 rounded-md border border-border px-3 py-1.5"
+            onClick={() => setRetryKey((n) => n + 1)}>Riprova sincronizzazione</button>}
         </div>
       )}
       {/* Top Header & View Controls */}
@@ -341,13 +346,14 @@ export function ContentPlanner() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span aria-hidden="true" className={`h-2.5 w-2.5 rounded-full ${selectedCompanyId ? "bg-amber-400" : "bg-slate-400"}`} />
+              <span className="sr-only" role="status">{selectedCompanyId ? "Stato Tier 1 non verificato" : "Nessuna azienda autorizzata selezionata"}</span>
               <h1 className="text-base font-bold text-foreground">
                 MVX Content Planner &amp; Calendario Editoriale
               </h1>
             </div>
             <span className="text-xs bg-muted text-muted-foreground px-2.5 py-0.5 rounded-full font-mono border border-border/50">
-              {filteredItems.length} Pubblicazioni Totali
+              {filteredItems.length} Elementi editoriali
             </span>
 
             {/* View Switcher Toggle */}
@@ -475,6 +481,7 @@ export function ContentPlanner() {
           <div className="relative w-72">
             <input
               type="text"
+              aria-label="Cerca contenuti editoriali"
               placeholder="Cerca per titolo, gancio o leader..."
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
@@ -546,7 +553,7 @@ export function ContentPlanner() {
                       ? "border-primary/80 bg-primary/5 shadow-xs ring-1 ring-primary/30"
                       : dayCell.isCurrentMonth
                       ? "border-border/60 bg-card/50 hover:bg-card hover:border-border"
-                      : "border-border/20 bg-muted/10 opacity-50"
+                      : "border-border/20 bg-muted/10"
                   }`}
                 >
                   {/* Day Number Header */}

@@ -88,4 +88,14 @@ test("UI never hardcodes fake company, fake metrics, or local CRM/editor URLs",a
  assert.doesNotMatch(planner,/Oggi \(17 Set\)/);
  assert.doesNotMatch(planner,/creativePhrases\.length\s*\|\|\s*408/);
  assert.match(planner,/Studio Creativo \(\{creativePhrases\.length\}\)/);
+ assert.doesNotMatch(planner,/Commenta con la tua opinione|#business #growth|Gancio di conversione ottimizzato/);
+ assert.match(planner,/Riprova sincronizzazione/);
+ assert.match(planner,/selectedCompanyId, retryKey/);
+ assert.doesNotMatch(planner,/bg-emerald-400 animate-pulse/);
+ assert.match(planner,/aria-label="Cerca contenuti editoriali"/);
+ assert.match(crm,/aria-label="Cerca contatti CRM"/);
+ const council=await read("ui/src/pages/SovereignCouncil.tsx");
+ assert.match(council,/aria-label="Cerca profili e modelli del consiglio"/);
+ assert.match(council,/role="dialog"/);
+ assert.match(council,/event.key === "Escape"/);
 });
