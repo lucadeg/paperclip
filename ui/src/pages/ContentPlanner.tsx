@@ -383,7 +383,7 @@ export function ContentPlanner() {
                 }`}
               >
                 <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-                Studio Creativo ({creativePhrases.length || 408})
+                Studio Creativo ({creativePhrases.length})
               </button>
             </div>
           </div>
@@ -500,7 +500,7 @@ export function ContentPlanner() {
                 onClick={handleToday}
                 className="h-7 text-xs px-2.5"
               >
-                Oggi (17 Set)
+                Oggi ({new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "short" }).format(new Date())})
               </Button>
             </div>
 
@@ -689,7 +689,7 @@ export function ContentPlanner() {
         </div>
       )}
 
-      {/* VIEW 3: Creative Studio (408 Contenuti Pronti) */}
+      {/* VIEW 3: Creative Studio contents from the verified provider */}
       {viewMode === "studio" && (
         <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
           {/* Header Banner & Stats */}
@@ -718,7 +718,7 @@ export function ContentPlanner() {
           {/* Category Filter Pills */}
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
             {[
-              { id: "all", label: "Tutti i Contenuti", count: creativePhrases.length || 408 },
+              { id: "all", label: "Tutti i Contenuti", count: creativePhrases.length },
               { id: "Reel Script", label: "Reel Script 9:16", count: creativePhrases.filter((p) => p.category === "Reel Script").length },
               { id: "Educational", label: "Educational & Framework", count: creativePhrases.filter((p) => p.category === "Educational").length },
               { id: "Viral Sketch", label: "Viral Sketch", count: creativePhrases.filter((p) => p.category === "Viral Sketch").length },

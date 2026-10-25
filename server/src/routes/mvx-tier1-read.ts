@@ -6,8 +6,13 @@
 export type Tier1Resource = "crm/contacts" | "content/phrases" | "content/calendar";
 
 export class Tier1ReadError extends Error {
-  constructor(public readonly status: number, public readonly reason: string) {
+  readonly status: number;
+  readonly reason: string;
+
+  constructor(status: number, reason: string) {
     super(reason);
+    this.status = status;
+    this.reason = reason;
   }
 }
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;

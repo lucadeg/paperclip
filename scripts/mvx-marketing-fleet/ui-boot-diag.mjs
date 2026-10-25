@@ -1,0 +1,23 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { chromium } from '@playwright/test';
+const root=process.cwd();
+if(!/[\\/]\.hermes[\\/]paperclip$/i.test(root)) throw Error('Authorized checkout only');
+const dest=path.join(root,'evidence','mvx-marketing-fleet','diag-'+new Date().toISOString().replace(/[:.]/g,'-'));
+await fs.mkdir(dest,{recursive:true});process.env.TEMP=dest;process.env.TMP=dest;process.env.TMPDIR=dest;
+const context=await chromium.launchPersistentContext(path.join(dest,'chrome-profile'),{headless:true,channel:'chrome',viewport:{width:1440,height:900}});
+const page=context.pages()[0]||await context.newPage(); const requests=new Map();const failures=[];const statuses=[];const errors=[];
+page.on('request',r=>requests.set(r.url(),{start:Date.now(),method:r.method()}));
+page.on('requestfinished',r=>requests.delete(r.url()));
+page.on('requestfailed',r=>{failures.push({url:r.url(),failure:r.failure()?.errorText});requests.delete(r.url())});
+page.on('response',r=>{if(r.status()>=400)statuses.push({status:r.status(),url:r.url()})});
+page.on('pageerror',e=>errors.push(String(e)));
+page.on('console',e=>{if(e.type()==='error')errors.push(e.text())});
+let navError;let status;
+try{const r=await page.goto('http://127.0.0.1:5173/',{waitUntil:'commit',timeout:15000});status=r?.status()}catch(e){navError=String(e)}
+await page.waitForTimeout(18000);
+const dom=await page.evaluate(()=>({readyState:document.readyState,body:document.body?.innerText?.slice(0,800)||'',scripts:[...document.scripts].map(s=>({src:s.src,type:s.type})).slice(0,15), resources:performance.getEntriesByType('resource').map(x=>({name:x.name,duration:x.duration,responseEnd:x.responseEnd})).slice(-50)})).catch(e=>({evaluateError:String(e)}));
+const out={status,navError,dom,errors,failures,statuses,pending:[...requests.entries()].map(([url,v])=>({url,ageMs:Date.now()-v.start,method:v.method})),time:new Date().toISOString()};
+await fs.writeFile(path.join(dest,'diagnostic.json'),JSON.stringify(out,null,2));
+await page.screenshot({path:path.join(dest,'screenshot.png'),timeout:12000}).catch(()=>{});
+await context.close();console.log('DIAG='+path.join(dest,'diagnostic.json'));console.log(JSON.stringify({readyState:dom.readyState,bodyLength:dom.body?.length,errors:errors.slice(0,8),statuses:statuses.slice(0,10),pending:out.pending.slice(0,14)}));

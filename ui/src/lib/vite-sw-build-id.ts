@@ -54,28 +54,28 @@ export function serviceWorkerBuildIdPlugin(
   options: { serviceWorkerFileName?: string } = {},
 ): Plugin {
   const serviceWorkerFileName = options.serviceWorkerFileName ?? "sw.js";
-  let buildId: string | null = null;
-  let outDir = "dist";
+  let root = process.cwd();
 
   return {
     name: "paperclip-sw-build-id",
     apply: "build",
     configResolved(config) {
-      outDir = config.build.outDir;
+      root = config.root;
     },
     generateBundle(_options, bundle) {
       const entry = Object.values(bundle).find(
         (chunk) => chunk.type === "chunk" && chunk.isEntry,
       );
-      if (entry) {
-        buildId = deriveBuildIdFromEntryFileName(entry.fileName);
-      }
-    },
-    closeBundle() {
-      const swPath = path.resolve(outDir, serviceWorkerFileName);
-      const source = fs.readFileSync(swPath, "utf8");
-      const stamped = stampServiceWorkerBuildId(source, buildId ?? "build");
-      fs.writeFileSync(swPath, stamped);
+      const buildId = entry ? deriveBuildIdFromEntryFileName(entry.fileName) : "build";
+      // Emit as part of the bundle. closeBundle can run before public assets
+      // are copied or before the output directory exists in Vite 8.
+      const publicWorker = path.resolve(root, "public", serviceWorkerFileName);
+      const source = fs.readFileSync(publicWorker, "utf8");
+      this.emitFile({
+        type: "asset",
+        fileName: serviceWorkerFileName,
+        source: stampServiceWorkerBuildId(source, buildId),
+      });
     },
   };
 }

@@ -3,12 +3,12 @@ import path from 'node:path';
 import { chromium } from '@playwright/test';
 const root=path.resolve(process.cwd());
 if(!/[/\\]\.hermes[/\\]paperclip$/i.test(root))throw Error('Only authorized .hermes/paperclip checkout');
-const dest=path.join(root,'evidence','mvx-marketing-fleet','ui-browser-20261017');
+const dest=path.join(root,'evidence','mvx-marketing-fleet','ui-browser-'+new Date().toISOString().replace(/[:.]/g,'-'));
 await fs.mkdir(dest,{recursive:true});
 const temp=path.join(dest,'tmp'),profile=path.join(dest,'browser-profile');
 await fs.mkdir(temp,{recursive:true});
 process.env.TEMP=temp;process.env.TMP=temp;process.env.TMPDIR=temp;
-const report={schema:'mvx-ui-browser-smoke/v1',mode:'REAL_BROWSER_NO_DATA_MOCKS',startedAt:new Date().toISOString(),base:'http://127.0.0.1:5173',scenarios:[],browser:'',auth:'UNAUTHENTICATED_OR_UNKNOWN',productionReady:false};
+const report={schema:'mvx-ui-browser-smoke/v1',mode:'REAL_BROWSER_NO_DATA_MOCKS',startedAt:new Date().toISOString(),base:process.env.MVX_BROWSER_BASE||'http://127.0.0.1:5173',scenarios:[],browser:'',auth:'UNAUTHENTICATED_OR_UNKNOWN',productionReady:false};
 let browser;
 for(const opts of [{channel:'chrome'},{channel:'msedge'},{}]) {
  try{
@@ -42,7 +42,11 @@ for(const [index,t] of targets.entries()){
  const start=Date.now(),scenario={test:t.id,path:t.path,status:'UNKNOWN',errors:[],network:[]};
  const a=consoleErrors.length,b=reqFailures.length;
  try{
-  const response=await page.goto(report.base+t.path,{waitUntil:'domcontentloaded',timeout:30000});
+  const response=await page.goto(report.base+t.path,{waitUntil:'commit',timeout:30000});
+  let domReady=true;
+  try { await page.waitForLoadState('domcontentloaded',{timeout:20000}); }
+  catch { domReady=false; }
+  scenario.domReady=domReady;
   await page.waitForTimeout(1700);
   scenario.httpStatus=response?.status()??null;
   scenario.title=await page.title();scenario.url=page.url();
@@ -50,7 +54,7 @@ for(const [index,t] of targets.entries()){
   scenario.buttons=await page.getByRole('button').count();
   scenario.links=await page.getByRole('link').count();
   scenario.tabs=await page.getByRole('tab').count();
-  scenario.status=scenario.httpStatus>=400?'FAIL_HTTP':scenario.body.length<20?'FAIL_BLANK':'RENDERED_UNVERIFIED';
+  scenario.status=scenario.httpStatus>=400?'FAIL_HTTP':!scenario.domReady?'FAIL_DOM_NOT_READY':scenario.body.length<20?'FAIL_BLANK':'RENDERED_UNVERIFIED';
   scenario.elapsedMs=Date.now()-start;
   await page.screenshot({path:path.join(dest,String(index).padStart(2,'0')+'-'+t.id+'.png'),fullPage:false,timeout:20000});
  }catch(e){scenario.status='FAIL_BROWSER';scenario.error=String(e).slice(0,1000);}

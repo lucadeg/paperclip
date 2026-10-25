@@ -1,8 +1,12 @@
-#!/usr/bin/env -S node --import tsx
+#!/usr/bin/env node
 import fs from "node:fs/promises";
 import { existsSync, readdirSync, readFileSync, realpathSync } from "node:fs";
 import path from "node:path";
-import { repoRoot } from "./dev-service-profile.ts";
+import { fileURLToPath } from "node:url";
+// Bootstrap must not import the server before workspace package links are repaired.
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const checkOnly = process.argv.includes("--check");
+let unresolvedLinkCount = 0;
 
 type WorkspaceLinkMismatch = {
   workspaceDir: string;
@@ -20,6 +24,8 @@ function discoverWorkspacePackagePaths(rootDir: string): Map<string, string> {
   const ignoredDirNames = new Set([".git", ".paperclip", "dist", "node_modules"]);
 
   function visit(dirPath: string) {
+    // A sparse worktree may omit cli or optional package directories.
+    if (!existsSync(dirPath)) return;
     const packageJsonPath = path.join(dirPath, "package.json");
     if (existsSync(packageJsonPath)) {
       const packageJson = readJsonFile(packageJsonPath);
@@ -54,10 +60,8 @@ const workspaceDirs = Array.from(
 
 function findWorkspaceLinkMismatches(workspaceDir: string): WorkspaceLinkMismatch[] {
   const nodeModulesDir = path.join(repoRoot, workspaceDir, "node_modules");
-  if (!existsSync(nodeModulesDir)) {
-    return [];
-  }
-
+  // Sparse worktrees may have a workspace package but no node_modules yet.
+  // Workspace-only links can still be restored without reinstalling packages.
   const packageJson = readJsonFile(path.join(repoRoot, workspaceDir, "package.json"));
   const dependencies = {
     ...(packageJson.dependencies as Record<string, unknown> | undefined),
@@ -90,18 +94,24 @@ async function ensureWorkspaceLinksCurrent(workspaceDir: string) {
   const mismatches = findWorkspaceLinkMismatches(workspaceDir);
   if (mismatches.length === 0) return;
 
-  console.log(`[paperclip] detected stale workspace package links for ${workspaceDir}; relinking dependencies...`);
+  console.log(`[paperclip] stale workspace package links for ${workspaceDir}; ${checkOnly ? "checking only" : "relinking dependencies"}...`);
   for (const mismatch of mismatches) {
     console.log(
       `[paperclip]   ${mismatch.packageName}: ${mismatch.actualPath ?? "missing"} -> ${mismatch.expectedPath}`,
     );
   }
 
+  if (checkOnly) {
+    unresolvedLinkCount += mismatches.length;
+    console.log(`[paperclip] check-only: ${mismatches.length} workspace links need repair in ${workspaceDir}`);
+    return;
+  }
+
   for (const mismatch of mismatches) {
     const linkPath = path.join(repoRoot, mismatch.workspaceDir, "node_modules", ...mismatch.packageName.split("/"));
     await fs.mkdir(path.dirname(linkPath), { recursive: true });
     await fs.rm(linkPath, { recursive: true, force: true });
-    await fs.symlink(mismatch.expectedPath, linkPath);
+    await fs.symlink(mismatch.expectedPath, linkPath, process.platform === "win32" ? "junction" : "dir");
   }
 
   const remainingMismatches = findWorkspaceLinkMismatches(workspaceDir);
@@ -114,4 +124,8 @@ async function ensureWorkspaceLinksCurrent(workspaceDir: string) {
 
 for (const workspaceDir of workspaceDirs) {
   await ensureWorkspaceLinksCurrent(workspaceDir);
+}
+if (checkOnly && unresolvedLinkCount > 0) {
+  console.error(`[paperclip] workspace-link check failed: ${unresolvedLinkCount} stale or missing links`);
+  process.exitCode = 1;
 }

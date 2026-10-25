@@ -85,4 +85,7 @@ test("UI never hardcodes fake company, fake metrics, or local CRM/editor URLs",a
  assert.doesNotMatch(planner,/metrics_views\s*\|\|\s*25000/);
  assert.doesNotMatch(planner,/ev\.views_count\s*\|\|\s*15000/);
  assert.match(planner,/new Date\(\)/);
+ assert.doesNotMatch(planner,/Oggi \(17 Set\)/);
+ assert.doesNotMatch(planner,/creativePhrases\.length\s*\|\|\s*408/);
+ assert.match(planner,/Studio Creativo \(\{creativePhrases\.length\}\)/);
 });
