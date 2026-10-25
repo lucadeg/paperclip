@@ -26,6 +26,7 @@
     "test:mvx-marketing-transversal": "node --test scripts/mvx-marketing-fleet/cross-workflow.test.mjs",
     "test:mvx-marketing-tier1": "node --test scripts/mvx-marketing-fleet/tier1-read.test.ts",
     "test:mvx-marketing-all": "npm run test:mvx-marketing-fleet && npm run test:mvx-marketing-dashboard && npm run test:mvx-marketing-transversal && npm run test:mvx-marketing-tier1",
+    "test:workspace-links": "node --test scripts/ensure-workspace-package-links.test.mjs",
     "test:watch": "pnpm run preflight:workspace-links && vitest",
     "test:run": "pnpm run preflight:workspace-links && node scripts/run-vitest-stable.mjs",
     "test:runner-acceptance": "vitest run --config tests/runner-acceptance/vitest.config.ts",

@@ -26,6 +26,7 @@ Browser tests exercise Planner current date, zero real creative-count, Calendar 
 - Browser javascriptErrors and legacyOriginRequests arrays are empty; multiple `502` from `/api/auth/get-session`, `/api/health`, instance settings and plugins prove **backend unavailable** in test environment. Do NOT label this as production end-to-end acceptance.
 - Tier 1 TypeScript `Tier1ReadError` parameter property caused `ERR_UNSUPPORTED_TYPESCRIPT_SYNTAX` with Node's strip-only TS loader; replaced with explicitly assigned fields without changing Error behavior. **11/11 Tier 1 tests PASS**.
 - Root test commands for dashboard and Tier 1 no longer rely on network-dependent `npm exec --yes --package=tsx`; project engines already require `node >=24.11.0`. Direct Node 24 TS test runner passes.
+- Follow-up bootstrap safety (same date): `scripts/ensure-workspace-package-links.ts` now refuses to delete an existing **physical** dependency directory/file. Only stale symlinks/junctions may be replaced. Dedicated regression `npm run test:workspace-links` creates isolated fixtures **inside this repo's evidence directory**, verifies an actual installed-file sentinel survives both `--check` and normal mode, repairs a missing link and a stale symlink, and removes only its own fixtures. Node test **1/1 PASS** and real-workspace `--check` **PASS**, both exit 0. This prevents destructive repairs in a sparse PNPM checkout.
 
 ## Remaining release blockers
 

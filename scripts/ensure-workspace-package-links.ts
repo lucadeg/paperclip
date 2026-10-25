@@ -109,8 +109,22 @@ async function ensureWorkspaceLinksCurrent(workspaceDir: string) {
 
   for (const mismatch of mismatches) {
     const linkPath = path.join(repoRoot, mismatch.workspaceDir, "node_modules", ...mismatch.packageName.split("/"));
+    // Never recursively delete a real package directory or file. An existing
+    // non-link may contain user data or installed dependencies: fail closed.
+    let existingLink: Awaited<ReturnType<typeof fs.lstat>> | null = null;
+    try {
+      existingLink = await fs.lstat(linkPath);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    }
+    if (existingLink && !existingLink.isSymbolicLink()) {
+      throw new Error(`Refusing to replace a non-symlink workspace dependency: ${linkPath}`);
+    }
+
     await fs.mkdir(path.dirname(linkPath), { recursive: true });
-    await fs.rm(linkPath, { recursive: true, force: true });
+    if (existingLink) {
+      await fs.rm(linkPath, { force: true });
+    }
     await fs.symlink(mismatch.expectedPath, linkPath, process.platform === "win32" ? "junction" : "dir");
   }
 
