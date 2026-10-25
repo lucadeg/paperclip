@@ -177,6 +177,64 @@ test("actual loopback HTTP response is authenticated, company scoped and rejecte
  }
 });
 
+test("real HTTP phrases/calendar are company scoped; upstream 403 and forged rows fail closed", async () => {
+ const cases = [
+  {resource:"content/phrases" as const, path:"/api/phrases", key:"phrases"},
+  {resource:"content/calendar" as const, path:"/api/calendar/events", key:"events"},
+ ];
+ let resourcePath = "/api/phrases";
+ let payloadKey = "phrases";
+ let mode:"ok"|"cross-tenant"|"forbidden" = "ok";
+ const observed:{path?:string;companyQuery?:string;headerCompany?:string;token?:string} = {};
+ const server = createServer((req,res) => {
+  const u = new URL(req.url || "/", "http://127.0.0.1");
+  observed.path=u.pathname;
+  observed.companyQuery=u.searchParams.get("companyId") || undefined;
+  observed.headerCompany=req.headers["x-mvx-company-id"] as string | undefined;
+  observed.token=req.headers.authorization;
+  if(mode==="forbidden") {
+   res.writeHead(403,{"content-type":"application/json"});
+   res.end(JSON.stringify({error:"not authorized"}));
+   return;
+  }
+  const rowCompany=mode==="cross-tenant" ? other : company;
+  res.writeHead(200,{"content-type":"application/json"});
+  res.end(JSON.stringify({companyId:company,
+   [payloadKey]:[{id:"http-evidence",companyId:rowCompany}]}));
+ });
+ await new Promise<void>((resolve,reject) => {
+  server.once("error",reject);
+  server.listen(0,"127.0.0.1",resolve);
+ });
+ try {
+  const address=server.address();
+  assert(address && typeof address==="object");
+  const devEnv={...env,NODE_ENV:"development",
+   MVX_TIER1_API_ORIGIN:`http://127.0.0.1:${address.port}/`};
+  for(const scenario of cases) {
+   resourcePath=scenario.path;
+   payloadKey=scenario.key;
+   mode="ok";
+   const data=await readTier1CompanyResource(company,scenario.resource,{env:devEnv});
+   assert.equal(data.companyId,company);
+   assert.equal(data.items.length,1);
+   assert.equal(observed.path,resourcePath);
+   assert.equal(observed.companyQuery,company);
+   assert.equal(observed.headerCompany,company);
+   assert.equal(observed.token,`Bearer ${env.MVX_TIER1_SERVICE_TOKEN}`);
+   mode="cross-tenant";
+   await assert.rejects(readTier1CompanyResource(company,scenario.resource,{env:devEnv}),
+    /TIER1_COMPANY_SCOPE_OR_SCHEMA_MISMATCH/);
+   mode="forbidden";
+   await assert.rejects(readTier1CompanyResource(company,scenario.resource,{env:devEnv}),
+    /TIER1_SERVICE_AUTHORIZATION_FAILED/);
+  }
+ } finally {
+  await new Promise<void>((resolve,reject) =>
+   server.close(error=>error?reject(error):resolve()));
+ }
+});
+
 test("UI never hardcodes fake company, fake metrics, or local CRM/editor URLs",async()=>{
  const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"../..");
  const read=async(file:string)=>fs.readFile(path.join(root,file),"utf8");

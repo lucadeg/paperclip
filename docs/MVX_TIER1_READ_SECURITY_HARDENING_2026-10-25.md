@@ -13,9 +13,9 @@ In `server/src/routes/mvx-tier1-read.ts`:
 
 ## Executed evidence
 
-- `node --test scripts/mvx-marketing-fleet/tier1-read.test.ts`: **18/18 PASS**, exit 0. Seven added tests cover internal/metadata origin denial, explicitly allowed local development, contradictory row ownership, oversized declared bodies, streamed overflow, invalid UTF-8 and **a real HTTP loopback server**.
+- `node --test scripts/mvx-marketing-fleet/tier1-read.test.ts`: **19/19 PASS**, exit 0 (latest). Added a second HTTP loopback scenario covering both company-scoped `content/phrases` and `content/calendar`; it checks the actual request path, `companyId` query, company authorization header, Bearer token, response rows, denial of forged cross-company rows and upstream HTTP 403. Prior checks cover internal/metadata origin denial, explicitly allowed local development, contradictory row ownership, oversized declared bodies, streamed overflow, invalid UTF-8 and the first real HTTP CRM loopback server.
 - The local HTTP test uses an ephemeral `127.0.0.1` listening port with synthetic credentials. It verifies the actual `GET /api/crm/contacts` request, Bearer authorization and `X-MVX-Company-Id` headers, a valid company-attested response, then rejects a different-company response from the same server.
-- `npm run test:mvx-marketing-all`: final **141/141 PASS**, exit 0 (76 Fleet + 18 dashboard + 29 transversal + 18 Tier 1), after adding the real HTTP loopback check. Log: `evidence/mvx-marketing-fleet/marketing-all-20261025-tier1-http.log`. The earlier 140/140 run is archived as `marketing-all-20261025-tier1-guard.log`.
+- `npm run test:mvx-marketing-all`: latest **142/142 PASS**, exit 0 (76 Fleet + 18 dashboard + 29 transversal + 19 Tier 1) including actual loopback HTTP tests for CRM, phrases and calendar. Latest log: `evidence/mvx-marketing-fleet/marketing-all-20261025-142.log`. Earlier 141/141 and 140/140 runs are archived as `marketing-all-20261025-tier1-http.log` and `marketing-all-20261025-tier1-guard.log`.
 - All tests rely on synthetic fixture inputs and local memory/network loopback; **no actual MVX Tier 1 provider or real CRM authenticated integration has been certified.**
 
 ## Known limits and remaining gates
